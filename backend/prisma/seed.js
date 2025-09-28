@@ -10,7 +10,7 @@ async function main() {
     
     // --- Catégories ---
     const pochetteBandoulière = await prisma.category.create({
-        data: { name: 'Pochettes bandoulière', slug: 'pochette-bandoulière' }
+        data: { name: 'Pochettes bandoulière', slug: 'pochette-bandouliere' }
     });
 
     const pochetteTelephone = await prisma.category.create({

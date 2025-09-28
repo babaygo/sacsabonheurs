@@ -100,7 +100,26 @@ app.get("/api/categories", async (req, res) => {
         select: { id: true, name: true, slug: true },
     });
     res.json(categories);
-}); 
+});
+
+app.get("/api/categories/:slug/products", async (req, res) => {
+    const { slug } = req.params;
+    try {
+        const category = await prisma.category.findUnique({
+            where: { slug },
+            include: { products: true },
+        });
+
+        if (!category) {
+            return res.status(404).json({ error: "Catégorie non trouvée" });
+        }
+
+        res.json(category.products);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err instanceof multer.MulterError) {
