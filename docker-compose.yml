@@ -2,26 +2,30 @@ version: '3.8'
 
 services:
   postgres:
+    container_name: sacsabonheur_postgres
     image: postgres:17
     restart: always
+    env_file: .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: sacsdb
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
-      - "5432:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   backend:
+    container_name: sacsabonheur_backend
     build: ./backend
     restart: always
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: postgres://sacs:bonheur@postgres:5432/sacsdb
+      DATABASE_URL: ${DATABASE_URL}
     depends_on:
       - postgres
 
 volumes:
   pgdata:
+    driver: local
