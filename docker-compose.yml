@@ -18,11 +18,12 @@ services:
   backend:
     container_name: sacsabonheur_backend
     build: ./backend
-    restart: always
+    volumes:
+      - ./backend/public/uploads:/app/public/uploads
     ports:
       - "3001:3001"
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: ${POSGRES_DATABASE_URL}
     depends_on:
       - postgres
 
