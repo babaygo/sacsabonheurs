@@ -1,7 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+const { PrismaClient } = require('@prisma/client');
 const prisma = new PrismaClient();
 
 async function main() {
+    console.log('Début du seed...');
+
+    // Nettoyer la base de données
+    await prisma.product.deleteMany();
+    await prisma.category.deleteMany();
+    
     // --- Catégories ---
     const pochetteBandoulière = await prisma.category.create({
         data: { name: 'Pochettes bandoulière', slug: 'pochette-bandoulière' }

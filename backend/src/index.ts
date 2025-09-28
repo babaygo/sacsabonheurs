@@ -35,6 +35,7 @@ const upload = multer({
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 app.use(express.json());
 
+// Produits
 app.get('/products', async (req, res) => {
     const products = await prisma.product.findMany({ include: { category: true } });
     res.json(products);
@@ -71,6 +72,7 @@ app.post('/products', async (req, res) => {
     res.json(product);
 });
 
+// Upload d'images pour un produit
 app.post('/upload', upload.array('images', 5), async (req, res) => {
     if (!req.files) return res.status(400).send('Aucun fichier reçu');
 
@@ -91,6 +93,14 @@ app.post('/upload', upload.array('images', 5), async (req, res) => {
         res.status(400).json({ error: 'Produit introuvable ou erreur lors de la mise à jour' });
     }
 });
+
+// Catégories
+app.get("/api/categories", async (req, res) => {
+    const categories = await prisma.category.findMany({
+        select: { id: true, name: true, slug: true },
+    });
+    res.json(categories);
+}); 
 
 app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
     if (err instanceof multer.MulterError) {
