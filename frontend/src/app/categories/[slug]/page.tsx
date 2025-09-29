@@ -77,11 +77,8 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                             src={JSON.parse(p.images)[0]}
                             alt={p.name}
                         />
-                        <h2 className="">{p.name}</h2>
-                        <p className="">{p.price} €</p>
-                        {/* <p className="">
-                            {p.stock > 0 ? `En stock (${p.stock})` : "Rupture de stock"}
-                        </p> */}
+                        <h2>{p.name}</h2>
+                        <p>{p.price} €</p>
                     </Link>
                 ))}
             </div>

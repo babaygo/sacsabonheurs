@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import AddToCartDrawer from "@/components/AddToCartDrawer";
 
 async function getProduct(slug: string) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`, {
@@ -26,14 +27,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
                     <h1 className="text-2xl font-bold mb-4">{product.name}</h1>
                     <p className="text-lg mb-2">{product.price} €</p>
                     <p className="text-sm text-gray-600 mb-4">{product.description}</p>
-                    <button
-                        className={`px-4 py-2 rounded ${product.stock > 0 ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-300 text-gray-600 cursor-not-allowed'}`}
-                        disabled={product.stock <= 0}
-                        aria-disabled={product.stock <= 0}
-                        title={product.stock > 0 ? 'Ajouter au panier' : 'Produit en rupture de stock'}
-                    >
-                        {product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
-                    </button>
+                    <AddToCartDrawer product={product} />
                 </div>
             </div>
         </div>
