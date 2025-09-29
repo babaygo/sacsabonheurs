@@ -10,7 +10,7 @@ async function getProductsByCategory(slug: string) {
 }
 
 export default async function CategoryPage({ params }: { params: { slug: string } }) {
-    const { slug } = params; // 👈 plus besoin de await
+    const { slug } = await params;
     const products = await getProductsByCategory(slug);
 
     if (!products) {

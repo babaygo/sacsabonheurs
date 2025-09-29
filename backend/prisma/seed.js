@@ -108,9 +108,9 @@ async function main() {
                 price: 55,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-medium-simili-bleu-suedine-beige-2.jpg',
-                    'http://localhost:3001/uploads/sac-medium-simili-bleu-suedine-beige-3.jpg',
-                    'http://localhost:3001/uploads/sac-medium-simili-bleu-suedine-beige-4.jpg'
+                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-2.jpg',
+                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-3.jpg',
+                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-4.jpg'
                 ]),
                 categoryId: sacBesace.id
             }
@@ -128,9 +128,9 @@ async function main() {
                 price: 55,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-cabas-liege-simili-camel-1.jpg',
-                    'http://localhost:3001/uploads/sac-cabas-liege-simili-camel-2.jpg',
-                    'http://localhost:3001/uploads/sac-cabas-liege-simili-camel-3.jpg'
+                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-1.jpg',
+                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-6.jpg',
+                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-8.jpg'
                 ]),
                 categoryId: sacCabas.id
             }
