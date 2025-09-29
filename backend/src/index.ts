@@ -2,9 +2,12 @@ import express from 'express';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
+import cors from "cors";
 import { PrismaClient } from '@prisma/client';
 
 const app = express();
+app.use(cors());
+
 const prisma = new PrismaClient();
 
 const uploadDir = path.join(__dirname, '../public/uploads');
@@ -41,25 +44,17 @@ app.get('/products', async (req, res) => {
     res.json(products);
 });
 
-app.get('/products/:id', async (req, res) => {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-        return res.status(400).json({ error: 'ID invalide' });
-    }
-
+app.get("/api/products/:slug", async (req, res) => {
+    const { slug } = req.params;
     try {
         const product = await prisma.product.findUnique({
-            where: { id },
-            include: { category: true }
+            where: { slug },
         });
-
-        if (!product) {
-            return res.status(404).json({ error: 'Produit introuvable' });
-        }
-
+        if (!product) return res.status(404).json({ error: "Produit non trouvé" });
         res.json(product);
     } catch (err) {
-        res.status(500).json({ error: 'Erreur serveur' });
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
     }
 });
 
