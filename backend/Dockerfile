@@ -30,6 +30,9 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package*.json ./
+# Copie le script d'entrypoint
+COPY entrypoint.sh ./
+RUN chmod +x ./entrypoint.sh
 
 EXPOSE 3001
-CMD ["node", "dist/index.js"]
+ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
