@@ -3,10 +3,18 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cors from "cors";
+import { auth } from "../src/lib/auth";
+import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
 import { PrismaClient } from '@prisma/client';
 
 const app = express();
-app.use(cors());
+
+app.use(cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+}));
+
+app.all("/api/auth/*", toNodeHandler(auth));
 
 const prisma = new PrismaClient();
 
@@ -36,6 +44,7 @@ const upload = multer({
 });
 
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
+
 app.use(express.json());
 
 // Produits
