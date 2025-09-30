@@ -1,15 +1,32 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { useAuthStore } from "@/lib/authStore";
 import { useCategories } from "@/lib/useCategories";
-import { Skeleton } from "../ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button";
+import { User } from "@/types/User";
+import { Separator } from "../ui/separator";
+import { authClient } from "@/lib/authClient";
+import { useRouter } from "next/navigation";
 
 export default function HeaderClient() {
-    const user = useAuthStore((s) => s.user);
+    const user: User = useAuthStore((s) => s.user);
+    const setUser = useAuthStore((s) => s.setUser);
     const { categories, loading, error } = useCategories();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        await authClient.signOut();
+        setUser(null);
+        router.push("/");
+    };
 
     return (
         <header className="bg-white">
@@ -37,7 +54,35 @@ export default function HeaderClient() {
                 </Link>
 
                 {user ? (
-                    <Link href="/profile">Mon compte</Link>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button variant="link">Mon compte</Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="start">
+                            <div className="grid gap-4">
+                                <div className="space-y-2">
+                                    <p className="text-sm font-small">
+                                        {user.name}
+                                    </p>
+                                    <p className="text-sm text-muted-foreground">
+                                        {user.email}
+                                    </p>
+                                </div>
+                                <Separator />
+                                <div className="grid gap-2">
+                                    <div className="grid items-center p-2 rounded hover:bg-gray-100">
+                                        <Link href="/profile" className="text-sm">Profil</Link>
+                                    </div>
+                                    <div className="grid items-center p-2 rounded hover:bg-gray-100">
+                                        <Link href="/orders" className="text-sm">Mes commandes</Link>
+                                    </div>
+                                    <div className="grid items-center p-2 rounded">
+                                        <Button variant='default' onClick={handleLogout} className="text-sm">Se déconnecter</Button>
+                                    </div>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 ) : (
                     <Link href="/login">Se connecter</Link>
                 )}
