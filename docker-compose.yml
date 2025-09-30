@@ -20,7 +20,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./backend:/app
-      - node_modules_backend:/app/node_modules
+      - ./backend/node_modules:/app/node_modules
     ports:
       - "3001:3001"
       - "5555:5555"
@@ -33,6 +33,4 @@ services:
 
 volumes:
   pgdata:
-    driver: local
-  node_modules_backend:
     driver: local
