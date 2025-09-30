@@ -1,15 +1,7 @@
-"use client";
+import { useCart } from "@/lib/useCart";
 
-import { useCartStore } from "@/lib/cartStore";
-
-export default function AddToCartButton({
-    product,
-    onAdded,
-}: {
-    product: any;
-    onAdded?: () => void;
-}) {
-    const addToCart = useCartStore((state) => state.addToCart);
+export default function AddToCartButton({ product }: { product: any }) {
+    const { addToCart, setOpen } = useCart();
 
     const handleClick = () => {
         addToCart({
@@ -19,17 +11,18 @@ export default function AddToCartButton({
             price: product.price,
             image: JSON.parse(product.images)[0],
         });
-        if (onAdded) onAdded();
+        setOpen(true);
     };
 
     return (
         <button
-            className={`px-4 py-2 rounded ${product.stock > 0 ? 'bg-black text-white hover:bg-gray-800' : 'bg-gray-300 text-gray-600'}`}
+            className={`px-4 py-2 rounded ${product.stock > 0 ? "bg-black text-white hover:bg-gray-800" : "bg-gray-300 text-gray-600"
+                }`}
             disabled={product.stock <= 0}
             aria-disabled={product.stock <= 0}
             onClick={handleClick}
         >
-            {product.stock > 0 ? 'Ajouter au panier' : 'Rupture de stock'}
+            {product.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
         </button>
     );
 }

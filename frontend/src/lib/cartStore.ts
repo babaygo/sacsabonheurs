@@ -39,10 +39,10 @@ export const useCartStore = create<CartState>()(
                 set((state) => ({
                     items: state.items.filter((i) => i.id !== id),
                 })),
-            clearCart: () => set({ items: [] }),
+            clearCart: () => set(() => ({ items: [] })),
         }),
         {
-            name: "cart-storage", // clé dans localStorage
+            name: "cart-storage",
         }
     )
 );
