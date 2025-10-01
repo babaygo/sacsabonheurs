@@ -75,7 +75,7 @@ export default function HeaderClient() {
                             <PopoverTrigger asChild>
                                 <Button variant="link">Mon compte</Button>
                             </PopoverTrigger>
-                            <PopoverContent side="bottom" align="end" className="w-64 rounded-md shadow-md">
+                            <PopoverContent align="start">
                                 <div className="grid gap-4">
                                     <div className="space-y-2">
                                         <p className="text-sm font-medium">{user.name}</p>
@@ -83,16 +83,16 @@ export default function HeaderClient() {
                                     </div>
                                     <Separator />
                                     <div className="grid gap-2">
-                                        <Link href="/profile" className="text-sm px-2 py-1 rounded hover:bg-gray-100">
+                                        <Link href="/profile" className="text-sm p-2 rounded hover:bg-gray-100">
                                             Profil
                                         </Link>
-                                        <Link href="/orders" className="text-sm px-2 py-1 rounded hover:bg-gray-100">
+                                        <Link href="/orders" className="text-sm p-2 rounded hover:bg-gray-100">
                                             Mes commandes
                                         </Link>
                                         <Button
-                                            variant="ghost"
+                                            variant="default"
                                             onClick={handleLogout}
-                                            className="text-sm px-2 py-1 w-full text-left hover:bg-gray-100"
+                                            className="text-sm px-2 py-1 w-full text-left hover:opacity-90"
                                         >
                                             Se déconnecter
                                         </Button>
