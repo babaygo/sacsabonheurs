@@ -106,6 +106,20 @@ app.get("/api/categories", async (req, res) => {
     res.json(categories);
 });
 
+app.get("/categories/first-product-by-categories", async (req, res) => {
+  const categories = await prisma.category.findMany({
+    include: {
+      products: {
+        take: 1,
+        orderBy: { createdAt: "asc" },
+      },
+    },
+    orderBy: { id: "desc" },
+  });
+
+  res.json(categories);
+})
+
 app.get("/api/categories/:slug/products", async (req, res) => {
     const { slug } = req.params;
     try {
