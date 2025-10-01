@@ -1,4 +1,5 @@
 import { useCart } from "@/lib/useCart";
+import { Button } from "@/components/ui/button";
 
 export default function AddToCartButton({ product }: { product: any }) {
     const { addToCart, setOpen } = useCart();
@@ -15,14 +16,14 @@ export default function AddToCartButton({ product }: { product: any }) {
     };
 
     return (
-        <button
-            className={`px-4 py-2 rounded ${product.stock > 0 ? "bg-black text-white hover:bg-gray-800" : "bg-gray-300 text-gray-600"
-                }`}
-            disabled={product.stock <= 0}
-            aria-disabled={product.stock <= 0}
+        <Button
             onClick={handleClick}
+            disabled={product.stock <= 0}
+            variant={product.stock > 0 ? "default" : "secondary"}
+            className={product.stock > 0 ? "my-4 hover:opacity-75" : "my-4 text-gray-600"}
         >
             {product.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
-        </button>
+        </Button>
+
     );
 }
