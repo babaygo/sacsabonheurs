@@ -7,21 +7,35 @@ import type { User } from "better-auth";
 const SessionContext = createContext<{
     user: User | null;
     loadingUser: boolean;
-}>({ user: null, loadingUser: true });
+    refreshSession: () => Promise<void>;
+}>({
+    user: null,
+    loadingUser: true,
+    refreshSession: async () => { }
+});
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
+    const refreshSession = async () => {
+        setLoadingUser(true);
+        try {
+            const session = await authClient.getSession();
+            setUser(session?.data?.user ?? null);
+        } catch {
+            setUser(null);
+        } finally {
+            setLoadingUser(false);
+        }
+    };
+
     useEffect(() => {
-        authClient.getSession()
-            .then((session) => setUser(session?.data?.user ?? null))
-            .catch(() => setUser(null))
-            .finally(() => setLoadingUser(false));
+        refreshSession();
     }, []);
 
     return (
-        <SessionContext.Provider value={{ user, loadingUser }}>
+        <SessionContext.Provider value={{ user, loadingUser, refreshSession  }}>
             {children}
         </SessionContext.Provider>
     );

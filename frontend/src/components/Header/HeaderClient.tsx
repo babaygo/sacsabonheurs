@@ -18,13 +18,14 @@ import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
 
 export default function HeaderClient() {
-    const { user, loadingUser } = useSessionContext();
+    const { user, loadingUser, refreshSession } = useSessionContext();
     const { categories, loadingCategories } = useCategories();
     const router = useRouter();
     const { setOpen, count } = useCart();
 
     const handleLogout = async () => {
         await authClient.signOut();
+        await refreshSession();
         router.push("/");
     };
 

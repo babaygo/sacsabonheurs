@@ -17,12 +17,14 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useSessionContext } from "@/components/SessionProvider";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [lastname, setLastName] = useState("");
     const [fisrtname, setFisrtName] = useState("");
+    const { refreshSession } = useSessionContext();
     const router = useRouter();
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -45,6 +47,7 @@ export default function SignupPage() {
 
         try {
             await useSignup({ name, email, password });
+            await refreshSession();
             router.push("/");
         } catch (err: any) {
             alert(err.message || "Erreur lors de l'inscription");

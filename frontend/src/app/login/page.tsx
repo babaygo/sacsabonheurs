@@ -17,23 +17,18 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginSchema } from "@/lib/validation/loginSchema";
 import { useLogin } from "@/lib/useLogin";
-import { authClient } from "@/lib/authClient";
-import { useAuthStore } from "@/lib/authStore";
+import { useSessionContext } from "@/components/SessionProvider";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const setUser = useAuthStore((state) => state.setUser);
+    const { refreshSession } = useSessionContext();
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const result = loginSchema.safeParse({
-            email,
-            password
-        });
-
+        const result = loginSchema.safeParse({ email, password });
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
             alert(firstError || "Erreur de validation");
@@ -42,11 +37,10 @@ export default function LoginPage() {
 
         try {
             await useLogin({ email, password });
-            const { data } = await authClient.getSession();
-            setUser(data?.user ?? null);
+            await refreshSession();
             router.push("/");
         } catch (err: any) {
-            alert(err.message || "Erreur lors de l'inscription");
+            alert(err.message || "Erreur lors de la connexion");
         }
     };
 
