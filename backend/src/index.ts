@@ -90,6 +90,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                 total: session.amount_total! / 100,
                 subtotal: session.amount_subtotal! / 100,
                 shippingCost: session.total_details?.amount_shipping! / 100,
+                taxes: session.total_details?.amount_tax,
 
                 deliveryMethod: session.metadata?.deliveryMethod ?? null,
                 relayId: session.metadata?.relayId ?? null,
@@ -227,12 +228,17 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     const user: User = (req as any).user;
     const relay = (req as any)?.relay
     const slugs = items.map((item: any) => item.slug);
+    const shippingCost = 4.90;
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         billing_address_collection: 'required',
         mode: "payment",
         customer_email: user.email,
+        automatic_tax: { enabled: true },
+        shipping_options: [{
+            shipping_rate: process.env.ID_TARIF_LIVRAISON
+        }],
         metadata: {
             userId: user.id,
             deliveryMethod: "mondial_relay",

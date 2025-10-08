@@ -106,6 +106,7 @@ model Order {
   total                 Float
   subtotal              Float?
   shippingCost          Float?
+  taxes                 Float?
   deliveryMethod        String?
   relayId               String?
   relayName             String?
