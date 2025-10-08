@@ -9,6 +9,22 @@ import { PrismaClient } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAuth } from './middleware/requireAuth';
 
+declare global {
+    namespace Express {
+        interface Request {
+            user?: {
+                name: string,
+                email: string,
+                emailVerified: boolean,
+                image: string | null
+                createdAt: Date
+                updatedAt: Date
+                id: string
+            },
+        }
+    }
+}
+
 const app = express();
 
 app.use(cors({
@@ -49,7 +65,7 @@ app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
-app.post("/webhook", requireAuth, express.raw({ type: "application/json" }), async (req, res) => {
+app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     const sig = req.headers["stripe-signature"]!;
     let event;
 
@@ -200,6 +216,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
+        customer_email: req.user?.email,
         line_items: items.map((item: any) => ({
             price_data: {
                 currency: "eur",

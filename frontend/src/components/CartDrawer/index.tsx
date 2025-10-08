@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/drawer";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
 
 import { useCartDrawerStore } from "@/lib/cartDrawerStore";
 import { useCartStore } from "@/lib/cartStore";
@@ -21,7 +20,6 @@ export default function CartDrawer() {
     const { open, setOpen } = useCartDrawerStore();
     const items = useCartStore((s) => s.items);
     const removeFromCart = useCartStore((s) => s.removeFromCart);
-    const router = useRouter();
 
     const total = useMemo(() => {
         return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
