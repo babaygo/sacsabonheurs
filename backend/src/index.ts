@@ -9,22 +9,6 @@ import { PrismaClient } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAuth } from './middleware/requireAuth';
 
-declare global {
-    namespace Express {
-        interface Request {
-            user: {
-                name: string,
-                email: string,
-                emailVerified: boolean,
-                image: string | null
-                createdAt: Date
-                updatedAt: Date
-                id: string
-            },
-        }
-    }
-}
-
 const app = express();
 
 app.use(cors({
@@ -213,12 +197,13 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Checkout with Stripe
 app.post("/api/checkout", requireAuth, async (req, res) => {
     const { items } = req.body;
+    const user = (req as any).user;
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        customer_email: req.user.email,
-        metadata: { userId: req.user.id },
+        customer_email: user.email,
+        metadata: { userId: user.id },
         line_items: items.map((item: any) => ({
             price_data: {
                 currency: "eur",
@@ -268,7 +253,7 @@ app.get("/api/orders", requireAuth, async (req, res) => {
 
     try {
         const orders = await prisma.order.findMany({
-            where: { email: user.email },
+            where: { userId: user.id },
             include: { items: true },
             orderBy: { createdAt: "desc" },
         });
