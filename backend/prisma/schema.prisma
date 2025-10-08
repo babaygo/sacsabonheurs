@@ -5,7 +5,7 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
   // output   = "../src/generated/prisma"
 }
@@ -94,4 +94,22 @@ model Verification {
   updatedAt  DateTime @default(now()) @updatedAt
 
   @@map("verification")
+}
+
+model Order {
+  id              Int         @id @default(autoincrement())
+  stripeSessionId String      @unique
+  email           String
+  total           Float
+  createdAt       DateTime    @default(now())
+  items           OrderItem[]
+}
+
+model OrderItem {
+  id       Int    @id @default(autoincrement())
+  name     String
+  price    Float
+  quantity Int
+  orderId  Int
+  order    Order  @relation(fields: [orderId], references: [id])
 }
