@@ -12,7 +12,7 @@ import { requireAuth } from './middleware/requireAuth';
 declare global {
     namespace Express {
         interface Request {
-            user?: {
+            user: {
                 name: string,
                 email: string,
                 emailVerified: boolean,
@@ -85,6 +85,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             data: {
                 stripeSessionId: session.id,
                 email: session.customer_email ?? '',
+                userId: session.metadata!.userId,
                 total: (session.amount_total ?? 0) / 100,
                 items: {
                     create: lineItems.data.map((item) => ({
@@ -216,7 +217,8 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
-        customer_email: req.user?.email,
+        customer_email: req.user.email,
+        metadata: { userId: req.user.id },
         line_items: items.map((item: any) => ({
             price_data: {
                 currency: "eur",
