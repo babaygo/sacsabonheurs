@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useAuthStore } from "@/lib/authStore";
 import { useCategories } from "@/lib/useCategories";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -10,25 +9,22 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { User } from "@/types/User";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/authClient";
 import { useRouter } from "next/navigation";
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import CartDrawer from "@/components/CartDrawer";
 import { useCart } from "@/lib/useCart";
-
+import { useSessionContext } from "@/components/SessionProvider";
 
 export default function HeaderClient() {
-    const user: User = useAuthStore((s) => s.user);
-    const setUser = useAuthStore((s) => s.setUser);
-    const { categories, loading } = useCategories();
+    const { user, loadingUser } = useSessionContext();
+    const { categories, loadingCategories } = useCategories();
     const router = useRouter();
     const { setOpen, count } = useCart();
 
     const handleLogout = async () => {
         await authClient.signOut();
-        setUser(null);
         router.push("/");
     };
 
@@ -38,12 +34,14 @@ export default function HeaderClient() {
                 {/* Logo */}
                 <div className="flex items-center space-x-4">
                     <img src="/logo.png" alt="Logo Sacs à Bonheur" />
-                    <Link href="/" className="text-xl font-semibold">Sacs à Bonheur</Link>
+                    <Link href="/" className="text-xl font-semibold">
+                        Sacs à Bonheur
+                    </Link>
                 </div>
 
                 {/* Catégories */}
                 <div className="flex space-x-6">
-                    {loading
+                    {loadingCategories
                         ? Array.from({ length: 4 }).map((_, i) => (
                             <Skeleton key={i} className="h-4 w-24 rounded" />
                         ))
@@ -61,16 +59,19 @@ export default function HeaderClient() {
                 {/* Actions */}
                 <div className="flex items-center space-x-4">
                     <CartDrawer />
-                    <button onClick={() => setOpen(true)} className="group -m-2 flex items-center p-2">
+                    <button
+                        onClick={() => setOpen(true)}
+                        className="group -m-2 flex items-center p-2 relative"
+                    >
                         <ShoppingCartIcon className="size-6 text-gray-400 group-hover:text-gray-500" />
                         {count > 0 && (
-                            <span className="absolute bg-red-500 text-white text-xs rounded-full px-1">
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
                                 {count}
                             </span>
                         )}
                     </button>
 
-                    {user ? (
+                    {!loadingUser && user ? (
                         <Popover>
                             <PopoverTrigger asChild>
                                 <Button variant="link">Mon compte</Button>
@@ -83,10 +84,16 @@ export default function HeaderClient() {
                                     </div>
                                     <Separator />
                                     <div className="grid gap-2">
-                                        <Link href="/profile" className="text-sm p-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/profile"
+                                            className="text-sm p-2 rounded hover:bg-gray-100"
+                                        >
                                             Profil
                                         </Link>
-                                        <Link href="/orders" className="text-sm p-2 rounded hover:bg-gray-100">
+                                        <Link
+                                            href="/orders"
+                                            className="text-sm p-2 rounded hover:bg-gray-100"
+                                        >
                                             Mes commandes
                                         </Link>
                                         <Button
