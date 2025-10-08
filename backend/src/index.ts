@@ -4,13 +4,15 @@ import path from 'path';
 import fs from 'fs';
 import cors from "cors";
 import { auth } from "../src/lib/auth";
-import { fromNodeHeaders, toNodeHandler } from "better-auth/node";
+import { toNodeHandler } from "better-auth/node";
 import { PrismaClient } from '@prisma/client';
+import Stripe from "stripe";
+import { requireAuth } from './middleware/requireAuth';
 
 const app = express();
 
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: process.env.URL_FRONT,
     credentials: true,
 }));
 
@@ -45,6 +47,43 @@ const upload = multer({
 
 app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+
+app.post("/webhook", requireAuth, express.raw({ type: "application/json" }), async (req, res) => {
+    const sig = req.headers["stripe-signature"]!;
+    let event;
+
+    try {
+        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    } catch (err: any) {
+        console.error("Webhook signature error:", err);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    if (event.type === "checkout.session.completed") {
+        const session = event.data.object;
+
+        const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+
+        await prisma.order.create({
+            data: {
+                stripeSessionId: session.id,
+                email: session.customer_email ?? '',
+                total: (session.amount_total ?? 0) / 100,
+                items: {
+                    create: lineItems.data.map((item) => ({
+                        name: item.description ?? 'Unknown item',
+                        price: (item.amount_total ?? 0) / 100,
+                        quantity: item.quantity ?? 1,
+                    })),
+                },
+            },
+        });
+    }
+
+    res.status(200).json({ received: true });
+});
+
 app.use(express.json());
 
 // Produits
@@ -68,7 +107,7 @@ app.get("/api/products/:slug", async (req, res) => {
 });
 
 
-app.post('/products', async (req, res) => {
+app.post('/add-products', requireAuth, async (req, res) => {
     const { name, slug, description, price, stock, categoryId } = req.body;
     const product = await prisma.product.create({
         data: { name, slug, description, price, stock, images: [], categoryId }
@@ -77,7 +116,7 @@ app.post('/products', async (req, res) => {
 });
 
 // Upload d'images pour un produit
-app.post('/upload', upload.array('images', 5), async (req, res) => {
+app.post('/upload', requireAuth, upload.array('images', 5), async (req, res) => {
     if (!req.files) return res.status(400).send('Aucun fichier reçu');
 
     const files = req.files as Express.Multer.File[];
@@ -107,17 +146,17 @@ app.get("/api/categories", async (req, res) => {
 });
 
 app.get("/categories/first-product-by-categories", async (req, res) => {
-  const categories = await prisma.category.findMany({
-    include: {
-      products: {
-        take: 1,
-        orderBy: { createdAt: "asc" },
-      },
-    },
-    orderBy: { id: "desc" },
-  });
+    const categories = await prisma.category.findMany({
+        include: {
+            products: {
+                take: 1,
+                orderBy: { createdAt: "asc" },
+            },
+        },
+        orderBy: { id: "desc" },
+    });
 
-  res.json(categories);
+    res.json(categories);
 })
 
 app.get("/api/categories/:slug/products", async (req, res) => {
@@ -152,6 +191,74 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
         return res.status(400).json({ error: err.message || 'Erreur serveur' });
     }
     next();
+});
+
+// Checkout with Stripe
+app.post("/api/checkout", requireAuth, async (req, res) => {
+    const { items } = req.body;
+
+    const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: items.map((item: any) => ({
+            price_data: {
+                currency: "eur",
+                product_data: {
+                    name: item.name,
+                    images: [item.image],
+                },
+                unit_amount: Math.round(item.price * 100),
+            },
+            quantity: item.quantity,
+        })),
+        success_url: process.env.URL_FRONT + "/orders?session_id={CHECKOUT_SESSION_ID}",
+        cancel_url: process.env.URL_FRONT + "/",
+    });
+
+    res.json({ url: session.url });
+});
+
+// Commandes
+app.get("/api/order-by-session-id", requireAuth, async (req, res) => {
+    const sessionId = req.query.session_id as string;
+
+    if (!sessionId) {
+        return res.status(400).json({ error: "Missing session_id" });
+    }
+
+    try {
+        const order = await prisma.order.findFirst({
+            where: { stripeSessionId: sessionId },
+            include: { items: true },
+            orderBy: { createdAt: 'desc' }
+        });
+
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        res.json(order);
+    } catch (err) {
+        console.error("Erreur lors de la récupération de la commande :", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get("/api/orders", requireAuth, async (req, res) => {
+    const user = (req as any).user;
+
+    try {
+        const orders = await prisma.order.findMany({
+            where: { email: user.email },
+            include: { items: true },
+            orderBy: { createdAt: "desc" },
+        });
+
+        res.json(orders);
+    } catch (err) {
+        console.error("Erreur lors de la récupération des commandes :", err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
 });
 
 app.listen(3001, () => console.log('API running on port 3001'));

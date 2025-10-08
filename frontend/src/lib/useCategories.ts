@@ -3,7 +3,7 @@ import { useCategoryStore } from "./categoryStore";
 
 export function useCategories() {
     const { categories, setCategories, hasFetched, setHasFetched } = useCategoryStore();
-    const [loading, setLoading] = useState(!hasFetched);
+    const [loadingCategories, setLoading] = useState(!hasFetched);
     const [error, setError] = useState<null | string>(null);
 
     useEffect(() => {
@@ -13,7 +13,9 @@ export function useCategories() {
 
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`, {
+                    credentials: "include",
+                });
                 if (!res.ok) throw new Error("Erreur serveur");
                 const data = await res.json();
                 if (!cancelled) {
@@ -36,5 +38,5 @@ export function useCategories() {
         };
     }, [hasFetched]);
 
-    return { categories, loading, error };
+    return { categories, loadingCategories, error };
 }

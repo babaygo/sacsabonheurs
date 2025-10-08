@@ -9,7 +9,7 @@ import {
 
 async function getProduct(slug: string) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`, {
-        cache: "no-store",
+        credentials: "include"
     });
     if (!res.ok) return null;
     return res.json();

@@ -6,9 +6,7 @@ import Link from "next/link";
 
 async function getProductsByCategory(slug: string) {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}/products`,
-        { cache: "no-store" }
-    );
+        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}/products`);
     if (!res.ok) return null;
     return res.json();
 }
@@ -43,7 +41,7 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
     }, [priceMax, inStockOnly, products]);
 
     return (
-        <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="max-w-7xl mx-auto min-h-screen px-4 py-8">
             <div className="mb-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center">
                 Filtres :
                 <label className="flex items-center gap-2">

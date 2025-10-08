@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 
 import {
     Drawer,
@@ -26,6 +26,18 @@ export default function CartDrawer() {
     const total = useMemo(() => {
         return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }, [items]);
+
+    async function handleCheckout() {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ items: items }),
+            credentials: "include",
+        });
+
+        const data = await res.json();
+        window.location.href = data.url;
+    }
 
     return (
         <>
@@ -74,7 +86,7 @@ export default function CartDrawer() {
                                 <span className="text-sm text-gray-600">Total :</span>
                                 <span className="text-lg font-semibold">{total.toFixed(2)} €</span>
                             </div>
-                            <Button className="w-full" onClick={() => router.push("/checkout")}>
+                            <Button className="w-full" onClick={handleCheckout}>
                                 Commander
                             </Button>
                         </DrawerFooter>
