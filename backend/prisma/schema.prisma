@@ -102,6 +102,10 @@ model Order {
   stripeSessionId String      @unique
   email           String
   total           Float
+  deliveryMethod  String?
+  relayId         String?
+  relayName       String?
+  relayAddress    String?
   createdAt       DateTime    @default(now())
   items           OrderItem[]
 }

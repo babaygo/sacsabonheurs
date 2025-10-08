@@ -69,8 +69,12 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             data: {
                 stripeSessionId: session.id,
                 email: session.customer_email ?? '',
-                userId: session.metadata!.userId,
+                userId: session.metadata?.userId ?? '',
                 total: (session.amount_total ?? 0) / 100,
+                deliveryMethod: session.metadata?.deliveryMethod ?? null,
+                relayId: session.metadata?.relayId ?? null,
+                relayName: session.metadata?.relayName ?? null,
+                relayAddress: session.metadata?.relayAddress ?? null,
                 items: {
                     create: lineItems.data.map((item) => ({
                         name: item.description ?? 'Unknown item',
@@ -198,12 +202,19 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 app.post("/api/checkout", requireAuth, async (req, res) => {
     const { items } = req.body;
     const user = (req as any).user;
+    const relay = (req as any)?.relay
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         mode: "payment",
         customer_email: user.email,
-        metadata: { userId: user.id },
+        metadata: {
+            userId: user.id,
+            deliveryMethod: "mondial_relay",
+            relayId: relay?.id,
+            relayName: relay?.name,
+            relayAddress: relay?.address,
+        },
         line_items: items.map((item: any) => ({
             price_data: {
                 currency: "eur",
@@ -215,7 +226,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
             },
             quantity: item.quantity,
         })),
-        success_url: process.env.URL_FRONT + "/orders?session_id={CHECKOUT_SESSION_ID}",
+        success_url: process.env.URL_FRONT + "/choose-relay?session_id={CHECKOUT_SESSION_ID}",
         cancel_url: process.env.URL_FRONT + "/",
     });
 
@@ -263,6 +274,32 @@ app.get("/api/orders", requireAuth, async (req, res) => {
         console.error("Erreur lors de la récupération des commandes :", err);
         res.status(500).json({ error: "Erreur serveur" });
     }
+});
+
+app.post("/api/order/:id/relay", requireAuth, async (req, res) => {
+    const relay = req.body.relay
+    const user = (req as any).user;
+    const sessionId = req.params.id as string;
+
+    if (!sessionId) {
+        return res.status(400).json({ error: "Missing session_id" });
+    }
+
+    try {
+        await prisma.order.update({
+            where: { stripeSessionId: sessionId, userId: user.id },
+            data: {
+                relayId: relay.ID,
+                relayName: relay.Nom,
+                relayAddress: relay.Adresse1,
+                deliveryMethod: "mondial_relay",
+            }
+        });
+    } catch (err) {
+        console.error("Erreur lors de la récupération de la commande :", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+    res.status(200).json({ success: true });
 });
 
 app.listen(3001, () => console.log('API running on port 3001'));
