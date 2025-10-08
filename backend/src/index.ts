@@ -5,9 +5,11 @@ import fs from 'fs';
 import cors from "cors";
 import { auth } from "../src/lib/auth";
 import { toNodeHandler } from "better-auth/node";
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, Product, User } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAuth } from './middleware/requireAuth';
+import { sendOrderConfirmationEmail } from './lib/email';
+import { getImageUrl } from './lib/utils';
 
 const app = express();
 
@@ -62,25 +64,46 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
     if (event.type === "checkout.session.completed") {
         const session = event.data.object;
-
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+        const slugs: string[] = JSON.parse(session.metadata!.slugs);
+        const billingAddress = session.customer_details?.address;
+
+        const items: {
+            name: string;
+            price: number;
+            quantity: number;
+            imageUrl: string;
+        }[] = await Promise.all(
+            lineItems.data.map(async (item, index) => ({
+                name: item.description ?? "Produit inconnu",
+                price: item.amount_total ? item.amount_total / 100 : 0,
+                quantity: item.quantity ?? 1,
+                imageUrl: await getImageUrl(slugs[index]),
+            }))
+        );
 
         await prisma.order.create({
             data: {
                 stripeSessionId: session.id,
-                email: session.customer_email ?? '',
-                userId: session.metadata?.userId ?? '',
-                total: (session.amount_total ?? 0) / 100,
+                user: { connect: { id: session.metadata!.userId } },
+                email: session.customer_email!,
+                total: session.amount_total! / 100,
+                subtotal: session.amount_subtotal! / 100,
+                shippingCost: session.total_details?.amount_shipping! / 100,
+
                 deliveryMethod: session.metadata?.deliveryMethod ?? null,
                 relayId: session.metadata?.relayId ?? null,
                 relayName: session.metadata?.relayName ?? null,
                 relayAddress: session.metadata?.relayAddress ?? null,
+
+                billingAddress: billingAddress?.line1 ?? null,
+                detailsBillingAddress: billingAddress?.line2 ?? null,
+                postalCode: billingAddress?.postal_code ?? null,
+                city: billingAddress?.city ?? null,
+                country: billingAddress?.country ?? "FR",
+
                 items: {
-                    create: lineItems.data.map((item) => ({
-                        name: item.description ?? 'Unknown item',
-                        price: (item.amount_total ?? 0) / 100,
-                        quantity: item.quantity ?? 1,
-                    })),
+                    create: items
                 },
             },
         });
@@ -201,11 +224,13 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 // Checkout with Stripe
 app.post("/api/checkout", requireAuth, async (req, res) => {
     const { items } = req.body;
-    const user = (req as any).user;
+    const user: User = (req as any).user;
     const relay = (req as any)?.relay
+    const slugs = items.map((item: any) => item.slug);
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
+        billing_address_collection: 'required',
         mode: "payment",
         customer_email: user.email,
         metadata: {
@@ -214,13 +239,13 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
             relayId: relay?.id,
             relayName: relay?.name,
             relayAddress: relay?.address,
+            slugs: JSON.stringify(slugs)
         },
         line_items: items.map((item: any) => ({
             price_data: {
                 currency: "eur",
                 product_data: {
                     name: item.name,
-                    images: [item.image],
                 },
                 unit_amount: Math.round(item.price * 100),
             },
@@ -295,11 +320,26 @@ app.post("/api/order/:id/relay", requireAuth, async (req, res) => {
                 deliveryMethod: "mondial_relay",
             }
         });
+
+        const order = await prisma.order.findUnique({
+            where: { stripeSessionId: sessionId },
+            include: {
+                user: true,
+                items: true,
+            },
+        });
+
+        if (!order) {
+            return res.status(404).json({ error: "Commande introuvable" });
+        }
+
+        await sendOrderConfirmationEmail(order);
+
+        res.status(200).json({ success: true });
     } catch (err) {
         console.error("Erreur lors de la récupération de la commande :", err);
         res.status(500).json({ error: "Internal server error" });
     }
-    res.status(200).json({ success: true });
 });
 
 app.listen(3001, () => console.log('API running on port 3001'));

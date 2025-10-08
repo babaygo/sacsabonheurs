@@ -46,6 +46,7 @@ model User {
   updatedAt     DateTime  @default(now()) @updatedAt
   sessions      Session[]
   accounts      Account[]
+  Orders        Order[]
 
   @@unique([email])
   @@map("user")
@@ -97,24 +98,33 @@ model Verification {
 }
 
 model Order {
-  id              Int         @id @default(autoincrement())
-  userId          String
-  stripeSessionId String      @unique
-  email           String
-  total           Float
-  deliveryMethod  String?
-  relayId         String?
-  relayName       String?
-  relayAddress    String?
-  createdAt       DateTime    @default(now())
-  items           OrderItem[]
+  id                    Int         @id @default(autoincrement())
+  userId                String
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSessionId       String      @unique
+  email                 String
+  total                 Float
+  subtotal              Float?
+  shippingCost          Float?
+  deliveryMethod        String?
+  relayId               String?
+  relayName             String?
+  relayAddress          String?
+  billingAddress        String?
+  detailsBillingAddress String?
+  postalCode            String?
+  city                  String?
+  country               String?
+  createdAt             DateTime    @default(now())
+  items                 OrderItem[]
 }
 
 model OrderItem {
-  id       Int    @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   name     String
   price    Float
   quantity Int
+  imageUrl String?
   orderId  Int
-  order    Order  @relation(fields: [orderId], references: [id])
+  order    Order   @relation(fields: [orderId], references: [id])
 }

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <title>Confirmation de commande</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #333;
+            background-color: #f9f9f9;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.9em;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>Merci pour votre commande, {{userName}} !</h2>
+        <p>Résumé de votre commande passée le {{orderDate}} :</p>
+
+        <h4>Coordonnées</h4>
+        {{email}}
+
+        <h4>Point Relais sélectionné</h4>
+        <p>{{relayName}}</p>
+        <p>{{relayAddress}}</p>
+
+        <h4>Adresse de facturation</h4>
+        <p>{{userName}}</p>
+        <p>{{billingAddress}}</p>
+        <p>{{detailsBillingAddress}}</p>
+        <p>{{codePostal}}</p>
+        <p>{{city}}</p>
+        <p>{{country}}</p>
+
+        <h4>Paiement</h4>
+        <p>{{prixTotal}}</p>
+        <p>{{datePaiement}}</p>
+
+        <h4>Articles commandés</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Produit</th>
+                    <th>Quantité</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{itemRows}}
+            </tbody>
+        </table>
+
+        <h4>Récapitulatif</h4>
+        <p>Sous-total : {{subtotal}} €</p>
+        <p>Frais de livraison : {{shippingCost}} €</p>
+        <p>Total : {{total}} €</p>
+
+        <div class="footer">
+            <p>Vous recevrez un email dès que votre commande sera expédiée.</p>
+            <p>Merci pour votre confiance,</p>
+            <p>L'équipe {{storeName}}</p>
+        </div>
+    </div>
+</body>
+
+</html>
