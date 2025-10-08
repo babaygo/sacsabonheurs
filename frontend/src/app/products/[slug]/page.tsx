@@ -8,9 +8,7 @@ import {
 } from "@/components/ui/accordion"
 
 async function getProduct(slug: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`, {
-        credentials: "include"
-    });
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`);
     if (!res.ok) return null;
     return res.json();
 }
