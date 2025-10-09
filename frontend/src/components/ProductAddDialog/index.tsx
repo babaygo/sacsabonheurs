@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import {
     Dialog,
+    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -20,10 +21,8 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
-import { DialogClose } from "@radix-ui/react-dialog";
 
 export function AddDialog() {
-    const [open, setOpen] = useState(false);
     const [form, setForm] = useState({
         name: "",
         slug: "",
@@ -70,8 +69,21 @@ export function AddDialog() {
             }
 
             const data = await res.json();
+
             if (data.success) {
-                setOpen(false);
+                setForm({
+                    name: "",
+                    slug: "",
+                    description: "",
+                    price: 0,
+                    stock: 1,
+                    weight: 0,
+                    height: 0,
+                    lenght: 0,
+                    width: 0,
+                    categoryId: 0,
+                });
+                setFiles([]);
             }
 
         } catch (error: any) {
@@ -80,14 +92,18 @@ export function AddDialog() {
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
+        <Dialog>
             <DialogTrigger asChild>
-                <Button variant="outline">Ajouter un sac</Button>
+                <Button variant="outline">
+                    Ajouter un sac
+                </Button>
             </DialogTrigger>
+
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Ajouter un sac</DialogTitle>
                 </DialogHeader>
+
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <FieldGroup>
                         <div className="grid grid-cols-2 gap-4">
@@ -187,10 +203,12 @@ export function AddDialog() {
                                 onValueChange={(value) =>
                                     handleChange("categoryId", parseInt(value))
                                 }
-                                value={String(form.categoryId)} // ← important pour garder la sélection
+                                value={String(form.categoryId)}
                             >
                                 <SelectTrigger>
-                                    {selectedCategory ? selectedCategory.name : "Choisir une catégorie"}
+                                    {selectedCategory
+                                        ? selectedCategory.name
+                                        : "Choisir une catégorie"}
                                 </SelectTrigger>
                                 <SelectContent>
                                     {categories.map((cat) => (
@@ -207,9 +225,12 @@ export function AddDialog() {
                             <ImageUploader onChange={setFiles} />
                         </Field>
 
-                        <Button type="submit" className="w-full">
-                            Enregistrer
-                        </Button>
+                        <DialogClose>
+                            <Button type="submit" className="w-full">
+                                Enregistrer
+                            </Button>
+                        </DialogClose>
+
                     </FieldGroup>
                 </form>
             </DialogContent>
