@@ -2,9 +2,9 @@ import { Category } from "./Category";
 
 export interface Product {
     id: number;
-    name: String;
-    slug: String;
-    description: String;
+    name: string;
+    slug: string;
+    description: string;
     price: number;
     stock: number;
     weight: number;

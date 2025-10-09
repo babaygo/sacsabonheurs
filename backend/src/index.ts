@@ -198,17 +198,61 @@ app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (r
     }
 });
 
-
-app.put("/api/admin/products/:id", requireAuth, async (req, res) => {
+app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async (req, res) => {
     const { id } = req.params;
+    const {
+        name,
+        slug,
+        description,
+        price,
+        stock,
+        weight,
+        height,
+        lenght,
+        width,
+        categoryId,
+        keptImages,
+    } = req.body;
+
+    const parsedImages = JSON.parse(keptImages || "[]");
+    const uploaded = Array.isArray(req.files)
+        ? req.files.map(f => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`)
+        : [];
+    const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
 
     try {
+        const previous = await prisma.product.findUnique({ where: { id: parseInt(id) } });
+        const oldImages = JSON.parse(String(previous?.images) || "[]");
+
         const product = await prisma.product.update({
             where: { id: parseInt(id) },
-            data: req.body,
+            data: {
+                name,
+                slug,
+                description,
+                price: parseFloat(price),
+                stock: parseInt(stock),
+                weight: parseFloat(weight),
+                height: parseFloat(height),
+                lenght: parseFloat(lenght),
+                width: parseFloat(width),
+                categoryId: parseInt(categoryId),
+                images: JSON.stringify(finalImages),
+            },
         });
 
-        res.json(product);
+        res.json({ success: true, product });
+
+        setImmediate(() => {
+            const removed = oldImages.filter((img: any) => !finalImages.includes(img));
+            removed.forEach((imgUrl: any) => {
+                const filename = imgUrl.split("/uploads/")[1];
+                const filepath = path.join(__dirname, "..", "public", "uploads", filename);
+                fs.unlink(filepath, err => {
+                    if (err) console.warn("Erreur suppression image :", filename, err.message);
+                });
+            });
+        });
     } catch (error) {
         console.error("Erreur mise à jour produit :", error);
         res.status(500).json({ error: "Erreur serveur" });
@@ -219,16 +263,33 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
     const { id } = req.params;
 
     try {
+        const product = await prisma.product.findUnique({
+            where: { id: parseInt(id) },
+        });
+
+        const images = JSON.parse(String(product?.images) || "[]");
+
         await prisma.product.delete({
             where: { id: parseInt(id) },
         });
 
         res.json({ message: "Produit supprimé avec succès" });
+
+        setImmediate(() => {
+            images.forEach((imgUrl: any) => {
+                const filename = imgUrl.split("/uploads/")[1];
+                const filepath = path.join(__dirname, "..", "public", "uploads", filename);
+                fs.unlink(filepath, (err) => {
+                    if (err) console.warn("Erreur suppression image :", filename, err.message);
+                });
+            });
+        });
     } catch (error) {
         console.error("Erreur suppression produit :", error);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });
+
 
 // Upload d'images pour un produit
 app.post('/upload', requireAuth, upload.array('images', 5), async (req, res) => {

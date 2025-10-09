@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogHeader,
     DialogTitle,
@@ -21,6 +20,7 @@ import { Textarea } from "../ui/textarea";
 import { Input } from "../ui/input";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
+import { Category } from "@/types/Category";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -115,6 +115,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 <FieldLabel>Nom du produit</FieldLabel>
                                 <Input
                                     value={form.name}
+                                    required
                                     onChange={(e) => handleChange("name", e.target.value)}
                                 />
                             </Field>
@@ -122,6 +123,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 <FieldLabel>Slug</FieldLabel>
                                 <Input
                                     value={form.slug}
+                                    required
                                     onChange={(e) => handleChange("slug", e.target.value)}
                                 />
                             </Field>
@@ -131,6 +133,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                             <FieldLabel>Description</FieldLabel>
                             <Textarea
                                 value={form.description}
+                                required
                                 onChange={(e) => handleChange("description", e.target.value)}
                             />
                         </Field>
@@ -140,20 +143,28 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 <FieldLabel>Prix (€)</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.price}
-                                    onChange={(e) =>
-                                        handleChange("price", parseFloat(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("price", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                             <Field>
                                 <FieldLabel>Quantité</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.stock}
-                                    onChange={(e) =>
-                                        handleChange("stock", parseInt(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("stock", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                         </div>
@@ -163,40 +174,56 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 <FieldLabel>Poids (g)</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.weight}
-                                    onChange={(e) =>
-                                        handleChange("weight", parseFloat(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("weight", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                             <Field>
                                 <FieldLabel>Hauteur (cm)</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.height}
-                                    onChange={(e) =>
-                                        handleChange("height", parseFloat(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("height", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                             <Field>
                                 <FieldLabel>Longueur (cm)</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.lenght}
-                                    onChange={(e) =>
-                                        handleChange("lenght", parseFloat(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("lenght", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                             <Field>
                                 <FieldLabel>Largeur (cm)</FieldLabel>
                                 <Input
                                     type="number"
+                                    step="any"
+                                    min={0}
                                     value={form.width}
-                                    onChange={(e) =>
-                                        handleChange("width", parseFloat(e.target.value))
-                                    }
+                                    required
+                                    onChange={(e) => {
+                                        const value = e.target.value;
+                                        handleChange("width", value === "" ? 0 : parseFloat(value));
+                                    }}
                                 />
                             </Field>
                         </div>
@@ -215,7 +242,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                         : "Choisir une catégorie"}
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categories.map((cat) => (
+                                    {categories.map((cat: Category) => (
                                         <SelectItem key={cat.id} value={String(cat.id)}>
                                             {cat.name}
                                         </SelectItem>

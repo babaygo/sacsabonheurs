@@ -2,9 +2,11 @@
 
 import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
+import { Trash } from "lucide-react";
 
 export function ImageUploader({ onChange }: { onChange: (files: File[]) => void }) {
     const [files, setFiles] = useState<File[]>([]);
+
     const onDrop = useCallback(
         (newFiles: File[]) => {
             const combined = [...files, ...newFiles];
@@ -18,11 +20,13 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         [files, onChange]
     );
 
-    const {
-        getRootProps,
-        getInputProps,
-        isDragActive,
-    } = useDropzone({
+    const removeFile = (index: number) => {
+        const updated = files.filter((_, i) => i !== index);
+        setFiles(updated);
+        onChange(updated);
+    };
+
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: { "image/*": [] },
         multiple: true,
@@ -42,15 +46,20 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
             )}
 
             {files.length > 0 && (
-                <div className="grid grid-cols-2 gap-2 mt-4">
-                    <ul className="mt-4 text-left text-sm">
-                        {files.map((file, i) => (
-                            <li key={i} className="truncate">
-                                {file.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                <ul className="mt-4 text-left text-sm space-y-1">
+                    {files.map((file, i) => (
+                        <li key={i} className="flex items-center justify-between truncate">
+                            <span className="truncate">{file.name}</span>
+                            <button
+                                type="button"
+                                onClick={() => removeFile(i)}
+                                className="text-red-500 text-xs ml-2"
+                            >
+                                <Trash />
+                            </button>
+                        </li>
+                    ))}
+                </ul>
             )}
         </div>
     );

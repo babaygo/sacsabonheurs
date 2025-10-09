@@ -66,7 +66,7 @@ export default function AdminProducts() {
                 {products.map((product) => (
 
                     <div key={product.id} className="border rounded p-4 space-y-2">
-                        <img src={JSON.parse(product.images)[0]} alt={String(product.name)} className="w-full h-48 object-cover rounded" />
+                        <img src={JSON.parse(product.images)[0]} alt={product.name} className="w-full h-48 object-cover rounded" />
                         <h2 className="text-lg font-semibold">{product.name}</h2>
 
                         <div className="flex gap-2 mt-2">
