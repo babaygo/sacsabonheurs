@@ -63,23 +63,26 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
                 </label>
             </div>
 
-            {/* Produits */}
-            <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-8">
+            <div className="grid grid-cols-4 gap-6">
                 {filtered.map((p) => (
                     <Link
                         key={p.id}
                         href={`/products/${p.slug}`}
-                        className="flex flex-col items-center hover:opacity-75"
+                        className="flex flex-col items-center hover:opacity-75 p-4 h-[400px] justify-between"
                     >
-                        <img
-                            src={JSON.parse(p.images)[0]}
-                            alt={p.name}
-                        />
-                        <h2>{p.name}</h2>
-                        <p>{p.price} €</p>
+                        <div className="flex-1 flex items-center justify-center w-full">
+                            <img
+                                src={JSON.parse(p.images)[0]}
+                                alt={p.name}
+                                className="max-h-64 object-contain"
+                            />
+                        </div>
+                        <h2 className="mt-2 text-center">{p.name}</h2>
+                        <p className="text-muted-foreground">{p.price} €</p>
                     </Link>
                 ))}
             </div>
+
         </div>
     );
 }
