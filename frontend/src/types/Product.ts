@@ -11,7 +11,7 @@ export interface Product {
     height: number;
     lenght: number;
     width: number;
-    images: string[];
+    images: any;
     categoryId: number;
     category: Category;
     createdAt: Date;

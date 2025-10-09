@@ -5,7 +5,6 @@ import StatusBadge from "@/components/StatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Order } from "@/types/Order";
 import { OrderStatusType } from "@/types/OrderStatusType";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -70,7 +69,6 @@ export default function AdminOrdersClient() {
                         <TableHead>Client</TableHead>
                         <TableHead>Montant</TableHead>
                         <TableHead>Statut</TableHead>
-                        {/* <TableHead>Actions</TableHead> */}
                     </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -86,14 +84,6 @@ export default function AdminOrdersClient() {
                                     onChange={(newStatus) => updateOrderStatus(order.id, newStatus)}
                                 />
                             </TableCell>
-                            {/* <TableCell>
-                                <Link
-                                    href={`/admin/orders/${order.id}`}
-                                    className="text-sm underline text-blue-600 hover:text-blue-800"
-                                >
-                                    Voir la commande
-                                </Link>
-                            </TableCell> */}
                         </TableRow>
                     ))}
                 </TableBody>
