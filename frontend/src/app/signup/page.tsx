@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSessionContext } from "@/components/SessionProvider";
+import { authClient } from "@/lib/authClient";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");

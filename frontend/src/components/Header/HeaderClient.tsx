@@ -22,6 +22,11 @@ export default function HeaderClient() {
     const { categories, loadingCategories } = useCategories();
     const router = useRouter();
     const { setOpen, count } = useCart();
+    let isAdmin: boolean = false;
+
+    if (user?.role == "admin") {
+        isAdmin = true;
+    }
 
     const handleLogout = async () => {
         await authClient.signOut();
@@ -104,6 +109,18 @@ export default function HeaderClient() {
                                         >
                                             Se déconnecter
                                         </Button>
+                                        {isAdmin && (
+                                            <>
+                                                <Separator />
+                                                <Link
+                                                    href="/admin"
+                                                    className="text-sm p-2 rounded hover:bg-gray-100"
+                                                >
+                                                    Admin
+                                                </Link>
+                                            </>
+                                        )}
+
                                     </div>
                                 </div>
                             </PopoverContent>

@@ -5,9 +5,9 @@ import fs from 'fs';
 import cors from "cors";
 import { auth } from "../src/lib/auth";
 import { toNodeHandler } from "better-auth/node";
-import { PrismaClient, Product, User } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
-import { requireAuth } from './middleware/requireAuth';
+import { requireAuth } from './middleware/middleware';
 import { sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 
@@ -345,6 +345,59 @@ app.post("/api/order/:id/relay", requireAuth, async (req, res) => {
     } catch (err) {
         console.error("Erreur lors de la récupération de la commande :", err);
         res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+// Admin routes
+app.get("/api/admin/orders", requireAuth, async (req, res) => {
+    try {
+        const orders = await prisma.order.findMany({
+            orderBy: { createdAt: "desc" },
+            include: {
+                user: true,
+                items: true,
+            },
+        });
+
+        res.json(orders);
+    } catch (error) {
+        console.error("Erreur récupération commandes :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.post("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
+    const newStatus = req.body.status
+    const orderId = Number(req.params.orderId);
+
+    try {
+        const order = await prisma.order.update({
+            where: { id: orderId },
+            data: { status: newStatus },
+        });
+
+        res.status(200).json({ success: true, order });
+    } catch (error) {
+        res.status(500).json({ error: "Erreur serveur", details: error });
+    }
+})
+
+app.get("/api/admin/orders/:id", requireAuth, async (req, res) => {
+    const orderId = Number(req.params.id);
+    if (!Number.isFinite(orderId)) return res.status(400).json({ error: "ID invalide" });
+
+    try {
+        const order = await prisma.order.findUnique({
+            where: { id: orderId },
+            include: {
+                user: true,
+                items: true,
+            },
+        });
+        if (!order) return res.status(404).json({ error: "Commande introuvable" });
+        res.json(order);
+    } catch (error) {
+        res.status(500).json({ error: "Erreur serveur", details: error });
     }
 });
 

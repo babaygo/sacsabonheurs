@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 export default function OrdersPage() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get("session_id");
-
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 

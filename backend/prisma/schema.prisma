@@ -48,6 +48,11 @@ model User {
   accounts      Account[]
   Orders        Order[]
 
+  role       String?
+  banned     Boolean?  @default(false)
+  banReason  String?
+  banExpires DateTime?
+
   @@unique([email])
   @@map("user")
 }
@@ -62,6 +67,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")
@@ -98,10 +105,10 @@ model Verification {
 }
 
 model Order {
-  id                    Int         @id @default(autoincrement())
+  id                    Int             @id @default(autoincrement())
   userId                String
-  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
-  stripeSessionId       String      @unique
+  user                  User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeSessionId       String          @unique
   email                 String
   total                 Float
   subtotal              Float?
@@ -116,7 +123,8 @@ model Order {
   postalCode            String?
   city                  String?
   country               String?
-  createdAt             DateTime    @default(now())
+  createdAt             DateTime        @default(now())
+  status                OrderStatusType @default(pending)
   items                 OrderItem[]
 }
 
@@ -128,4 +136,12 @@ model OrderItem {
   imageUrl String?
   orderId  Int
   order    Order   @relation(fields: [orderId], references: [id])
+}
+
+enum OrderStatusType {
+  pending
+  paid
+  shipped
+  delivered
+  cancelled
 }

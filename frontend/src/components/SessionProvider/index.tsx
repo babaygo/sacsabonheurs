@@ -2,20 +2,19 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import { authClient } from "@/lib/authClient";
-import type { User } from "better-auth";
 
 const SessionContext = createContext<{
-    user: User | null;
+    user: any | null;
     loadingUser: boolean;
     refreshSession: () => Promise<void>;
 }>({
     user: null,
     loadingUser: true,
-    refreshSession: async () => { }
+    refreshSession: async () => { },
 });
 
 export function SessionProvider({ children }: { children: React.ReactNode }) {
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<any | null>(null);
     const [loadingUser, setLoadingUser] = useState(true);
 
     const refreshSession = async () => {
@@ -35,7 +34,7 @@ export function SessionProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     return (
-        <SessionContext.Provider value={{ user, loadingUser, refreshSession  }}>
+        <SessionContext.Provider value={{ user, loadingUser, refreshSession }}>
             {children}
         </SessionContext.Provider>
     );
