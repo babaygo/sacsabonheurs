@@ -33,14 +33,18 @@ export default function AdminProducts() {
         }
     }
 
+    const refreshProducts = async () => {
+        const data = await getProducts();
+        setProducts(data ?? []);
+    };
+
     useEffect(() => {
         if (!loadingUser) {
             if (user?.role != "admin") {
                 router.push("/");
             } else {
                 const fetchProducts = async () => {
-                    const data = await getProducts();
-                    setProducts(data ?? []);
+                    refreshProducts();
                 }
                 fetchProducts();
             }
@@ -55,7 +59,7 @@ export default function AdminProducts() {
         <main className="p-6">
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold mb-4">Produits</h1>
-                <AddDialog />
+                <AddDialog onSuccess={refreshProducts} />
             </div>
 
             <div className="grid grid-cols-5 gap-6">
@@ -66,8 +70,8 @@ export default function AdminProducts() {
                         <h2 className="text-lg font-semibold">{product.name}</h2>
 
                         <div className="flex gap-2 mt-2">
-                            <EditDialog product={product} />
-                            <DeleteDialog productId={product.id} />
+                            <EditDialog product={product} onSuccess={refreshProducts} />
+                            <DeleteDialog productId={product.id} onSuccess={refreshProducts} />
                         </div>
                     </div>
                 ))}

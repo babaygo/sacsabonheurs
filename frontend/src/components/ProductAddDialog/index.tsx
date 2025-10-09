@@ -22,7 +22,9 @@ import { Input } from "../ui/input";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
 
-export function AddDialog() {
+export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
+    const [open, setOpen] = useState(false);
+
     const [form, setForm] = useState({
         name: "",
         slug: "",
@@ -70,7 +72,7 @@ export function AddDialog() {
 
             const data = await res.json();
 
-            if (data.success) {
+            if (data) {
                 setForm({
                     name: "",
                     slug: "",
@@ -84,6 +86,8 @@ export function AddDialog() {
                     categoryId: 0,
                 });
                 setFiles([]);
+                setOpen(false);
+                onSuccess();
             }
 
         } catch (error: any) {
@@ -92,9 +96,9 @@ export function AddDialog() {
     };
 
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" onClick={() => setOpen(true)}>
                     Ajouter un sac
                 </Button>
             </DialogTrigger>
@@ -225,11 +229,9 @@ export function AddDialog() {
                             <ImageUploader onChange={setFiles} />
                         </Field>
 
-                        <DialogClose>
-                            <Button type="submit" className="w-full">
-                                Enregistrer
-                            </Button>
-                        </DialogClose>
+                        <Button type="submit" className="w-full">
+                            Enregistrer
+                        </Button>
 
                     </FieldGroup>
                 </form>

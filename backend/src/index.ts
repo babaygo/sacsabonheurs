@@ -230,7 +230,6 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
     }
 });
 
-
 // Upload d'images pour un produit
 app.post('/upload', requireAuth, upload.array('images', 5), async (req, res) => {
     if (!req.files) return res.status(400).send('Aucun fichier reçu');

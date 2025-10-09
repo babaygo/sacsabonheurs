@@ -1,31 +1,57 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 
 async function deleteProduct(id: number) {
-    const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/products/${id}`,
-        {
-            credentials: "include",
-            headers: { "Content-Type": "application/json" },
-            cache: "no-store",
+    try {
+        const res = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/api/admin/products/${id}`,
+            {
+                method: "DELETE",
+                credentials: "include",
+                headers: { "Content-Type": "application/json" },
+                cache: "no-store",
+            }
+        );
+
+        if (!res.ok) {
+            const { error } = await res.json();
+            throw new Error(error || "Erreur inconnue");
         }
-    );
-    if (!res.ok) return null;
-    return res.json();
+        return res.json();
+    } catch (error: any) {
+        alert(error.message);
+    }
 }
 
-export function DeleteDialog({ productId }: { productId: number }) {
+export function DeleteDialog({ productId, onSuccess }: { productId: number, onSuccess: () => void }) {
+    const [open, setOpen] = useState(false);
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="destructive">Supprimer</Button>
+                <Button onClick={() => setOpen(true)} variant="destructive">
+                    Supprimer
+                </Button>
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Confirmer la suppression</DialogTitle>
                 </DialogHeader>
                 <p>Ce produit sera définitivement supprimé.</p>
-                <Button variant="destructive" onClick={() => deleteProduct(productId)}>
+                <Button
+                    className="w-full"
+                    variant="destructive"
+                    onClick={async () => {
+                        const result = await deleteProduct(productId);
+                        if (result) {
+                            setOpen(false);
+                            onSuccess();
+                        }
+                    }}
+                >
                     Supprimer
                 </Button>
             </DialogContent>
