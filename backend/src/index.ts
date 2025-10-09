@@ -163,13 +163,12 @@ app.get("/api/products/:slug", async (req, res) => {
 });
 
 
-app.post("/api/admin/products", requireAuth, async (req, res) => {
+app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (req, res) => {
     try {
-        const { name, slug, description, price, images, categoryId, ...rest } = req.body;
+        const { name, slug, description, price, categoryId, stock, weight, height, lenght, width } = req.body;
 
-        if (!name || !slug || !description || !price || !images || !categoryId) {
-            return res.status(400).json({ error: "Champs obligatoires manquants" });
-        }
+        const files = req.files as Express.Multer.File[];
+        const urls = files.map(f => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`);
 
         const product = await prisma.product.create({
             data: {
@@ -177,15 +176,24 @@ app.post("/api/admin/products", requireAuth, async (req, res) => {
                 slug,
                 description,
                 price: parseFloat(price),
-                images,
+                stock: parseInt(stock),
+                weight: parseFloat(weight),
+                height: parseFloat(height),
+                lenght: parseFloat(lenght),
+                width: parseFloat(width),
                 categoryId: parseInt(categoryId),
-                ...rest,
+                images: JSON.stringify(urls),
             },
         });
 
         res.json(product);
-    } catch (error) {
+    } catch (error: any) {
         console.error("Erreur création produit :", error);
+
+        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
+            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
+        }
+
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

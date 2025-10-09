@@ -4,6 +4,7 @@ import "./globals.css";
 import ClientLayout from "./clientLayout";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "@/components/SessionProvider";
+import { CategoryHydrator } from "@/components/CategoryHydrator/CategoryHydrator";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,6 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
+          <CategoryHydrator />
           <ClientLayout>
             {children}
           </ClientLayout>

@@ -16,10 +16,11 @@ import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import CartDrawer from "@/components/CartDrawer";
 import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
+import { useCategoryStore } from "@/lib/categoryStore";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
-    const { categories, loadingCategories } = useCategories();
+    const categories = useCategoryStore((state) => state.categories);
     const router = useRouter();
     const { setOpen, count } = useCart();
     let isAdmin: boolean = false;
@@ -47,19 +48,15 @@ export default function HeaderClient() {
 
                 {/* Catégories */}
                 <div className="flex space-x-6">
-                    {loadingCategories
-                        ? Array.from({ length: 4 }).map((_, i) => (
-                            <Skeleton key={i} className="h-4 w-24 rounded" />
-                        ))
-                        : categories.map((cat) => (
-                            <Link
-                                key={cat.id}
-                                href={`/categories/${cat.slug}`}
-                                className="text-gray-700 hover:text-black text-sm"
-                            >
-                                {cat.name}
-                            </Link>
-                        ))}
+                    {categories.map((cat) => (
+                        <Link
+                            key={cat.id}
+                            href={`/categories/${cat.slug}`}
+                            className="text-gray-700 hover:text-black text-sm"
+                        >
+                            {cat.name}
+                        </Link>
+                    ))}
                 </div>
 
                 {/* Actions */}
