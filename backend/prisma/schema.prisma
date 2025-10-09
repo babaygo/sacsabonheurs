@@ -28,7 +28,11 @@ model Product {
   slug        String   @unique
   description String
   price       Float
-  stock       Int
+  stock       Int      @default(1)
+  weight      Float    @default(0)
+  height      Float    @default(0)
+  lenght      Float    @default(0)
+  width       Float    @default(0)
   images      Json
   categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id])
