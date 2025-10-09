@@ -23,21 +23,28 @@ model Category {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int           @id @default(autoincrement())
   name        String
-  slug        String   @unique
+  slug        String        @unique
   description String
   price       Float
-  stock       Int      @default(1)
-  weight      Float    @default(0)
-  height      Float    @default(0)
-  lenght      Float    @default(0)
-  width       Float    @default(0)
+  stock       Int           @default(1)
+  weight      Float         @default(0)
+  height      Float         @default(0)
+  lenght      Float         @default(0)
+  width       Float         @default(0)
   images      Json
+  status      ProductStatus @default(AVAILABLE)
   categoryId  Int
-  category    Category @relation(fields: [categoryId], references: [id])
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  category    Category      @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+}
+
+enum ProductStatus {
+  AVAILABLE
+  SOLD
+  HIDDEN
 }
 
 model User {
