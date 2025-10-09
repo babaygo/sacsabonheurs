@@ -116,9 +116,36 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 app.use(express.json());
 
 // Produits
-app.get('/products', async (req, res) => {
-    const products = await prisma.product.findMany({ include: { category: true } });
-    res.json(products);
+app.get("/api/products", async (req, res) => {
+    try {
+        const products = await prisma.product.findMany({
+            include: { category: true },
+            orderBy: { createdAt: "desc" },
+        });
+
+        res.json(products);
+    } catch (error) {
+        console.error("Erreur récupération produits :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.get("/api/admin/products/:id", requireAuth, async (req, res) => {
+    const id = Number(req.params.id);
+
+    try {
+        const product = await prisma.product.findUnique({
+            where: { id },
+            include: { category: true },
+        });
+
+        if (!product) return res.status(404).json({ error: "Produit introuvable" });
+
+        res.json(product);
+    } catch (error) {
+        console.error("Erreur récupération produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
 });
 
 app.get("/api/products/:slug", async (req, res) => {
@@ -136,13 +163,65 @@ app.get("/api/products/:slug", async (req, res) => {
 });
 
 
-app.post('/add-products', requireAuth, async (req, res) => {
-    const { name, slug, description, price, stock, categoryId } = req.body;
-    const product = await prisma.product.create({
-        data: { name, slug, description, price, stock, images: [], categoryId }
-    });
-    res.json(product);
+app.post("/api/admin/products", requireAuth, async (req, res) => {
+    try {
+        const { name, slug, description, price, images, categoryId, ...rest } = req.body;
+
+        if (!name || !slug || !description || !price || !images || !categoryId) {
+            return res.status(400).json({ error: "Champs obligatoires manquants" });
+        }
+
+        const product = await prisma.product.create({
+            data: {
+                name,
+                slug,
+                description,
+                price: parseFloat(price),
+                images,
+                categoryId: parseInt(categoryId),
+                ...rest,
+            },
+        });
+
+        res.json(product);
+    } catch (error) {
+        console.error("Erreur création produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
 });
+
+
+app.put("/api/admin/products/:id", requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const product = await prisma.product.update({
+            where: { id: parseInt(id) },
+            data: req.body,
+        });
+
+        res.json(product);
+    } catch (error) {
+        console.error("Erreur mise à jour produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        await prisma.product.delete({
+            where: { id: parseInt(id) },
+        });
+
+        res.json({ message: "Produit supprimé avec succès" });
+    } catch (error) {
+        console.error("Erreur suppression produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 
 // Upload d'images pour un produit
 app.post('/upload', requireAuth, upload.array('images', 5), async (req, res) => {
