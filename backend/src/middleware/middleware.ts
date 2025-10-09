@@ -8,8 +8,6 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
             headers: fromNodeHeaders(req.headers),
         });
 
-        console.log(req.headers.cookie)
-
         if (!session || !session.user) {
             return res.status(401).json({ error: "Non authentifié" });
         }
