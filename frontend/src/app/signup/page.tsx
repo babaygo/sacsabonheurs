@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSessionContext } from "@/components/SessionProvider";
-import { authClient } from "@/lib/authClient";
+import toast from "react-hot-toast";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
@@ -40,7 +40,7 @@ export default function SignupPage() {
 
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
-            alert(firstError || "Erreur de validation");
+            toast.error(firstError || "Erreur de validation");
             return;
         }
 
@@ -50,8 +50,8 @@ export default function SignupPage() {
             await useSignup({ name, email, password });
             await refreshSession();
             router.push("/");
-        } catch (err: any) {
-            alert(err.message || "Erreur lors de l'inscription");
+        } catch (error: any) {
+            toast.error(error.message || "Erreur lors de l'inscription");
         }
     };
 

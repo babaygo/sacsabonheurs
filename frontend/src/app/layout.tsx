@@ -5,6 +5,7 @@ import ClientLayout from "./clientLayout";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "@/components/SessionProvider";
 import { CategoryHydrator } from "@/components/CategoryHydrator/CategoryHydrator";
+import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -34,6 +35,7 @@ export default function RootLayout({
         <SessionProvider>
           <CategoryHydrator />
           <ClientLayout>
+            <Toaster position="top-right" />
             {children}
           </ClientLayout>
         </SessionProvider>

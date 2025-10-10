@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import toast from "react-hot-toast";
 
 async function deleteProduct(id: number) {
     try {
@@ -22,7 +23,7 @@ async function deleteProduct(id: number) {
         }
         return res.json();
     } catch (error: any) {
-        alert(error.message);
+        toast.error(error.message);
     }
 }
 

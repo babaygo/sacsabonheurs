@@ -3,6 +3,7 @@
 import { useDropzone } from "react-dropzone";
 import { useCallback, useState } from "react";
 import { Trash } from "lucide-react";
+import toast from "react-hot-toast";
 
 export function ImageUploader({ onChange }: { onChange: (files: File[]) => void }) {
     const [files, setFiles] = useState<File[]>([]);
@@ -11,7 +12,7 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         (newFiles: File[]) => {
             const combined = [...files, ...newFiles];
             if (combined.length > 5) {
-                alert("Maximum 5 images autorisées");
+                toast.error("Maximum 5 images autorisées");
                 return;
             }
             setFiles(combined);

@@ -18,6 +18,7 @@ import { useRouter } from "next/navigation";
 import { loginSchema } from "@/lib/validation/loginSchema";
 import { useLogin } from "@/lib/useLogin";
 import { useSessionContext } from "@/components/SessionProvider";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -31,7 +32,7 @@ export default function LoginPage() {
         const result = loginSchema.safeParse({ email, password });
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
-            alert(firstError || "Erreur de validation");
+            toast.error(firstError || "Erreur de validation");
             return;
         }
 
@@ -40,7 +41,7 @@ export default function LoginPage() {
             await refreshSession();
             router.push("/");
         } catch (err: any) {
-            alert(err.message || "Erreur lors de la connexion");
+            toast.error(err.message || "Erreur lors de la connexion");
         }
     };
 

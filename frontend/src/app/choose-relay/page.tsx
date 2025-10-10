@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 declare global {
     interface Window {
@@ -104,7 +105,7 @@ export default function ChooseRelay() {
     }, [isValid]);
 
     const handleConfirm = async () => {
-        if (!relay) return alert("Veuillez choisir un point relais");
+        if (!relay) return toast.error("Veuillez choisir un point relais");
 
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/${sessionId}/relay`, {
@@ -115,13 +116,13 @@ export default function ChooseRelay() {
             });
 
             if (response.ok) {
-                alert("Point relais enregistré avec succès !");
+                toast.success("Point relais enregistré avec succès !");
                 router.push("/orders");
             } else {
-                alert("Erreur lors de l'enregistrement");
+                toast.error("Erreur lors de l'enregistrement");
             }
         } catch (error) {
-            alert("Erreur lors de l'enregistrement : " + error);
+            toast.error("Erreur lors de l'enregistrement : " + error);
         }
     };
 

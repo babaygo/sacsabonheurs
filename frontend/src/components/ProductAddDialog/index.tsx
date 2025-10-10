@@ -21,6 +21,7 @@ import { Input } from "../ui/input";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
 import { Category } from "@/types/Category";
+import toast from "react-hot-toast";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -91,7 +92,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
             }
 
         } catch (error: any) {
-            alert(error.message);
+            toast.error(error.message);
         }
     };
 

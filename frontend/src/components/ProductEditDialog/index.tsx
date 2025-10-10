@@ -15,6 +15,7 @@ import {
 import { Textarea } from "../ui/textarea";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
+import toast from "react-hot-toast";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -73,7 +74,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
             setOpen(false);
             onSuccess();
         } catch (err: any) {
-            alert(err.message);
+            toast.error(err.message);
         }
     };
 
