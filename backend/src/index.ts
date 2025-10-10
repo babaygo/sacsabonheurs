@@ -3,13 +3,13 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 import cors from "cors";
-import { auth } from "../src/lib/auth";
 import { toNodeHandler } from "better-auth/node";
 import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAuth } from './middleware/middleware';
 import { sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
+import { auth } from './lib/auth';
 
 const app = express();
 
