@@ -3,10 +3,11 @@
 import { notFound } from "next/navigation";
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getProductsByCategory(slug: string) {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/categories/${slug}/products`);
+        `${getBaseUrl()}/api/categories/${slug}/products`);
     if (!res.ok) return null;
     return res.json();
 }

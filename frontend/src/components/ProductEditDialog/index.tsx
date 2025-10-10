@@ -16,6 +16,7 @@ import { Textarea } from "../ui/textarea";
 import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
 import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -59,7 +60,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         files.forEach((file) => formData.append("images", file));
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/products/${product.id}`, {
+            const res = await fetch(`${getBaseUrl()}/api/admin/products/${product.id}`, {
                 method: "PUT",
                 credentials: "include",
                 body: formData,

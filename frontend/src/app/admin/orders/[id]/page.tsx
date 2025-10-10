@@ -3,10 +3,11 @@
 import { notFound } from "next/navigation";
 import { Order } from "@/types/Order"; // adapte si tu as un type enrichi
 import { use, useEffect, useState } from "react";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getOrderById(id: string) {
     const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/${id}`,
+        `${getBaseUrl()}/api/admin/orders/${id}`,
         {
             credentials: "include",
             headers: { "Content-Type": "application/json" },

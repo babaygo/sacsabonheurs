@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useCategoryStore } from "./categoryStore";
+import { getBaseUrl } from "./getBaseUrl";
 
 export function useCategories() {
     const { categories, setCategories, hasFetched, setHasFetched } = useCategoryStore();
@@ -13,7 +14,7 @@ export function useCategories() {
 
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/categories`);
+                const res = await fetch(`${getBaseUrl()}/api/categories`);
                 if (!res.ok) throw new Error("Erreur serveur");
                 const data = await res.json();
                 if (!cancelled) {

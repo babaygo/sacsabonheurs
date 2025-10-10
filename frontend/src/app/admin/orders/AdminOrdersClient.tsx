@@ -3,6 +3,7 @@
 import { useSessionContext } from "@/components/SessionProvider";
 import StatusBadge from "@/components/StatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Order } from "@/types/Order";
 import { OrderStatusType } from "@/types/OrderStatusType";
 import { useRouter } from "next/navigation";
@@ -15,7 +16,7 @@ export default function AdminOrdersClient() {
     const [orders, setOrders] = useState<Order[]>([]);
 
     const updateOrderStatus = async (orderId: number, newStatus: OrderStatusType) => {
-        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/${orderId}/status`, {
+        await fetch(`${getBaseUrl()}/api/admin/orders/${orderId}/status`, {
             method: "PUT",
             body: JSON.stringify({ status: newStatus }),
             headers: { "Content-Type": "application/json" },
@@ -25,7 +26,7 @@ export default function AdminOrdersClient() {
 
     async function getOrders() {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders`, {
+            const res = await fetch(`${getBaseUrl()}/api/admin/orders`, {
                 credentials: "include",
             });
             if (!res.ok) {

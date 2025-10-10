@@ -1,7 +1,8 @@
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Category } from "@/types/Category";
 
 export default async function BoutiquePage() {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/categories/first-product-by-categories`, {
+    const res = await fetch(`${getBaseUrl()}/categories/first-product-by-categories`, {
         next: { revalidate: 60 },
     });
     const categories = await res.json();

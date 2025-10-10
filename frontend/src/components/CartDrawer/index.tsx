@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 
 import { useCartDrawerStore } from "@/lib/cartDrawerStore";
 import { useCartStore } from "@/lib/cartStore";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export default function CartDrawer() {
     const { open, setOpen } = useCartDrawerStore();
@@ -26,7 +27,7 @@ export default function CartDrawer() {
     }, [items]);
 
     async function handleCheckout() {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/checkout`, {
+        const res = await fetch(`${getBaseUrl()}/api/checkout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ items: items }),

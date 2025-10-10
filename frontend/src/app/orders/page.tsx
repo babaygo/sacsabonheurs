@@ -1,5 +1,6 @@
 "use client";
 
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Order } from "@/types/Order";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -14,7 +15,7 @@ export default function OrdersPage() {
     async function getLastOrderBySessionId(sessionId: string) {
         try {
             const res = await fetch(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/order-by-session-id?session_id=${sessionId}`, {
+                `${getBaseUrl()}/api/order-by-session-id?session_id=${sessionId}`, {
                     credentials: "include"
                 }
             );
@@ -32,7 +33,7 @@ export default function OrdersPage() {
 
     async function getUserOrders() {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
+            const res = await fetch(`${getBaseUrl()}/api/orders`, {
                 credentials: "include",
             });
             if (!res.ok) {

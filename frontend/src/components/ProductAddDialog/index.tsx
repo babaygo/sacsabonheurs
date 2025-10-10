@@ -22,6 +22,7 @@ import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "../ImageUploader";
 import { Category } from "@/types/Category";
 import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -60,7 +61,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
         files.forEach((file) => formData.append("images", file));
 
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/products`, {
+            const res = await fetch(`${getBaseUrl()}/api/admin/products`, {
                 method: "POST",
                 credentials: "include",
                 body: formData,

@@ -7,9 +7,10 @@ import {
     AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Product } from "@/types/Product";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getProduct(slug: string) {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products/${slug}`);
+    const res = await fetch(`${getBaseUrl()}/api/products/${slug}`);
     if (!res.ok) return null;
     return res.json();
 }

@@ -7,6 +7,7 @@ import { DeleteDialog } from "@/components/ProductDeleteDialog";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
@@ -15,7 +16,7 @@ export default function AdminProducts() {
 
     async function getProducts() {
         try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/products`, {
+            const res = await fetch(`${getBaseUrl()}/api/products`, {
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json",

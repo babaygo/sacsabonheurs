@@ -4,11 +4,12 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
 import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function deleteProduct(id: number) {
     try {
         const res = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}/api/admin/products/${id}`,
+            `${getBaseUrl()}/api/admin/products/${id}`,
             {
                 method: "DELETE",
                 credentials: "include",

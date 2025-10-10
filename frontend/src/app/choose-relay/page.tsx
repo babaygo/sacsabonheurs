@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 declare global {
     interface Window {
@@ -108,7 +109,7 @@ export default function ChooseRelay() {
         if (!relay) return toast.error("Veuillez choisir un point relais");
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/order/${sessionId}/relay`, {
+            const response = await fetch(`${getBaseUrl()}/api/order/${sessionId}/relay`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ relay }),
