@@ -12,8 +12,8 @@ export interface User {
   sessions: Session[]
   accounts: Account[]
   Orders: Order[]
-  role: String
-  banned: Boolean
-  banReason: String
+  role: string
+  banned: boolean
+  banReason: string
   banExpires: Date
 }
