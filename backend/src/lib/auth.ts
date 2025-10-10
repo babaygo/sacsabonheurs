@@ -11,9 +11,15 @@ export const auth = betterAuth({
         enabled: true,
     },
     trustedOrigins: [process.env.URL_FRONT!],
-    cookie: {
-        secure: true,
-        sameSite: "none",
+    advanced: {
+        cookies: {
+            session_token: {
+                attributes: {
+                    secure: true,
+                    sameSite: 'None'
+                }
+            }
+        }
     },
     plugins: [
         admin({
