@@ -15,7 +15,7 @@ export default function AdminOrdersClient() {
     const [orders, setOrders] = useState<Order[]>([]);
 
     const updateOrderStatus = async (orderId: number, newStatus: OrderStatusType) => {
-        await fetch(`/api/admin/orders/${orderId}/status`, {
+        await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/admin/orders/${orderId}/status`, {
             method: "PUT",
             body: JSON.stringify({ status: newStatus }),
             headers: { "Content-Type": "application/json" },
