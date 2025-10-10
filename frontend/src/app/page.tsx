@@ -7,12 +7,12 @@ export default function HomePage() {
   return (
     <>
       <Head>
-        <title>Sacs à Bonheur</title>
+        <title>Sacs à Bonheurs</title>
         <meta name="description" content="Boutique artisanale de sacs faits main en France" />
       </Head>
 
       <main className="min-h-screen flex flex-col items-center justify-center">
-        <h1 className="text-4xl font-bold mb-4">Bienvenue chez Sacs à Bonheur</h1>
+        <h1 className="text-4xl font-bold mb-4">Bienvenue chez Sacs à Bonheurs</h1>
         <p className="text-lg text-gray-700">Découvrez mes sacs faits main avec passion, en France !</p>
         <Link href="/boutique" >
           <Button className="mt-6 py-5 text-base group flex items-center">

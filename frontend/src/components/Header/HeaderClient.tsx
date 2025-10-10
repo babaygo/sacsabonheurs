@@ -40,9 +40,9 @@ export default function HeaderClient() {
             <div className="flex p-4 h-full items-center justify-between max-w-7xl mx-auto">
                 {/* Logo */}
                 <div className="flex items-center space-x-4">
-                    <img src="/logo.png" alt="Logo Sacs à Bonheur" />
-                    <Link href="/" className="text-xl font-semibold">
-                        Sacs à Bonheur
+                    <img src="/logo.png" alt="Logo Sacs à Bonheurs" />
+                    <Link href="/" className="text-xl font-playfair-display font-semibold">
+                        Sacs à Bonheurs
                     </Link>
                 </div>
 
@@ -52,7 +52,7 @@ export default function HeaderClient() {
                         <Link
                             key={cat.id}
                             href={`/categories/${cat.slug}`}
-                            className="text-gray-700 hover:text-black text-sm"
+                            className="text-gray-700 font-montserrat hover:text-black text-sm"
                         >
                             {cat.name}
                         </Link>
@@ -66,7 +66,7 @@ export default function HeaderClient() {
                         onClick={() => setOpen(true)}
                         className="group -m-2 flex items-center p-2 relative"
                     >
-                        <ShoppingCartIcon className="size-6 text-gray-400 group-hover:text-gray-500" />
+                        <ShoppingCartIcon className="size-6 text-gray-400 group-hover:text-gray-500 cursor-pointer" />
                         {count > 0 && (
                             <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
                                 {count}

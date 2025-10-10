@@ -9,7 +9,7 @@ export default function Footer() {
             <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row justify-between gap-6 text-sm text-gray-600">
                 {/* Bloc gauche */}
                 <div className="space-y-2">
-                    <p className="font-semibold text-gray-800">Sacs à Bonheur</p>
+                    <p className="font-semibold text-gray-800">Sacs à Bonheurs</p>
                     <p>Créations uniques, faites main avec amour.</p>
                     <p className="text-xs text-gray-400">© {new Date().getFullYear()} Tous droits réservés.</p>
                 </div>

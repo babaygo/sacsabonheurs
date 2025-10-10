@@ -7,7 +7,12 @@ module.exports = {
   purge: [],
   darkMode: false, // or 'media' or 'class'
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+         sans: ["var(--font-montserrat)"],
+         mono: ["var(--font-playfair-display)"],
+      }
+    },
   },
   variants: {
     extend: {},
