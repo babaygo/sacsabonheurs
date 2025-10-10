@@ -10,15 +10,15 @@ export const auth = betterAuth({
     emailAndPassword: {
         enabled: true,
     },
-    trustedOrigins: [process.env.URL_EXPRESS!],
+    trustedOrigins: [process.env.URL_FRONT!],
     cookie: {
-        secure: false,
-        domain: "localhost"
+        secure: true,
+        sameSite: "none",
     },
     plugins: [
         admin({
             defaultRole: "user",
-            adminRoles: ["admin"]
-        })
-    ]
+            adminRoles: ["admin"],
+        }),
+    ],
 });
