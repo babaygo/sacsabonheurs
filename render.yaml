@@ -15,6 +15,6 @@ services:
       - key: SESSION_SECRET
         sync: false
       - key: CORS_ORIGIN
-        value: https://ton-frontend-preprod.vercel.app
+        value: https://sacsabonheur.vercel.app
       - key: NODE_ENV
         value: production
