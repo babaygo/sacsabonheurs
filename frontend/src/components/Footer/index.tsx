@@ -19,8 +19,8 @@ export default function Footer() {
                     <p className="font-semibold text-gray-800">Navigation</p>
                     <ul className="space-y-1">
                         <li><Link href="/" className="hover:underline">Accueil</Link></li>
-                        <li><Link href="/about" className="hover:underline">À propos</Link></li>
-                        <li><Link href="/contact" className="hover:underline">Contact</Link></li>
+                        <li><Link href="/" className="hover:underline">À propos</Link></li>
+                        <li><Link href="/" className="hover:underline">Contact</Link></li>
                     </ul>
                 </div>
 
@@ -28,9 +28,9 @@ export default function Footer() {
                 <div className="space-y-2">
                     <p className="font-semibold text-gray-800">Légal</p>
                     <ul className="space-y-1">
-                        <li><Link href="/mentions-legales" className="hover:underline">Mentions légales</Link></li>
-                        <li><Link href="/cgv" className="hover:underline">Conditions générales</Link></li>
-                        <li><Link href="/confidentialite" className="hover:underline">Politique de confidentialité</Link></li>
+                        <li><Link href="/" className="hover:underline">Mentions légales</Link></li>
+                        <li><Link href="/" className="hover:underline">Conditions générales</Link></li>
+                        <li><Link href="/" className="hover:underline">Politique de confidentialité</Link></li>
                     </ul>
                 </div>
 
