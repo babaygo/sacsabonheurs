@@ -9,6 +9,7 @@ services:
       npm install
       npm run build
       npx prisma migrate deploy
+      npx prisma db seed
     startCommand: npm run start
     envVars:
       - key: DATABASE_URL

@@ -48,9 +48,9 @@ async function main() {
                 price: 30,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/pochette-bandouliere-liege-et-cuir-3.jpg',
-                    'http://localhost:3001/uploads/pochette-bandouliere-liege-et-cuir-4.jpg',
-                    'http://localhost:3001/uploads/pochette-bandouliere-liege-et-cuir-5.jpg'
+                    'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-3.jpg',
+                    'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-4.jpg',
+                    'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-5.jpg'
                 ]),
                 categoryId: pochetteBandoulière.id
             }
@@ -68,9 +68,9 @@ async function main() {
                 price: 25,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/pochette-liege-poissons-1.jpg',
-                    'http://localhost:3001/uploads/pochette-liege-poissons-2.jpg',
-                    'http://localhost:3001/uploads/pochette-liege-poissons-3.jpg'
+                    'https://media.sacsabonheurs.fr/pochette-liege-poissons-1.jpg',
+                    'https://media.sacsabonheurs.fr/pochette-liege-poissons-2.jpg',
+                    'https://media.sacsabonheurs.fr/pochette-liege-poissons-3.jpg'
                 ]),
                 categoryId: pochetteTelephone.id
             }
@@ -88,9 +88,9 @@ async function main() {
                 price: 65,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-bandouliere-suedine-jaune-3.png',
-                    'http://localhost:3001/uploads/sac-bandouliere-suedine-jaune-4.png',
-                    'http://localhost:3001/uploads/sac-bandouliere-suedine-jaune-5.png'
+                    'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-3.png',
+                    'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-4.png',
+                    'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-5.png'
                 ]),
                 categoryId: sacAnses.id
             }
@@ -108,9 +108,9 @@ async function main() {
                 price: 55,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-2.jpg',
-                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-3.jpg',
-                    'http://localhost:3001/uploads/sac-medium-simil-bleu-et-suedine-beige-4.jpg'
+                    'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-2.jpg',
+                    'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-3.jpg',
+                    'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-4.jpg'
                 ]),
                 categoryId: sacBesace.id
             }
@@ -128,9 +128,9 @@ async function main() {
                 price: 55,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-1.jpg',
-                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-6.jpg',
-                    'http://localhost:3001/uploads/sac-cabas-liege-et-simili-camel-8.jpg'
+                    'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-1.jpg',
+                    'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-6.jpg',
+                    'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-8.jpg'
                 ]),
                 categoryId: sacCabas.id
             }
@@ -148,9 +148,9 @@ async function main() {
                 price: 48,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-trapeze-fausse-fourrure-zebre-8.jpg',
-                    'http://localhost:3001/uploads/sac-trapeze-fausse-fourrure-zebre-41.jpg',
-                    'http://localhost:3001/uploads/sac-trapeze-fausse-fourrure-zebre-51.jpg'
+                    'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-8.jpg',
+                    'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-41.jpg',
+                    'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-51.jpg'
                 ]),
                 categoryId: sacTrapeze.id
             }
@@ -168,9 +168,9 @@ async function main() {
                 price: 72,
                 stock: 1,
                 images: JSON.stringify([
-                    'http://localhost:3001/uploads/sac-tubulaire-lucie-1.jpg',
-                    'http://localhost:3001/uploads/sac-tubulaire-lucie-2.jpg',
-                    'http://localhost:3001/uploads/sac-tubulaire-lucie-3.jpg'
+                    'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-1.jpg',
+                    'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-2.jpg',
+                    'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-3.jpg'
                 ]),
                 categoryId: sacTubulaire.id
             }
