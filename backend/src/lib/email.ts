@@ -9,13 +9,12 @@ type OrderWithDetails = Prisma.OrderGetPayload<{
 
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT ?? 587),
-  secure: false,
+  port: Number(process.env.SMTP_PORT),
+  secure: Boolean(process.env.SMTP_SECURE),
   auth: {
     user: process.env.SMTP_USER,
     pass: process.env.SMTP_PASS,
-  },
-  tls: { rejectUnauthorized: false },
+  }
 });
 
 export async function sendEmail({
@@ -23,7 +22,7 @@ export async function sendEmail({
   subject,
   text,
   html,
-  from = process.env.MAIL_DEV,
+  from = `"Sacs à Bonheurs" <${process.env.MAIL_DEV}>`,
 }: {
   to: string;
   subject: string;
