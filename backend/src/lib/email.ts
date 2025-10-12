@@ -1,36 +1,16 @@
-import nodemailer from "nodemailer";
 import fs from "fs";
 import path from "path";
 import { Prisma } from "@prisma/client";
+import { Resend } from "resend";
 
 type OrderWithDetails = Prisma.OrderGetPayload<{
   include: { user: true; items: true };
 }>;
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: Boolean(process.env.SMTP_SECURE),
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function sendEmail({
-  to,
-  subject,
-  text,
-  html,
-  from = `"Sacs à Bonheurs" <${process.env.MAIL_DEV}>`,
-}: {
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-  from?: string;
-}) {
-  await transporter.sendMail({ from, to, subject, text, html });
+export async function sendEmail({ to, subject, html, from, replyTo }: { to: string; subject: string; html: string; from: string; replyTo: string; }) {
+  await resend.emails.send({ from, to, subject, html, replyTo });
 }
 
 export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
@@ -81,5 +61,7 @@ export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
     to: order.user.email,
     subject: `Confirmation de votre commande #${order.id}`,
     html,
+    from: `"Sacs à Bonheurs" <${process.env.MAIL_DEV}>`,
+    replyTo: "sacsabonheurs@gmail.com"
   });
 }
