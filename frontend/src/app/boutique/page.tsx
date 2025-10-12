@@ -1,7 +1,9 @@
+"use client";
+
 import { useCategoryStore } from "@/lib/categoryStore";
 import { Category } from "@/types/Category";
 
-export default async function BoutiquePage() {
+export default function BoutiquePage() {
     const categories = useCategoryStore((state) => state.categories);
 
     return (
