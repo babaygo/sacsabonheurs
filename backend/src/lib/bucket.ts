@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export const s3 = new S3Client({
     region: "auto",
@@ -10,7 +10,7 @@ export const s3 = new S3Client({
 });
 
 export async function uploadToR2(file: Express.Multer.File): Promise<string> {
-    const key = `uploads/${file.originalname}`;
+    const key = `${file.originalname}`;
     try {
         await s3.send(new PutObjectCommand({
             Bucket: process.env.R2_BUCKET!,
@@ -18,10 +18,10 @@ export async function uploadToR2(file: Express.Multer.File): Promise<string> {
             Body: file.buffer,
             ContentType: file.mimetype,
         }));
-    } catch (error) {
-        console.error("Webhook signature error:", error);
-    }
+    } catch (error: any) {
+        console.error("Upload échoué :", error);
 
+    }
 
     return `${process.env.DOMAIN_MEDIAS}/${key}`;
 }

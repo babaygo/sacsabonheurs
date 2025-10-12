@@ -1,7 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
-import path from 'path';
-import fs from 'fs';
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { PrismaClient, User } from '@prisma/client';
@@ -201,7 +199,7 @@ app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async
     } = req.body;
 
     try {
-        const parsedImages: string[] = JSON.parse(keptImages || "[]");
+        const parsedImages: string[] = keptImages || "[]";
 
         const uploaded = req.files && Array.isArray(req.files)
             ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
@@ -234,30 +232,38 @@ app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async
 });
 
 app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
-    const { id } = req.params;
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "ID invalide" });
+    }
 
     try {
-        const product = await prisma.product.findUnique({
-            where: { id: parseInt(id) },
-        });
+        const product = await prisma.product.findUnique({ where: { id } });
 
-        const images = JSON.parse(String(product?.images) || "[]");
+        if (!product) {
+            return res.status(404).json({ error: "Produit introuvable" });
+        }
 
-        await prisma.product.delete({
-            where: { id: parseInt(id) },
-        });
+        if (Array.isArray(product.images)) {
+            for (const url of product.images) {
+                const key = url.replace(`${process.env.DOMAIN_MEDIAS}/`, "");
+                try {
+                    await s3.send(
+                        new DeleteObjectCommand({
+                            Bucket: process.env.R2_BUCKET!,
+                            Key: key,
+                        })
+                    );
+                    console.log(`Image supprimée : ${key}`);
+                } catch (err) {
+                    console.warn(`Échec suppression image : ${key}`, err);
+                }
+            }
+        }
+
+        await prisma.product.delete({ where: { id } });
 
         res.json({ message: "Produit supprimé avec succès" });
-
-        setImmediate(() => {
-            images.forEach((imgUrl: any) => {
-                const filename = imgUrl.split("/uploads/")[1];
-                const filepath = path.join(__dirname, "..", "public", "uploads", filename);
-                fs.unlink(filepath, (err) => {
-                    if (err) console.warn("Erreur suppression image :", filename, err.message);
-                });
-            });
-        });
     } catch (error) {
         console.error("Erreur suppression produit :", error);
         res.status(500).json({ error: "Erreur serveur" });
