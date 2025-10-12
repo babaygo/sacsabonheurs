@@ -82,7 +82,7 @@ export default function OrdersClient() {
     }
 
     return (
-        <div className="max-w-2xl mx-auto py-12 space-y-8">
+        <div className="min-h-screen max-w-2xl mx-auto py-12 space-y-8">
             {orders.map((order) => (
                 <div key={order.id}>
                     <h1 className="text-2xl font-bold mb-4">
