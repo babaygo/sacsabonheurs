@@ -27,14 +27,14 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         (cat) => cat.id === form.categoryId
     );
 
-    const existingImages = JSON.parse(product.images) as string[];
+    const existingImages = product.images as string[];
 
     const [files, setFiles] = useState<File[]>([]);
     const [keptImages, setKeptImages] = useState<string[]>(existingImages);
 
     useEffect(() => {
         if (open) {
-            setKeptImages(JSON.parse(product.images));
+            setKeptImages(product.images);
             setFiles([]);
         }
     }, [open]);

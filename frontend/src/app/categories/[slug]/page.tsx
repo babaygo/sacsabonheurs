@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { useState, useEffect, use } from "react";
 import Link from "next/link";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { Product } from "@/types/Product";
 
 async function getProductsByCategory(slug: string) {
     const res = await fetch(
@@ -67,22 +68,22 @@ export default function CategoryPage({ params }: { params: Promise<{ slug: strin
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                {filtered.map((p) => (
+                {filtered.map((product: Product) => (
                     <Link
-                        key={p.id}
-                        href={`/products/${p.slug}`}
+                        key={product.id}
+                        href={`/products/${product.slug}`}
                         className="group p-4 flex flex-col justify-between h-[400px] hover:transition"
                     >
                         <div className="flex-1 flex items-center justify-center">
                             <img
-                                src={JSON.parse(p.images)[0]}
-                                alt={p.name}
+                                src={product.images[0]}
+                                alt={product.name}
                                 className="max-h-64 object-contain transition-transform group-hover:scale-105"
                             />
                         </div>
                         <div className="mt-4 text-center">
-                            <h2 className="text-sm font-montserrat font-medium">{p.name}</h2>
-                            <p className="text-sm font-mono font-bold ">{p.price} €</p>
+                            <h2 className="text-sm font-montserrat font-medium">{product.name}</h2>
+                            <p className="text-sm font-mono font-bold ">{product.price} €</p>
                         </div>
                     </Link>
                 ))}

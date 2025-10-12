@@ -33,7 +33,7 @@ model Product {
   height      Float         @default(0)
   lenght      Float         @default(0)
   width       Float         @default(0)
-  images      Json
+  images      String[]
   status      ProductStatus @default(AVAILABLE)
   categoryId  Int
   category    Category      @relation(fields: [categoryId], references: [id])

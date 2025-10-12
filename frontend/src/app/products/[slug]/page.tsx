@@ -21,7 +21,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
     const product: Product = await getProduct(params.slug);
     if (!product) notFound();
 
-    const images = JSON.parse(product.images);
+    const images = product.images;
 
     return (
         <div className="max-w-7xl mx-auto min-h-screen p-4 mt-8">

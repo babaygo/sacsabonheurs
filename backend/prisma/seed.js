@@ -7,7 +7,7 @@ async function main() {
     // Nettoyer la base de données
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
-    
+
     // --- Catégories ---
     const pochetteBandoulière = await prisma.category.create({
         data: { name: 'Pochettes bandoulière', slug: 'pochette-bandouliere' }
@@ -47,11 +47,11 @@ async function main() {
                     'Pochette bandoulière en liège naturel et cuir véritable. Parfaite pour vos sorties quotidiennes.',
                 price: 30,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-3.jpg',
                     'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-4.jpg',
                     'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-5.jpg'
-                ]),
+                ],
                 categoryId: pochetteBandoulière.id
             }
         ]
@@ -67,11 +67,11 @@ async function main() {
                     'Pochette téléphone en liège naturel avec un motif de poissons colorés.',
                 price: 25,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/pochette-liege-poissons-1.jpg',
                     'https://media.sacsabonheurs.fr/pochette-liege-poissons-2.jpg',
                     'https://media.sacsabonheurs.fr/pochette-liege-poissons-3.jpg'
-                ]),
+                ],
                 categoryId: pochetteTelephone.id
             }
         ]
@@ -87,11 +87,11 @@ async function main() {
                     'Sac bandoulière en suédine jaune. Parfait pour un look décontracté et élégant.',
                 price: 65,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-3.png',
                     'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-4.png',
                     'https://media.sacsabonheurs.fr/sac-bandouliere-suedine-jaune-5.png'
-                ]),
+                ],
                 categoryId: sacAnses.id
             }
         ]
@@ -107,11 +107,11 @@ async function main() {
                     'Sac besace en simili cuir bleu et suédine beige. Parfait pour un usage quotidien.',
                 price: 55,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-2.jpg',
                     'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-3.jpg',
                     'https://media.sacsabonheurs.fr/sac-medium-simil-bleu-et-suedine-beige-4.jpg'
-                ]),
+                ],
                 categoryId: sacBesace.id
             }
         ]
@@ -127,11 +127,11 @@ async function main() {
                     'Sac cabas en liège naturel et simili cuir camel. Parfait pour vos courses ou une journée à la plage.',
                 price: 55,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-1.jpg',
                     'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-6.jpg',
                     'https://media.sacsabonheurs.fr/sac-cabas-liege-et-simili-camel-8.jpg'
-                ]),
+                ],
                 categoryId: sacCabas.id
             }
         ]
@@ -147,11 +147,11 @@ async function main() {
                     'Sac trapèze en fausse fourrure zèbre. Un accessoire tendance et éthique.',
                 price: 48,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-8.jpg',
                     'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-41.jpg',
                     'https://media.sacsabonheurs.fr/sac-trapeze-fausse-fourrure-zebre-51.jpg'
-                ]),
+                ],
                 categoryId: sacTrapeze.id
             }
         ]
@@ -167,11 +167,11 @@ async function main() {
                     'Sac tubulaire blanc. Élégant et pratique pour toutes les occasions.',
                 price: 72,
                 stock: 1,
-                images: JSON.stringify([
+                images: [
                     'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-1.jpg',
                     'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-2.jpg',
                     'https://media.sacsabonheurs.fr/sac-tubulaire-lucie-3.jpg'
-                ]),
+                ],
                 categoryId: sacTubulaire.id
             }
         ]

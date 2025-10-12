@@ -10,7 +10,7 @@ export default function AddToCartButton({ product }: { product: any }) {
             name: product.name,
             slug: product.slug,
             price: product.price,
-            image: JSON.parse(product.images)[0],
+            image: product.images[0],
         });
         setOpen(true);
     };

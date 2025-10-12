@@ -22,7 +22,7 @@ export default async function BoutiquePage() {
                             className="group border rounded-lg p-4 hover:shadow transition"
                         >
                             <img
-                                src={JSON.parse(product.images)[0]}
+                                src={product.images[0]}
                                 alt={product.name}
                                 className="w-full h-48 object-cover rounded"
                             />
