@@ -37,7 +37,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     const sig = req.headers["stripe-signature"]!;
-    let event;
+    let event: Stripe.Event;
 
     try {
         event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
@@ -52,12 +52,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         const slugs: string[] = JSON.parse(session.metadata!.slugs);
         const billingAddress = session.customer_details?.address;
 
-        const items: {
-            name: string;
-            price: number;
-            quantity: number;
-            imageUrl: string;
-        }[] = await Promise.all(
+        const items = await Promise.all(
             lineItems.data.map(async (item, index) => ({
                 name: item.description ?? "Produit inconnu",
                 price: item.amount_total ? item.amount_total / 100 : 0,
@@ -66,34 +61,32 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             }))
         );
 
-        await prisma.order.create({
-            data: {
-                stripeSessionId: session.id,
-                user: { connect: { id: session.metadata!.userId } },
-                email: session.customer_email!,
-                total: session.amount_total! / 100,
-                subtotal: session.amount_subtotal! / 100,
-                shippingCost: session.total_details?.amount_shipping! / 100,
-                taxes: session.total_details?.amount_tax,
-
-                deliveryMethod: session.metadata?.deliveryMethod ?? null,
-                relayId: session.metadata?.relayId ?? null,
-                relayName: session.metadata?.relayName ?? null,
-                relayAddress: session.metadata?.relayAddress ?? null,
-
-                billingAddress: billingAddress?.line1 ?? null,
-                detailsBillingAddress: billingAddress?.line2 ?? null,
-                postalCode: billingAddress?.postal_code ?? null,
-                city: billingAddress?.city ?? null,
-                country: billingAddress?.country ?? "FR",
-
-                items: {
-                    create: items
+        try {
+            await prisma.order.create({
+                data: {
+                    stripeSessionId: session.id,
+                    user: { connect: { id: session.metadata!.userId } },
+                    email: session.customer_email!,
+                    total: session.amount_total! / 100,
+                    subtotal: session.amount_subtotal! / 100,
+                    shippingCost: session.total_details?.amount_shipping! / 100,
+                    taxes: session.total_details?.amount_tax,
+                    deliveryMethod: session.metadata?.deliveryMethod ?? null,
+                    relayId: session.metadata?.relayId ?? null,
+                    relayName: session.metadata?.relayName ?? null,
+                    relayAddress: session.metadata?.relayAddress ?? null,
+                    billingAddress: billingAddress?.line1 ?? null,
+                    detailsBillingAddress: billingAddress?.line2 ?? null,
+                    postalCode: billingAddress?.postal_code ?? null,
+                    city: billingAddress?.city ?? null,
+                    country: billingAddress?.country ?? "FR",
+                    items: { create: items },
                 },
-            },
-        });
+            });
+        } catch (error: any) {
+            console.error("Erreur sur la création d'une commande :", error);
+        }
     }
-
     res.status(200).json({ received: true });
 });
 
