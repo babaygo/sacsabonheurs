@@ -42,11 +42,8 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
     const removeImage = async (url: string) => {
         setKeptImages((prev) => prev.filter((img) => img !== url));
 
-        const nameImageToDelete = url.split(process.env.NEXT_PUBLIC_URL_MEDIA + "/")[1];
-        if (!nameImageToDelete) return;
-
         try {
-            await fetch(`${getBaseUrl()}/api/admin/products/images/${encodeURIComponent(nameImageToDelete)}`, {
+            await fetch(`${getBaseUrl()}/api/admin/products/images/${url}`, {
                 method: "DELETE",
                 credentials:"include"
             });

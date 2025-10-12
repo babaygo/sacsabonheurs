@@ -8,8 +8,7 @@ import { requireAuth } from './middleware/middleware';
 import { sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
-import { s3, uploadToR2 } from './lib/bucket';
-import { DeleteObjectCommand } from '@aws-sdk/client-s3';
+import { deleteImagesFromR2, s3, uploadToR2 } from './lib/bucket';
 
 const app = express();
 
@@ -244,23 +243,7 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
             return res.status(404).json({ error: "Produit introuvable" });
         }
 
-        if (Array.isArray(product.images)) {
-            for (const url of product.images) {
-                const key = url.replace(`${process.env.DOMAIN_MEDIAS}/`, "");
-                try {
-                    await s3.send(
-                        new DeleteObjectCommand({
-                            Bucket: process.env.R2_BUCKET!,
-                            Key: key,
-                        })
-                    );
-                    console.log(`Image supprimée : ${key}`);
-                } catch (err) {
-                    console.warn(`Échec suppression image : ${key}`, err);
-                }
-            }
-        }
-
+        await deleteImagesFromR2(product.images);
         await prisma.product.delete({ where: { id } });
 
         res.json({ message: "Produit supprimé avec succès" });
@@ -270,13 +253,10 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
     }
 });
 
-app.delete("/api/admin/products/images/:key", requireAuth, async (req, res) => {
-    const key = req.params.key;
+app.delete("/api/admin/products/images/:url", requireAuth, async (req, res) => {
+    const url = req.params.url;
     try {
-        await s3.send(new DeleteObjectCommand({
-            Bucket: process.env.R2_BUCKET!,
-            Key: key,
-        }));
+        await deleteImagesFromR2([url]);
         res.status(200).json({ success: true });
     } catch (err) {
         console.error("Erreur suppression R2 :", err);

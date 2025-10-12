@@ -25,3 +25,23 @@ export async function uploadToR2(file: Express.Multer.File): Promise<string> {
 
     return `${process.env.DOMAIN_MEDIAS}/${key}`;
 }
+
+export async function deleteImagesFromR2(urls: string[]): Promise<void> {
+    if (!Array.isArray(urls)) return;
+
+    for (const url of urls) {
+        const key = url.replace(`${process.env.DOMAIN_MEDIAS}/`, "");
+
+        try {
+            await s3.send(
+                new DeleteObjectCommand({
+                    Bucket: process.env.R2_BUCKET!,
+                    Key: key,
+                })
+            );
+        } catch (err) {
+            console.warn(`Échec suppression image : ${key}`, err);
+        }
+    }
+}
+
