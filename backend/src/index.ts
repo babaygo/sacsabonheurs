@@ -10,6 +10,8 @@ import { requireAuth } from './middleware/middleware';
 import { sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
+import { s3, uploadToR2 } from './lib/bucket';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 const app = express();
 
@@ -22,20 +24,7 @@ app.all("/api/auth/*", toNodeHandler(auth));
 
 const prisma = new PrismaClient();
 
-const uploadDir = path.join(__dirname, '../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-    destination: path.join(__dirname, '../public/uploads'),
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-
 const upload = multer({
-    storage,
     fileFilter: (req, file, cb) => {
         const allowed = ['image/jpeg', 'image/png'];
         if (allowed.includes(file.mimetype)) {
@@ -46,8 +35,6 @@ const upload = multer({
     },
     limits: { fileSize: 5 * 1024 * 1024 }
 });
-
-app.use('/uploads', express.static(path.join(__dirname, '../public/uploads')));
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
@@ -165,10 +152,17 @@ app.get("/api/products/:slug", async (req, res) => {
 
 app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (req, res) => {
     try {
-        const { name, slug, description, price, categoryId, stock, weight, height, lenght, width } = req.body;
+        const {
+            name, slug, description, price, categoryId,
+            stock, weight, height, lenght, width
+        } = req.body;
 
         const files = req.files as Express.Multer.File[];
-        const urls = files.map(f => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`);
+        if (!files || files.length === 0) {
+            return res.status(400).json({ error: "Aucune image reçue." });
+        }
+
+        const urls = await Promise.all(files.map(file => uploadToR2(file)));
 
         const product = await prisma.product.create({
             data: {
@@ -182,7 +176,7 @@ app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (r
                 lenght: parseFloat(lenght),
                 width: parseFloat(width),
                 categoryId: parseInt(categoryId),
-                images: JSON.stringify(urls),
+                images: urls,
             },
         });
 
@@ -198,31 +192,22 @@ app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (r
     }
 });
 
+
 app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async (req, res) => {
     const { id } = req.params;
     const {
-        name,
-        slug,
-        description,
-        price,
-        stock,
-        weight,
-        height,
-        lenght,
-        width,
-        categoryId,
-        keptImages,
+        name, slug, description, price, stock,
+        weight, height, lenght, width, categoryId, keptImages
     } = req.body;
 
-    const parsedImages = JSON.parse(keptImages || "[]");
-    const uploaded = Array.isArray(req.files)
-        ? req.files.map(f => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`)
-        : [];
-    const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
-
     try {
-        const previous = await prisma.product.findUnique({ where: { id: parseInt(id) } });
-        const oldImages = JSON.parse(String(previous?.images) || "[]");
+        const parsedImages: string[] = JSON.parse(keptImages || "[]");
+
+        const uploaded = req.files && Array.isArray(req.files)
+            ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
+            : [];
+
+        const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
 
         const product = await prisma.product.update({
             where: { id: parseInt(id) },
@@ -237,22 +222,11 @@ app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async
                 lenght: parseFloat(lenght),
                 width: parseFloat(width),
                 categoryId: parseInt(categoryId),
-                images: JSON.stringify(finalImages),
+                images: finalImages,
             },
         });
 
         res.json({ success: true, product });
-
-        setImmediate(() => {
-            const removed = oldImages.filter((img: any) => !finalImages.includes(img));
-            removed.forEach((imgUrl: any) => {
-                const filename = imgUrl.split("/uploads/")[1];
-                const filepath = path.join(__dirname, "..", "public", "uploads", filename);
-                fs.unlink(filepath, err => {
-                    if (err) console.warn("Erreur suppression image :", filename, err.message);
-                });
-            });
-        });
     } catch (error) {
         console.error("Erreur mise à jour produit :", error);
         res.status(500).json({ error: "Erreur serveur" });
@@ -290,26 +264,17 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
     }
 });
 
-
-// Upload d'images pour un produit
-app.post('/upload', requireAuth, upload.array('images', 5), async (req, res) => {
-    if (!req.files) return res.status(400).send('Aucun fichier reçu');
-
-    const files = req.files as Express.Multer.File[];
-    const urls = files.map(f => `${req.protocol}://${req.get('host')}/uploads/${f.filename}`);
-
+app.delete("/api/admin/products/images/:key", requireAuth, async (req, res) => {
+    const key = req.params.key;
     try {
-        const product = await prisma.product.update({
-            where: { id: Number(req.body.productId) },
-            data: {
-                images: {
-                    push: urls
-                }
-            }
-        });
-        res.json({ success: true, urls, product });
+        await s3.send(new DeleteObjectCommand({
+            Bucket: process.env.R2_BUCKET!,
+            Key: key,
+        }));
+        res.status(200).json({ success: true });
     } catch (err) {
-        res.status(400).json({ error: 'Produit introuvable ou erreur lors de la mise à jour' });
+        console.error("Erreur suppression R2 :", err);
+        res.status(500).json({ error: "Erreur suppression image" });
     }
 });
 
@@ -375,7 +340,6 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     const user: User = (req as any).user;
     const relay = (req as any)?.relay
     const slugs = items.map((item: any) => item.slug);
-    const shippingCost = 4.90;
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],

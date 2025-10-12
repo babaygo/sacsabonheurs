@@ -20,7 +20,6 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
-    const [resetImages, setResetImages] = useState(false);
     const [form, setForm] = useState(product);
 
     const categories = useCategoryStore((state) => state.categories);
@@ -40,8 +39,20 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         }
     }, [open]);
 
-    const removeImage = (url: string) => {
+    const removeImage = async (url: string) => {
         setKeptImages((prev) => prev.filter((img) => img !== url));
+
+        const nameImageToDelete = url.split(process.env.NEXT_PUBLIC_URL_MEDIA + "/")[1];
+        if (!nameImageToDelete) return;
+
+        try {
+            await fetch(`${getBaseUrl()}/api/admin/products/images/${encodeURIComponent(nameImageToDelete)}`, {
+                method: "DELETE",
+                credentials:"include"
+            });
+        } catch (err) {
+            console.warn("Erreur suppression image R2 :", err);
+        }
     };
 
     const handleChange = (field: keyof Product, value: any) => {
@@ -71,7 +82,6 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                 throw new Error(error || "Erreur inconnue");
             }
 
-            setResetImages(true);
             setOpen(false);
             onSuccess();
         } catch (err: any) {
