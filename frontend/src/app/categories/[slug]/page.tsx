@@ -7,7 +7,9 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getProductsByCategory(slug: string) {
     const res = await fetch(
-        `${getBaseUrl()}/api/categories/${slug}/products`);
+        `${getBaseUrl()}/api/categories/${slug}/products`, {
+            credentials: "include"
+        });
     if (!res.ok) return null;
     return res.json();
 }

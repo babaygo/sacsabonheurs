@@ -13,8 +13,7 @@ async function deleteProduct(id: number) {
             {
                 method: "DELETE",
                 credentials: "include",
-                headers: { "Content-Type": "application/json" },
-                cache: "no-store",
+                headers: { "Content-Type": "application/json" }
             }
         );
 

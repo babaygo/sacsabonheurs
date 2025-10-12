@@ -20,6 +20,7 @@ export default function AdminOrdersClient() {
             method: "PUT",
             body: JSON.stringify({ status: newStatus }),
             headers: { "Content-Type": "application/json" },
+            credentials: "include"
         });
         // Optionnel : recharger les données ou mettre à jour localement
     };

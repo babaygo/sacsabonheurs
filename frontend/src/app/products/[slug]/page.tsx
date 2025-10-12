@@ -10,7 +10,9 @@ import { Product } from "@/types/Product";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 
 async function getProduct(slug: string) {
-    const res = await fetch(`${getBaseUrl()}/api/products/${slug}`);
+    const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
+        credentials: "include"
+    });
     if (!res.ok) return null;
     return res.json();
 }

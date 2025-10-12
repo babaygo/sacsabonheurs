@@ -14,7 +14,9 @@ export function useCategories() {
 
         const fetchCategories = async () => {
             try {
-                const res = await fetch(`${getBaseUrl()}/api/categories`);
+                const res = await fetch(`${getBaseUrl()}/api/categories`, {
+                    credentials: "include"
+                });
                 if (!res.ok) throw new Error("Erreur serveur");
                 const data = await res.json();
                 if (!cancelled) {

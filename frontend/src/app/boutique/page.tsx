@@ -3,7 +3,7 @@ import { Category } from "@/types/Category";
 
 export default async function BoutiquePage() {
     const res = await fetch(`${getBaseUrl()}/categories/first-product-by-categories`, {
-        next: { revalidate: 60 },
+        credentials: "include"
     });
     const categories = await res.json();
 
