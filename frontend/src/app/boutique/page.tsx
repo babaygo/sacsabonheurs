@@ -1,10 +1,31 @@
 "use client";
 
-import { useCategoryStore } from "@/lib/categoryStore";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Category } from "@/types/Category";
+import { notFound } from "next/navigation";
+import { useEffect, useState } from "react";
+
+async function getFisrtProductsByCategory() {
+    const res = await fetch(
+        `${getBaseUrl()}/api/categories/first-product-by-category`, {
+        credentials: "include"
+    });
+    if (!res.ok) return null;
+    return res.json();
+}
 
 export default function BoutiquePage() {
-    const categories = useCategoryStore((state) => state.categories);
+    const [categories, setCategories] = useState<any[]>([]);
+
+    useEffect(() => {
+        getFisrtProductsByCategory().then((data) => {
+            if (!data) {
+                notFound();
+            } else {
+                setCategories(data);
+            }
+        });
+    }, []);
 
     return (
         <main className="min-h-screen max-w-7xl mx-auto px-4 py-8">
