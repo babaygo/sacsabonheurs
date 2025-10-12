@@ -51,10 +51,10 @@ export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
     .join("");
 
   const replacements: Record<string, string> = {
-    userName: order.user.name,
-    orderDate: order.createdAt.toLocaleDateString("fr-FR"),
-    orderId: String(order.id),
-    email: order.user.email,
+    userName: order.user.name ?? "",
+    orderDate: order.createdAt.toLocaleDateString("fr-FR") ?? "",
+    orderId: String(order.id) ?? "",
+    email: order.user.email ?? "",
     relayName: order.relayName ?? "",
     relayAddress: order.relayAddress ?? "",
     billingAddress: order.billingAddress ?? "",
