@@ -1,11 +1,8 @@
-import { getBaseUrl } from "@/lib/getBaseUrl";
+import { useCategoryStore } from "@/lib/categoryStore";
 import { Category } from "@/types/Category";
 
 export default async function BoutiquePage() {
-    const res = await fetch(`${getBaseUrl()}/categories/first-product-by-categories`, {
-        credentials: "include"
-    });
-    const categories = await res.json();
+    const categories = useCategoryStore((state) => state.categories);
 
     return (
         <main className="min-h-screen max-w-7xl mx-auto px-4 py-8">

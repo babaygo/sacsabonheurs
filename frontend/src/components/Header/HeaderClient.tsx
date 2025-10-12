@@ -1,8 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useCategories } from "@/lib/useCategories";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
     Popover,
     PopoverContent,
