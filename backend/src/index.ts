@@ -146,124 +146,6 @@ app.get("/api/products/:slug", async (req, res) => {
     }
 });
 
-
-app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (req, res) => {
-    try {
-        const {
-            name, slug, description, price, categoryId,
-            stock, weight, height, lenght, width
-        } = req.body;
-
-        const files = req.files as Express.Multer.File[];
-        if (!files || files.length === 0) {
-            return res.status(400).json({ error: "Aucune image reçue." });
-        }
-
-        const urls = await Promise.all(files.map(file => uploadToR2(file)));
-
-        const product = await prisma.product.create({
-            data: {
-                name,
-                slug,
-                description,
-                price: parseFloat(price),
-                stock: parseInt(stock),
-                weight: parseFloat(weight),
-                height: parseFloat(height),
-                lenght: parseFloat(lenght),
-                width: parseFloat(width),
-                categoryId: parseInt(categoryId),
-                images: urls,
-            },
-        });
-
-        res.json(product);
-    } catch (error: any) {
-        console.error("Erreur création produit :", error);
-
-        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
-            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
-        }
-
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
-
-app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async (req, res) => {
-    const { id } = req.params;
-    const {
-        name, slug, description, price, stock,
-        weight, height, lenght, width, categoryId, keptImages
-    } = req.body;
-
-    try {
-        const parsedImages: string[] = keptImages || "[]";
-
-        const uploaded = req.files && Array.isArray(req.files)
-            ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
-            : [];
-
-        const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
-
-        const product = await prisma.product.update({
-            where: { id: parseInt(id) },
-            data: {
-                name,
-                slug,
-                description,
-                price: parseFloat(price),
-                stock: parseInt(stock),
-                weight: parseFloat(weight),
-                height: parseFloat(height),
-                lenght: parseFloat(lenght),
-                width: parseFloat(width),
-                categoryId: parseInt(categoryId),
-                images: finalImages,
-            },
-        });
-
-        res.json({ success: true, product });
-    } catch (error) {
-        console.error("Erreur mise à jour produit :", error);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
-app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
-    const id = parseInt(req.params.id);
-    if (isNaN(id)) {
-        return res.status(400).json({ error: "ID invalide" });
-    }
-
-    try {
-        const product = await prisma.product.findUnique({ where: { id } });
-
-        if (!product) {
-            return res.status(404).json({ error: "Produit introuvable" });
-        }
-
-        await deleteImagesFromR2(product.images);
-        await prisma.product.delete({ where: { id } });
-
-        res.json({ message: "Produit supprimé avec succès" });
-    } catch (error) {
-        console.error("Erreur suppression produit :", error);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
-app.delete("/api/admin/products/images/:url", requireAuth, async (req, res) => {
-    const url = req.params.url;
-    try {
-        await deleteImagesFromR2([url]);
-        res.status(200).json({ success: true });
-    } catch (err) {
-        console.error("Erreur suppression R2 :", err);
-        res.status(500).json({ error: "Erreur suppression image" });
-    }
-});
-
 // Catégories
 app.get("/api/categories", async (req, res) => {
     const categories = await prisma.category.findMany({
@@ -290,12 +172,16 @@ app.get("/api/categories/:slug/products", async (req, res) => {
     const { slug } = req.params;
     try {
         const category = await prisma.category.findUnique({
-            where: { slug },
+            where: { slug: slug },
             include: { products: true },
         });
 
         if (!category) {
             return res.status(404).json({ error: "Catégorie non trouvée" });
+        }
+
+        if (!category.products.length) {
+            return res.status(204).json({ message: "Aucun produit dans cette catégorie" });
         }
 
         res.json(category.products);
@@ -495,6 +381,123 @@ app.get("/api/admin/orders/:id", requireAuth, async (req, res) => {
         res.json(order);
     } catch (error) {
         res.status(500).json({ error: "Erreur serveur", details: error });
+    }
+});
+
+app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (req, res) => {
+    try {
+        const {
+            name, slug, description, price, categoryId,
+            stock, weight, height, lenght, width
+        } = req.body;
+
+        const files = req.files as Express.Multer.File[];
+        if (!files || files.length === 0) {
+            return res.status(400).json({ error: "Aucune image reçue." });
+        }
+
+        const urls = await Promise.all(files.map(file => uploadToR2(file)));
+
+        const product = await prisma.product.create({
+            data: {
+                name,
+                slug,
+                description,
+                price: parseFloat(price),
+                stock: parseInt(stock),
+                weight: parseFloat(weight),
+                height: parseFloat(height),
+                lenght: parseFloat(lenght),
+                width: parseFloat(width),
+                categoryId: parseInt(categoryId),
+                images: urls,
+            },
+        });
+
+        res.json(product);
+    } catch (error: any) {
+        console.error("Erreur création produit :", error);
+
+        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
+            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
+        }
+
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+
+app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async (req, res) => {
+    const { id } = req.params;
+    const {
+        name, slug, description, price, stock,
+        weight, height, lenght, width, categoryId, keptImages
+    } = req.body;
+
+    try {
+        const parsedImages: string[] = keptImages || "[]";
+
+        const uploaded = req.files && Array.isArray(req.files)
+            ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
+            : [];
+
+        const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
+
+        const product = await prisma.product.update({
+            where: { id: parseInt(id) },
+            data: {
+                name,
+                slug,
+                description,
+                price: parseFloat(price),
+                stock: parseInt(stock),
+                weight: parseFloat(weight),
+                height: parseFloat(height),
+                lenght: parseFloat(lenght),
+                width: parseFloat(width),
+                categoryId: parseInt(categoryId),
+                images: finalImages,
+            },
+        });
+
+        res.json({ success: true, product });
+    } catch (error) {
+        console.error("Erreur mise à jour produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "ID invalide" });
+    }
+
+    try {
+        const product = await prisma.product.findUnique({ where: { id } });
+
+        if (!product) {
+            return res.status(404).json({ error: "Produit introuvable" });
+        }
+
+        await deleteImagesFromR2(product.images);
+        await prisma.product.delete({ where: { id } });
+
+        res.json({ message: "Produit supprimé avec succès" });
+    } catch (error) {
+        console.error("Erreur suppression produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.delete("/api/admin/products/images/:url", requireAuth, async (req, res) => {
+    const url = req.params.url;
+    try {
+        await deleteImagesFromR2([url]);
+        res.status(200).json({ success: true });
+    } catch (err) {
+        console.error("Erreur suppression R2 :", err);
+        res.status(500).json({ error: "Erreur suppression image" });
     }
 });
 
