@@ -86,6 +86,8 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         } catch (error: any) {
             console.error("Erreur sur la création d'une commande :", error);
         }
+    } else {
+        console.log("Problème dans l'évènement reçu :", event)
     }
     res.status(200).json({ received: true });
 });
