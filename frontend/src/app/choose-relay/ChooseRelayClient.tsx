@@ -9,6 +9,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { Spinner } from "@/components/ui/spinner";
+import { Badge } from "@/components/ui/badge";
 
 declare global {
     interface Window {
@@ -23,6 +25,8 @@ export default function ChooseRelayClient() {
     const sessionId = searchParams.get("session_id");
     const [relay, setRelay] = useState<any>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [loadingConfirmRelay, setLoadingConfirmRelay] = useState(false);
+    const [errorConfirmRelay, setErrorConfirmRelay] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
     const widgetInitialized = useRef(false);
     const router = useRouter();
@@ -106,6 +110,8 @@ export default function ChooseRelayClient() {
     }, [isValid]);
 
     const handleConfirm = async () => {
+        setLoadingConfirmRelay(true);
+        setErrorConfirmRelay(null);
         if (!relay) return toast.error("Veuillez choisir un point relais");
 
         try {
@@ -117,13 +123,16 @@ export default function ChooseRelayClient() {
             });
 
             if (response.ok) {
-                toast.success("Point relais enregistré avec succès !");
+                toast.success("Point relais enregistré avec succès, vous avez reçu un email de confirmation !");
                 router.push("/orders");
             } else {
                 toast.error("Erreur lors de l'enregistrement");
             }
-        } catch (error) {
+        } catch (error: any) {
             toast.error("Erreur lors de l'enregistrement : " + error);
+            setErrorConfirmRelay(error.message);
+        } finally {
+            setLoadingConfirmRelay(false);
         }
     };
 
@@ -167,8 +176,22 @@ export default function ChooseRelayClient() {
                 disabled={!relay || isLoading}
                 className="w-full md:w-auto"
             >
-                Confirmer ce point relais
+                {loadingConfirmRelay ? (
+                    <Badge variant="outline">
+                        <Spinner />
+                        Confirmation
+                    </Badge>
+                ) : (
+                    'Confirmer ce point relais'
+                )}
             </Button>
+
+            {errorConfirmRelay && (
+                <Alert variant="destructive">
+                    <AlertTitle>Erreur</AlertTitle>
+                    <AlertDescription>{errorConfirmRelay}</AlertDescription>
+                </Alert>
+            )}
         </div>
     );
 }
