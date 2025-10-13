@@ -8,6 +8,7 @@ import { Order } from "@/types/Order";
 import { OrderStatusType } from "@/types/OrderStatusType";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 
 export default function AdminOrdersClient() {
@@ -16,14 +17,27 @@ export default function AdminOrdersClient() {
     const [orders, setOrders] = useState<Order[]>([]);
 
     const updateOrderStatus = async (orderId: number, newStatus: OrderStatusType) => {
-        await fetch(`${getBaseUrl()}/api/admin/orders/${orderId}/status`, {
-            method: "PUT",
-            body: JSON.stringify({ status: newStatus }),
-            headers: { "Content-Type": "application/json" },
-            credentials: "include"
-        });
-        // Optionnel : recharger les données ou mettre à jour localement
+        try {
+            const response = await fetch(`${getBaseUrl()}/api/admin/orders/${orderId}/status`, {
+                method: "PUT",
+                body: JSON.stringify({ status: newStatus }),
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                console.error("Erreur mise à jour statut commande :", await response.text());
+                return;
+            }
+
+            const updatedOrders = await getOrders();
+            setOrders(updatedOrders ?? []);
+            toast.success("Statut mis à jour !");
+        } catch (err) {
+            console.error("Erreur réseau ou serveur :", err);
+        }
     };
+
 
     async function getOrders() {
         try {

@@ -87,7 +87,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             console.error("Erreur sur la création d'une commande :", error);
         }
     } else {
-        console.log("Problème dans l'évènement reçu :", event)
+        console.log("Problème dans l'évènement reçu :", event);
     }
     res.status(200).json({ received: true });
 });
@@ -344,9 +344,13 @@ app.get("/api/admin/orders", requireAuth, async (req, res) => {
     }
 });
 
-app.post("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
+app.put("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
     const newStatus = req.body.status
     const orderId = Number(req.params.orderId);
+    
+    if (!orderId) {
+        return res.status(400).json({ error: "ID invalide" });
+    }
 
     try {
         const order = await prisma.order.update({
@@ -355,10 +359,14 @@ app.post("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
         });
 
         res.status(200).json({ success: true, order });
-    } catch (error) {
-        res.status(500).json({ error: "Erreur serveur", details: error });
+    } catch (error: any) {
+        console.error("Erreur mise à jour commande :", error);
+        if (error.code === "P2025") {
+            return res.status(404).json({ error: "Commande introuvable" });
+        }
+        res.status(500).json({ error: "Erreur serveur", details: error.message });
     }
-})
+});
 
 app.get("/api/admin/orders/:id", requireAuth, async (req, res) => {
     const orderId = Number(req.params.id);
