@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/accordion"
 import { Product } from "@/types/Product";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import ZoomableImage from "@/components/ZoomableImage";
 
 async function getProduct(slug: string) {
     const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
@@ -28,7 +29,7 @@ export default async function ProductPage({ params }: { params: { slug: string }
             <div className="grid grid-cols-2 gap-8">
                 <div className="grid grid-cols-2 gap-4">
                     {images.map((src: string, i: number) => (
-                        <img key={i} src={src} alt={`${product.name} ${i + 1}`} className="" />
+                        <ZoomableImage key={i} src={src} alt={`${product.name} ${i + 1}`} />
                     ))}
                 </div>
                 <div className="flex flex-col mr-38">
