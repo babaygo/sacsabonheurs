@@ -11,7 +11,7 @@ export default function HomePage() {
         <meta name="description" content="Boutique artisanale de sacs faits main en France" />
       </Head>
 
-      <main className="min-h-screen flex flex-col items-center justify-center">
+      <main className="min-h-170 flex flex-col items-center justify-center">
         <h1 className="text-4xl font-bold mb-4">Bienvenue chez Sacs à Bonheurs</h1>
         <p className="text-lg text-gray-700">Découvrez mes sacs faits main avec passion, en France !</p>
         <Link href="/boutique" >
