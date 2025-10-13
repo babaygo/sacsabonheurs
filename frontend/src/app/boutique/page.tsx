@@ -1,17 +1,17 @@
 "use client";
 
+import PreviewProduct from "@/components/PreviewProduct";
 import ProductFilters from "@/components/ProductsFilters";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Product } from "@/types/Product";
 import { SortOption } from "@/types/SortOptions";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function BoutiquePage() {
     const [products, setProducts] = useState<Product[]>([]);
-    const [selectedCategory, setSelectedCategory] = useState<string>("all");
-    const [sortOption, setSortOption] = useState<SortOption>("date-desc");
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
     useEffect(() => {
         fetch(`${getBaseUrl()}/api/products`, { credentials: "include" })
@@ -25,11 +25,12 @@ export default function BoutiquePage() {
             });
     }, []);
 
-    const filtered = selectedCategory === "all"
+    const filtered = !selectedCategory || selectedCategory === "all"
         ? products
         : products.filter((p) => p.category?.name === selectedCategory);
 
     const sorted = [...filtered].sort((a, b) => {
+        if (!sortOption) return 0;
         switch (sortOption) {
             case "price-asc":
                 return a.price - b.price;
@@ -48,42 +49,24 @@ export default function BoutiquePage() {
         }
     });
 
+
     return (
-        <main>
-            <ProductFilters
-                selectedCategory={selectedCategory}
-                sortOption={sortOption}
-                onCategoryChange={setSelectedCategory}
-                onSortChange={setSortOption}
-                showCategoryFilter={true}
-            />
+        <div>
+            <div className="px-4">
+                <ProductFilters
+                    selectedCategory={selectedCategory}
+                    sortOption={sortOption}
+                    onCategoryChange={setSelectedCategory}
+                    onSortChange={setSortOption}
+                    showCategoryFilter={true}
+                />
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 {sorted.map((product) => (
-                     <Link
-                        key={product.id}
-                        href={`/products/${product.slug}`}
-                        className="flex flex-col items-center p-4 group"
-                    >
-                        <div className="relative w-full h-100 bg-white rounded overflow-hidden">
-                            <img
-                                src={product.images?.[0]}
-                                alt={product.name}
-                                className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 opacity-100 group-hover:opacity-0"
-                            />
-                            {product.images?.[1] && (
-                                <img
-                                    src={product.images[1]}
-                                    alt={`${product.name} - vue secondaire`}
-                                    className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 opacity-0 group-hover:opacity-100"
-                                />
-                            )}
-                        </div>
-
-                        <h3 className="font-montserrat mt-4">{product.name}</h3>
-                        <p className="font-montserrat text-sm font-semibold mt-2">{product.price.toFixed(2)} €</p>
-                    </Link>
+                    <PreviewProduct key={product.id} product={product} />
                 ))}
             </div>
-        </main>
+        </div>
     );
 }

@@ -11,11 +11,9 @@ import { useCategoryStore } from "@/lib/categoryStore";
 import { Category } from "@/types/Category";
 import { SortOption } from "@/types/SortOptions";
 
-
-
 interface ProductFiltersProps {
-    selectedCategory: string;
-    sortOption: SortOption;
+    selectedCategory: string | null;
+    sortOption: SortOption | null;
     onCategoryChange: (value: string) => void;
     onSortChange: (value: SortOption) => void;
     showCategoryFilter?: boolean;
@@ -33,9 +31,9 @@ export default function ProductFilters({
     return (
         <div className="flex flex-wrap gap-4 mb-8">
             {showCategoryFilter && (
-                <Select value={selectedCategory} onValueChange={onCategoryChange}>
+                <Select value={selectedCategory ?? undefined} onValueChange={onCategoryChange}>
                     <SelectTrigger className="w-[200px]">
-                        <SelectValue placeholder="Catégorie" />
+                        <SelectValue placeholder="Catégories" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">Toutes les catégories</SelectItem>
@@ -48,7 +46,7 @@ export default function ProductFilters({
                 </Select>
             )}
 
-            <Select value={sortOption} onValueChange={(v) => onSortChange(v as SortOption)}>
+            <Select value={sortOption ?? undefined} onValueChange={(v) => onSortChange(v as SortOption)}>
                 <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="Trier par" />
                 </SelectTrigger>
