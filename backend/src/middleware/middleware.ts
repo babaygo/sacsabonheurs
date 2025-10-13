@@ -20,3 +20,14 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
         res.status(401).json({ error: "Erreur d’authentification" });
     }
 }
+
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
+    const user = (req as any).user;
+
+    if (!user || user.role !== "admin") {
+        return res.status(403).json({ error: "Accès réservé aux administrateurs" });
+    }
+
+    next();
+}
+

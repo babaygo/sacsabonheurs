@@ -4,7 +4,7 @@ import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
-import { requireAuth } from './middleware/middleware';
+import { requireAdmin, requireAuth } from './middleware/middleware';
 import { sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
@@ -109,7 +109,7 @@ app.get("/api/products", async (req, res) => {
     }
 });
 
-app.get("/api/admin/products/:id", requireAuth, async (req, res) => {
+app.get("/api/admin/products/:id", requireAuth, requireAdmin, async (req, res) => {
     const id = Number(req.params.id);
 
     try {
@@ -328,7 +328,7 @@ app.post("/api/order/:id/relay", requireAuth, async (req, res) => {
 });
 
 // Admin routes
-app.get("/api/admin/orders", requireAuth, async (req, res) => {
+app.get("/api/admin/orders", requireAuth, requireAdmin, async (req, res) => {
     try {
         const orders = await prisma.order.findMany({
             orderBy: { createdAt: "desc" },
@@ -345,7 +345,7 @@ app.get("/api/admin/orders", requireAuth, async (req, res) => {
     }
 });
 
-app.put("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
+app.put("/api/admin/orders/:orderId/status", requireAuth, requireAdmin, async (req, res) => {
     const newStatus = req.body.status
     const orderId = Number(req.params.orderId);
     
@@ -369,7 +369,7 @@ app.put("/api/admin/orders/:orderId/status", requireAuth, async (req, res) => {
     }
 });
 
-app.get("/api/admin/orders/:id", requireAuth, async (req, res) => {
+app.get("/api/admin/orders/:id", requireAuth, requireAdmin, async (req, res) => {
     const orderId = Number(req.params.id);
     if (!Number.isFinite(orderId)) return res.status(400).json({ error: "ID invalide" });
 
@@ -388,7 +388,7 @@ app.get("/api/admin/orders/:id", requireAuth, async (req, res) => {
     }
 });
 
-app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (req, res) => {
+app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images", 5), async (req, res) => {
     try {
         const {
             name, slug, description, price, categoryId,
@@ -431,7 +431,7 @@ app.post("/api/admin/products", requireAuth, upload.array("images", 5), async (r
 });
 
 
-app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async (req, res) => {
+app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("images", 5), async (req, res) => {
     const { id } = req.params;
     const {
         name, slug, description, price, stock,
@@ -471,7 +471,7 @@ app.put("/api/admin/products/:id", requireAuth, upload.array("images", 5), async
     }
 });
 
-app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
+app.delete("/api/admin/products/:id", requireAuth, requireAdmin, async (req, res) => {
     const id = parseInt(req.params.id);
     if (isNaN(id)) {
         return res.status(400).json({ error: "ID invalide" });
@@ -494,7 +494,7 @@ app.delete("/api/admin/products/:id", requireAuth, async (req, res) => {
     }
 });
 
-app.delete("/api/admin/products/images/:url", requireAuth, async (req, res) => {
+app.delete("/api/admin/products/images/:url", requireAuth, requireAdmin, async (req, res) => {
     const url = req.params.url;
     try {
         await deleteImagesFromR2([url]);
