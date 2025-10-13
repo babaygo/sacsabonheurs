@@ -230,6 +230,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
                 currency: "eur",
                 product_data: {
                     name: item.name,
+                    images: [item.image]
                 },
                 unit_amount: Math.round(item.price * 100),
             },
