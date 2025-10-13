@@ -28,9 +28,9 @@ export default function Footer() {
                 <div className="space-y-2">
                     <p className="font-semibold text-gray-800">Légal</p>
                     <ul className="space-y-1">
-                        <li><Link href="/" className="hover:underline">Mentions légales</Link></li>
-                        <li><Link href="/" className="hover:underline">Conditions générales</Link></li>
-                        <li><Link href="/" className="hover:underline">Politique de confidentialité</Link></li>
+                        <li><Link href="/policies/mentions" className="hover:underline">Mentions légales</Link></li>
+                        <li><Link href="/policies/cgv" className="hover:underline">Conditions générales</Link></li>
+                        <li><Link href="/policies/privacy-policy" className="hover:underline">Politique de confidentialité</Link></li>
                     </ul>
                 </div>
 

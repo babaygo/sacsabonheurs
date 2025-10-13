@@ -156,3 +156,11 @@ enum OrderStatusType {
   delivered
   cancelled
 }
+
+model Legal {
+  id        Int      @id @default(1)
+  mentions  String   @db.Text
+  cgv       String   @db.Text
+  privacy   String   @db.Text
+  updatedAt DateTime @updatedAt
+}

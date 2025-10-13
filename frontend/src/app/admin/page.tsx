@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PackageSearch, Handbag } from "lucide-react";
+import { PackageSearch, Handbag, Scale } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useEffect } from "react";
@@ -28,8 +28,8 @@ export default function AdminHomePage() {
             <h1 className="text-3xl font-bold mb-6">Tableau de bord admin</h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <Link href="/admin/orders">
-                    <Card className="hover:shadow-md transition">
+                <Link href="/admin/orders" className="h-full w-full">
+                    <Card className="h-full w-full hover:shadow-md transition">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <PackageSearch className="w-5 h-5" />
@@ -44,8 +44,8 @@ export default function AdminHomePage() {
                     </Card>
                 </Link>
 
-                <Link href="/admin/products">
-                    <Card className="hover:shadow-md transition">
+                <Link href="/admin/products" className="h-full w-full">
+                    <Card className="h-full w-full hover:shadow-md transition">
                         <CardHeader>
                             <CardTitle className="flex items-center gap-2">
                                 <Handbag className="w-5 h-5" />
@@ -55,6 +55,22 @@ export default function AdminHomePage() {
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
                                 Ajouter, supprimer, modifier les produits.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </Link>
+
+                <Link href="/admin/legal" className="h-full w-full">
+                    <Card className="h-full w-full hover:shadow-md transition">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <Scale className="w-5 h-5" />
+                                Légal
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                Saisir les Mentions légales, les Conditions générales et la Politique de confidentialité.
                             </p>
                         </CardContent>
                     </Card>
