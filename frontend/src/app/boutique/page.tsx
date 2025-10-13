@@ -4,6 +4,7 @@ import ProductFilters from "@/components/ProductsFilters";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Product } from "@/types/Product";
 import { SortOption } from "@/types/SortOptions";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -58,10 +59,14 @@ export default function BoutiquePage() {
             />
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 {sorted.map((product) => (
-                    <div key={product.id} className="flex flex-col items-center p-4 group">
+                     <Link
+                        key={product.id}
+                        href={`/products/${product.slug}`}
+                        className="flex flex-col items-center p-4 group"
+                    >
                         <div className="relative w-full h-100 bg-white rounded overflow-hidden">
                             <img
-                                src={product.images?.[0] ?? "/placeholder.jpg"}
+                                src={product.images?.[0]}
                                 alt={product.name}
                                 className="absolute inset-0 w-full h-full object-contain transition-opacity duration-300 opacity-100 group-hover:opacity-0"
                             />
@@ -76,7 +81,7 @@ export default function BoutiquePage() {
 
                         <h3 className="font-montserrat mt-4">{product.name}</h3>
                         <p className="font-montserrat text-sm font-semibold mt-2">{product.price.toFixed(2)} €</p>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </main>
