@@ -48,8 +48,25 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     );
 
     const handleChange = (field: string, value: any) => {
-        setForm((prev) => ({ ...prev, [field]: value }));
+        setForm((prev) => {
+            const updatedForm = { ...prev, [field]: value };
+
+            if (field === "name") {
+                const slug = value
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9\s-]/g, "")
+                    .trim()
+                    .replace(/\s+/g, "-");
+
+                updatedForm.slug = slug;
+            }
+
+            return updatedForm;
+        });
     };
+
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -125,6 +142,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 <FieldLabel>Slug</FieldLabel>
                                 <Input
                                     value={form.slug}
+                                    disabled
                                     required
                                     onChange={(e) => handleChange("slug", e.target.value)}
                                 />

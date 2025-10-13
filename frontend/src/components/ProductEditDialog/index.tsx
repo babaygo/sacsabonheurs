@@ -114,6 +114,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                                 <FieldLabel>Slug</FieldLabel>
                                 <Input
                                     value={form.slug}
+                                    disabled
                                     required
                                     onChange={(e) => handleChange("slug", e.target.value)}
                                 />
