@@ -1,0 +1,1 @@
+export type SortOption = "date-desc" | "date-asc" | "price-asc" | "price-desc" | "name-asc" | "name-desc";

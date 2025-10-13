@@ -30,13 +30,15 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${montserrat.variable} ${playfairDisplay.variable} antialiased`}
+        className={`${montserrat.variable} ${playfairDisplay.variable} `}
       >
         <SessionProvider>
           <CategoryHydrator />
           <ClientLayout>
             <Toaster position="top-right" />
-            {children}
+            <div className="min-h-screen max-w-7xl mx-auto px-4 py-8">
+              {children}
+            </div>
           </ClientLayout>
         </SessionProvider>
 
