@@ -17,7 +17,7 @@ app.use(cors({
     credentials: true,
 }));
 
-app.all("/api/auth/*", toNodeHandler(auth));
+app.all("/api/auth/*", toNodeHandler(auth.handler));
 
 const prisma = new PrismaClient();
 

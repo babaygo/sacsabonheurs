@@ -25,6 +25,7 @@ export default function SignupPage() {
     const [password, setPassword] = useState("");
     const [lastname, setLastName] = useState("");
     const [fisrtname, setFisrtName] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
     const { refreshSession } = useSessionContext();
     const router = useRouter();
 
@@ -40,7 +41,7 @@ export default function SignupPage() {
 
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
-            toast.error(firstError || "Erreur de validation");
+            setErrorMessage(firstError || "Erreur de validation");
             return;
         }
 
@@ -51,7 +52,7 @@ export default function SignupPage() {
             await refreshSession();
             router.push("/");
         } catch (error: any) {
-            toast.error(error.message || "Erreur lors de l'inscription");
+            setErrorMessage(error.message || "Erreur lors de l'inscription");
         }
     };
 
@@ -110,6 +111,9 @@ export default function SignupPage() {
                                 required
                             />
                         </div>
+                        {errorMessage && (
+                            <p className="text-sm text-red-500">{errorMessage}</p>
+                        )}
                         <Button type="submit" className="w-full">
                             Inscription
                         </Button>

@@ -19,34 +19,60 @@ import { loginSchema } from "@/lib/validation/loginSchema";
 import { useLogin } from "@/lib/useLogin";
 import { useSessionContext } from "@/components/SessionProvider";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/authClient";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
+    const [loading, setLoading] = useState(false);
     const { refreshSession } = useSessionContext();
     const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrorMessage("");
 
         const result = loginSchema.safeParse({ email, password });
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
-            toast.error(firstError || "Erreur de validation");
+            setErrorMessage(firstError || "Erreur de validation");
             return;
         }
 
+        setLoading(true);
         try {
             await useLogin({ email, password });
             await refreshSession();
             router.push("/");
         } catch (err: any) {
-            toast.error(err.message || "Erreur lors de la connexion");
+            setErrorMessage(err.message || "Erreur lors de la connexion");
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleResetPassword = async () => {
+        try {
+            if (!email) {
+                setErrorMessage("Veuillez entrer votre email avant de réinitialiser le mot de passe");
+                return;
+            }
+
+            await authClient.requestPasswordReset({
+                email,
+                redirectTo: `${process.env.NEXT_PUBLIC_URL_FRONT}/reset-password`
+            });
+
+            toast.success("Un lien de réinitialisation a été envoyé à votre adresse email");
+        } catch (err: any) {
+            setErrorMessage(err.message);
         }
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen">
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Se connecter</CardTitle>
@@ -71,12 +97,13 @@ export default function LoginPage() {
                         <div className="grid gap-2">
                             <div className="flex items-center">
                                 <Label htmlFor="password">Mot de passe *</Label>
-                                <a
-                                    href="#"
-                                    className="ml-auto text-sm underline-offset-4 hover:underline"
+                                <Button
+                                    onClick={handleResetPassword}
+                                    variant={"link"}
+                                    className="ml-auto"
                                 >
                                     Mot de passe oublié ?
-                                </a>
+                                </Button>
                             </div>
                             <Input
                                 id="password"
@@ -86,8 +113,11 @@ export default function LoginPage() {
                                 required
                             />
                         </div>
-                        <Button type="submit" className="w-full">
-                            Connexion
+                        {errorMessage && (
+                            <p className="text-sm text-red-500">{errorMessage}</p>
+                        )}
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading ? <Spinner /> : "Connexion"}
                         </Button>
                     </form>
                 </CardContent>
