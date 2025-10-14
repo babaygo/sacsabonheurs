@@ -1,5 +1,7 @@
 "use client";
 
+import StatusBadge from "@/components/StatusBadge";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Order } from "@/types/Order";
 import { Loader2 } from "lucide-react";
@@ -82,29 +84,44 @@ export default function OrdersClient() {
     }
 
     return (
-        <div className="min-h-screen max-w-2xl mx-auto py-12 space-y-8">
-            {orders.map((order) => (
-                <div key={order.id}>
-                    <h1 className="text-2xl font-bold mb-4">
-                        {sessionId ? "Merci pour votre commande !" : `Commande n° ${order.id}`}
-                    </h1>
-                    <p className="text-gray-700 mb-2">Email : {order.email}</p>
-                    <p className="text-gray-700 mb-2">Montant total : {order.total.toFixed(2)} €</p>
-                    <p className="text-gray-700 mb-6">
-                        Date : {order.createdAt ? new Date(order.createdAt).toLocaleDateString() : "—"}
-                    </p>
-
-                    <div className="space-y-4">
-                        {order.items?.map((item) => (
-                            <div key={item.id} className="border rounded p-4">
-                                <p className="font-semibold">{item.name}</p>
-                                <p className="text-sm text-gray-600">Quantité : {item.quantity}</p>
-                                <p className="text-sm text-gray-600">Prix : {item.price.toFixed(2)} €</p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            ))}
-        </div>
+        <Table>
+            <TableCaption>Historique de vos commandes</TableCaption>
+            <TableHeader>
+                <TableRow>
+                    <TableHead>Numéro de commande</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Status de la commande</TableHead>
+                    <TableHead>Total</TableHead>
+                </TableRow>
+            </TableHeader>
+            <TableBody>
+                {orders.map((order: Order) => (
+                    <TableRow key={order.id}>
+                        <TableCell className="font-medium">{order.id}</TableCell>
+                        <TableCell>
+                            {order.createdAt
+                                ? new Date(order.createdAt).toLocaleString("fr-FR", {
+                                    timeZone: "Europe/Paris",
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                })
+                                : "—"}
+                        </TableCell>
+                        <TableCell>
+                            <StatusBadge
+                                status={order.status}
+                                clickable={false}
+                            />
+                        </TableCell>
+                        <TableCell>
+                            {order.total.toFixed(2)} €
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
     );
 }

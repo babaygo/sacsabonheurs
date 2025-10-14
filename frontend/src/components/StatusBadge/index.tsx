@@ -6,6 +6,7 @@ import { useState } from "react";
 interface StatusBadgeProps {
     status: OrderStatusType;
     onChange?: (newStatus: OrderStatusType) => void;
+    clickable?: boolean;
 }
 
 const statusMap: Record<OrderStatusType, { label: string; color: string }> = {
@@ -16,7 +17,7 @@ const statusMap: Record<OrderStatusType, { label: string; color: string }> = {
     cancelled: { label: "Annulée", color: "bg-red-100 text-red-800" },
 };
 
-export default function StatusBadge({ status, onChange }: StatusBadgeProps) {
+export default function StatusBadge({ status, onChange, clickable = true }: StatusBadgeProps) {
     const [open, setOpen] = useState(false);
 
     const handleChange = (newStatus: OrderStatusType) => {
@@ -30,14 +31,20 @@ export default function StatusBadge({ status, onChange }: StatusBadgeProps) {
 
     return (
         <div className="relative inline-block">
-            <button
-                className={`px-2 py-1 rounded text-sm font-medium ${color}`}
-                onClick={() => setOpen(!open)}
-            >
-                {label}
-            </button>
+            {clickable ? (
+                <button
+                    className={`px-2 py-1 rounded text-sm font-medium ${color}`}
+                    onClick={() => setOpen(!open)}
+                >
+                    {label}
+                </button>
+            ) : (
+                <span className={`px-2 py-1 rounded text-sm font-medium cursor-default ${color}`}>
+                    {label}
+                </span>
+            )}
 
-            {open && (
+            {clickable && open && (
                 <ul className="absolute z-10 mt-1 w-32 bg-white border rounded shadow">
                     {Object.keys(statusMap).map((s) => (
                         <li
