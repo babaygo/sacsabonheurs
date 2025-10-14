@@ -45,21 +45,21 @@ export default async function ProductPage({ params }: { params: { slug: string }
                     <div className="flex flex-col">
                         <Accordion type="multiple">
                             <AccordionItem value="item-1">
-                                <AccordionTrigger>Description</AccordionTrigger>
+                                <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
                                 <AccordionContent>
                                     {product.description}
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-2">
-                                <AccordionTrigger>Dimensions</AccordionTrigger>
+                                <AccordionTrigger className="font-semibold">Dimensions</AccordionTrigger>
                                 <AccordionContent>
-                                    {product.height}*{product.lenght}*{product.width}*
+                                    {product.height}*{product.lenght}*{product.width} cm
                                 </AccordionContent>
                             </AccordionItem>
                             <AccordionItem value="item-3">
-                                <AccordionTrigger>Poids</AccordionTrigger>
+                                <AccordionTrigger className="font-semibold">Poids</AccordionTrigger>
                                 <AccordionContent>
-                                    {product.weight}g
+                                    {product.weight} g
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
