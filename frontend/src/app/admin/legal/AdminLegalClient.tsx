@@ -43,7 +43,17 @@ export default function AdminLegalClient() {
             } else {
                 const fetchLegalContent = async () => {
                     const data = await getLegals();
-                    setLegal(data);
+
+                    if (!data) {
+                        return;
+                    }
+
+                    setLegal({
+                        mentions: data.mentions ?? "",
+                        cgv: data.cgv ?? "",
+                        privacy: data.privacy ?? "",
+                        updatedAt: data.updatedAt ?? null,
+                    });
                 }
                 fetchLegalContent();
             }
@@ -79,13 +89,15 @@ export default function AdminLegalClient() {
 
             <p>
                 Dernière mise à jour le{" "}
-                {legal.updatedAt ? new Date(legal.updatedAt).toLocaleDateString("fr-FR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                }) : "—"}.
+                {legal.updatedAt && !isNaN(Date.parse(legal.updatedAt))
+                    ? new Date(legal.updatedAt).toLocaleDateString("fr-FR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    })
+                    : "non renseignée"}
+                .
             </p>
-
 
             <div className="space-y-4">
                 <Label htmlFor="mentions">Mentions légales</Label>
