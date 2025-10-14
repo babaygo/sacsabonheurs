@@ -38,7 +38,7 @@ export default function HeaderClient() {
             <div className="flex p-4 h-full items-center justify-between max-w-7xl mx-auto">
                 {/* Logo */}
                 <div className="flex items-center space-x-4">
-                    <img src="/logo.png" alt="Logo Sacs à Bonheurs" />
+                    <img src="/sacs-a-bonheurs-logo.png" alt="Logo Sacs à Bonheurs"   className="h-10 w-10 object-contain" />
                     <Link href="/" className="text-xl font-playfair-display font-semibold">
                         Sacs à Bonheurs
                     </Link>
