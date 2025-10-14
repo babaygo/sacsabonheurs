@@ -50,7 +50,7 @@ export default function HeaderClient() {
                         <Link
                             key={cat.id}
                             href={`/categories/${cat.slug}`}
-                            className="text-gray-700 font-montserrat hover:text-black text-sm"
+                            className="text-gray-700 hover:text-black text-sm"
                         >
                             {cat.name}
                         </Link>

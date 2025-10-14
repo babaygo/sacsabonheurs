@@ -37,8 +37,8 @@ export default async function ProductPage({ params }: { params: { slug: string }
 
                 </div>
                 <div className="flex flex-col mr-38">
-                    <p className="text-2xl font-montserrat mt-4">{product.name}</p>
-                    <p className="text-lg font-montserrat font-semibold my-4">{product.price} €</p>
+                    <p className="text-2xl mt-4">{product.name}</p>
+                    <p className="text-lg font-semibold my-4">{product.price} €</p>
 
                     <AddToCartDrawer product={product} />
 

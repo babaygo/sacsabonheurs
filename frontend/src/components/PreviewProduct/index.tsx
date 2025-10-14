@@ -23,8 +23,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 )}
             </div>
 
-            <h3 className="font-montserrat mt-4">{product.name}</h3>
-            <p className="font-montserrat text-sm font-semibold mt-2">{product.price.toFixed(2)} €</p>
+            <h3 className="mt-4">{product.name}</h3>
+            <p className="text-sm font-semibold mt-2">{product.price.toFixed(2)} €</p>
         </Link>
     );
 }
