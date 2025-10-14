@@ -24,7 +24,19 @@ export default function ZoomableCarousel({
     }, [emblaApi, initialIndex]);
 
     return (
-        <div className="relative w-full max-w-3xl mx-auto">
+
+        <div className="relative w-full flex items-center max-w-3xl mx-auto">
+            {/* Chevron gauche */}
+            <button
+                className="px-4 text-white text-3xl"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    emblaApi?.scrollPrev();
+                }}
+            >
+                <CircleChevronLeft />
+            </button>
+            {/* Zone scrollable */}
             <div className="overflow-hidden" ref={emblaRef}>
                 <div className="flex">
                     {images.map((src, i) => (
@@ -38,19 +50,17 @@ export default function ZoomableCarousel({
                     ))}
                 </div>
             </div>
-
+            {/* Chevron droite */}
             <button
-                className="absolute left-4 top-1/2 text-white text-2xl"
-                onClick={() => emblaApi?.scrollPrev()}
-            >
-                <CircleChevronLeft />
-            </button>
-            <button
-                className="absolute right-4 top-1/2 text-white text-2xl"
-                onClick={() => emblaApi?.scrollNext()}
+                className="px-4 text-white text-3xl"
+                onClick={(e) => {
+                    e.stopPropagation();
+                    emblaApi?.scrollNext();
+                }}
             >
                 <CircleChevronRight />
             </button>
         </div>
+
     );
 }

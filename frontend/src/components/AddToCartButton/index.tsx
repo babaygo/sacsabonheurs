@@ -20,7 +20,7 @@ export default function AddToCartButton({ product }: { product: any }) {
             onClick={handleClick}
             disabled={product.stock <= 0}
             variant={product.stock > 0 ? "default" : "secondary"}
-            className={product.stock > 0 ? "my-4 hover:opacity-75" : "my-4 text-gray-600"}
+            className={product.stock > 0 ? "my-4 cursor-pointer hover:opacity-75" : "my-4 text-gray-600"}
         >
             {product.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
         </Button>
