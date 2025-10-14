@@ -22,15 +22,19 @@ export default async function ProductPage({ params }: { params: { slug: string }
     const product: Product = await getProduct(params.slug);
     if (!product) notFound();
 
-    const images = product.images;
-
     return (
         <div className="max-w-7xl mx-auto min-h-screen p-4 mt-8">
             <div className="grid grid-cols-2 gap-8">
-                <div className="grid grid-cols-2 gap-4">
-                    {images.map((src: string, i: number) => (
-                        <ZoomableImage key={i} src={src} alt={`${product.name} ${i + 1}`} />
+                <div className="grid justify-items-center grid-cols-1 gap-4">
+                    {product.images.map((src, i) => (
+                        <ZoomableImage
+                            key={i}
+                            images={product.images}
+                            index={i}
+                            alt={`${product.name} ${i + 1}`}
+                        />
                     ))}
+
                 </div>
                 <div className="flex flex-col mr-38">
                     <p className="text-2xl mt-4">{product.name}</p>
