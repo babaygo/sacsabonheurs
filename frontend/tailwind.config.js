@@ -8,9 +8,16 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      colors: {
+        primary: '#6B2E1C',
+        secondary: '#F6E1D5',
+        accent: '#D2B48C',
+        neutral: '#FAF8F6',
+        text: '#3C3C3C',
+      },
       fontFamily: {
-         sans: ["var(--font-montserrat)"],
-         mono: ["var(--font-playfair-display)"],
+        sans: ["var(--font-montserrat)"],
+        serif: ["var(--font-playfair-display)"],
       }
     },
   },

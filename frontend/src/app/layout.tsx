@@ -19,7 +19,7 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Sacs à Bonheurs",
-  description: "Boutique de sacs, fait à la main en France",
+  description: "Boutique de sacs artisanaux, fait à la main en France.",
 };
 
 export default function RootLayout({
@@ -28,15 +28,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr">
-      <body
-        className={`${montserrat.variable} ${playfairDisplay.variable} `}
-      >
+    <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable} `}>
+      <body>
         <SessionProvider>
           <CategoryHydrator />
           <ClientLayout>
             <Toaster position="top-right" />
-            <div className="min-h-screen max-w-7xl mx-auto px-4 py-8">
+            <div>
               {children}
             </div>
           </ClientLayout>

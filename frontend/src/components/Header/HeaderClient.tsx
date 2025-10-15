@@ -10,11 +10,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/authClient";
 import { useRouter } from "next/navigation";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import CartDrawer from "@/components/CartDrawer";
 import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useCategoryStore } from "@/lib/categoryStore";
+import { Menu, ShoppingBasket, UserRound } from "lucide-react";
+import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
@@ -34,49 +35,30 @@ export default function HeaderClient() {
     };
 
     return (
-        <header className="bg-white w-full border-b">
-            <div className="flex p-4 h-full items-center justify-between max-w-7xl mx-auto">
-                {/* Logo */}
-                <div className="flex items-center space-x-4">
-                    <img src="/sacs-a-bonheurs-logo.png" alt="Logo Sacs à Bonheurs" className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 object-contain"
-                    />
-                    <Link href="/" className="text-xl font-playfair-display font-semibold">
+        <>
+            {/* Header sticky */}
+            <header className="sticky top-0 left-0 w-full z-50 bg-primary-foreground p-4">
+                <nav className="hidden md:flex absolute top-6 left-6 flex space-x-6 text-l font-medium">
+                    <Link href="/contact">Contact</Link>
+                    <Link href="/a-propos">À propos</Link>
+                    <Link href="/boutique">Boutique</Link>
+                </nav>
+
+                <div className="flex flex-col items-center space-y-1">
+                    <Link href="/" className="text-4xl font-playfair-display font-semibold">
                         Sacs à Bonheurs
                     </Link>
+                    <p className="text-sm text-muted-foreground">Fabriqué à la main, en France</p>
                 </div>
 
-                {/* Catégories */}
-                <div className="flex space-x-6">
-                    {categories.map((cat) => (
-                        <Link
-                            key={cat.id}
-                            href={`/categories/${cat.slug}`}
-                            className="text-gray-700 hover:text-black text-sm"
-                        >
-                            {cat.name}
-                        </Link>
-                    ))}
-                </div>
-
-                {/* Actions */}
-                <div className="flex items-center space-x-4">
+                <div className="hidden md:flex absolute top-6 right-6 flex items-center space-x-2">
                     <CartDrawer />
-                    <button
-                        onClick={() => setOpen(true)}
-                        className="group -m-2 flex items-center p-2 relative"
-                    >
-                        <ShoppingCartIcon className="size-6 text-gray-400 group-hover:text-gray-500 cursor-pointer" />
-                        {count > 0 && (
-                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
-                                {count}
-                            </span>
-                        )}
-                    </button>
-
                     {!loadingUser && user ? (
                         <Popover>
                             <PopoverTrigger asChild>
-                                <Button variant="link">Mon compte</Button>
+                                <Button variant="ghost" className="hover:bg-white">
+                                    <UserRound className="size-6 text-primary" />
+                                </Button>
                             </PopoverTrigger>
                             <PopoverContent align="start">
                                 <div className="grid gap-4">
@@ -86,18 +68,8 @@ export default function HeaderClient() {
                                     </div>
                                     <Separator />
                                     <div className="grid gap-2">
-                                        <Link
-                                            href="/profile"
-                                            className="text-sm p-2 rounded hover:bg-gray-100"
-                                        >
-                                            Profil
-                                        </Link>
-                                        <Link
-                                            href="/orders"
-                                            className="text-sm p-2 rounded hover:bg-gray-100"
-                                        >
-                                            Mes commandes
-                                        </Link>
+                                        <Link href="/profile" className="text-sm p-2 rounded">Profil</Link>
+                                        <Link href="/orders" className="text-sm p-2 rounded">Mes commandes</Link>
                                         <Button
                                             variant="default"
                                             onClick={handleLogout}
@@ -108,15 +80,9 @@ export default function HeaderClient() {
                                         {isAdmin && (
                                             <>
                                                 <Separator />
-                                                <Link
-                                                    href="/admin"
-                                                    className="text-sm p-2 rounded hover:bg-gray-100"
-                                                >
-                                                    Admin
-                                                </Link>
+                                                <Link href="/admin" className="text-sm p-2 rounded">Admin</Link>
                                             </>
                                         )}
-
                                     </div>
                                 </div>
                             </PopoverContent>
@@ -126,8 +92,80 @@ export default function HeaderClient() {
                             Se connecter
                         </Link>
                     )}
+                    <Button
+                        variant="ghost"
+                        onClick={() => setOpen(true)}
+                        className="group -m-2 flex items-center p-2 relative hover:bg-white"
+                    >
+                        <ShoppingBasket className="size-6 text-primary" />
+                        {count > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                                {count}
+                            </span>
+                        )}
+                    </Button>
                 </div>
-            </div>
-        </header>
+
+                {/* Menu burger mobile */}
+                <div className="md:hidden absolute top-6 left-2">
+                    <Sheet>
+                        <SheetTrigger asChild>
+                            <Button variant="ghost" className="p-2">
+                                <Menu className="size-6" />
+                            </Button>
+                        </SheetTrigger>
+                        <SheetContent side="left" className="w-64">
+                            <div className="mt-6 space-y-6">
+                                {!loadingUser && user ? (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center space-x-2">
+                                            <UserRound className="size-5 text-primary" />
+                                            <div>
+                                                <p className="text-sm font-medium">{user.name}</p>
+                                                <p className="text-sm text-muted-foreground">{user.email}</p>
+                                            </div>
+                                        </div>
+                                        <Separator />
+                                        <div className="flex flex-col space-y-2">
+                                            <Link href="/profile" className="text-sm hover:underline">Profil</Link>
+                                            <Link href="/orders" className="text-sm hover:underline">Mes commandes</Link>
+                                            <Link href="/boutique" className="text-sm hover:underline">Boutique</Link>
+                                            <Link href="/a-propos" className="text-sm hover:underline">À propos</Link>
+                                            <Link href="/contact" className="text-sm hover:underline">Contact</Link>
+                                            {isAdmin && <Link href="/admin" className="text-sm hover:underline">Admin</Link>}
+                                            <Button
+                                                variant="ghost"
+                                                onClick={handleLogout}
+                                                className="text-sm text-left px-0 hover:underline"
+                                            >
+                                                Se déconnecter
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Link href="/login" className="text-sm hover:underline">
+                                        Se connecter
+                                    </Link>
+                                )}
+                            </div>
+                        </SheetContent>
+                    </Sheet>
+                </div>
+                <div className="md:hidden absolute top-8 right-2">
+                    <Button
+                        variant="ghost"
+                        onClick={() => setOpen(true)}
+                        className="group -m-2 flex items-center p-2 relative hover:bg-white"
+                    >
+                        <ShoppingBasket className="size-6 text-primary" />
+                        {count > 0 && (
+                            <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full px-1">
+                                {count}
+                            </span>
+                        )}
+                    </Button>
+                </div>
+            </header>
+        </>
     );
 }
