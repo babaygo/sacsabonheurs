@@ -5,12 +5,22 @@ import { Instagram } from "lucide-react";
 
 export default function Footer() {
     return (
-        <footer className="relative top-6 bottom-6 left-1/2 transform -translate-x-1/2 w-4/5 bg-secondary rounded-t-xl shadow-sm">
+        <footer className="relative mt-8 top-6 bottom-6 left-1/2 transform -translate-x-1/2 w-4/5 bg-secondary rounded-t-xl shadow-sm">
             <div className="p-8 flex flex-col md:flex-row justify-between gap-6 text-sm">
-                <div className="space-y-2">
-                    <p className="font-semibold">Sacs à Bonheurs</p>
-                    <p>Créations uniques et artisanales, faites en France.</p>
-                    <p className="text-xs">© {new Date().getFullYear()} Tous droits réservés.</p>
+                <div className="flex items-center space-x-4">
+                    <div className="space-y-2">
+                        <div className="flex items-center space-x-2">
+                            <img
+                                src="/sacs-a-bonheurs-logo.png"
+                                alt="Logo Sacs à Bonheurs"
+                                className="h-8 w-auto"
+                            />
+                            <p className="font-semibold">Sacs à Bonheurs</p>
+                        </div>
+
+                        <p>Créations uniques et artisanales, faites en France.</p>
+                        <p className="text-xs">© {new Date().getFullYear()} Tous droits réservés.</p>
+                    </div>
                 </div>
 
                 <div className="space-y-2">

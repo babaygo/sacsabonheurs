@@ -58,7 +58,7 @@ export default function AdminProducts() {
     }
 
     return (
-        <main className="p-6">
+        <div className="p-6">
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold mb-4">Produits</h1>
                 <AddDialog onSuccess={refreshProducts} />
@@ -78,6 +78,6 @@ export default function AdminProducts() {
                     </div>
                 ))}
             </div>
-        </main>
+        </div>
     );
 }

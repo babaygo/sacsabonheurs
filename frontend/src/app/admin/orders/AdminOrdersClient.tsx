@@ -75,7 +75,7 @@ export default function AdminOrdersClient() {
     }
 
     return (
-        <main className="p-6">
+        <div className="p-6">
             <h1 className="text-2xl font-bold mb-4">Commandes</h1>
             <Table>
                 <TableHeader>
@@ -104,6 +104,6 @@ export default function AdminOrdersClient() {
                     ))}
                 </TableBody>
             </Table>
-        </main>
+        </div>
     );
 }

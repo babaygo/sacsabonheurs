@@ -34,9 +34,9 @@ export default function RootLayout({
           <CategoryHydrator />
           <ClientLayout>
             <Toaster position="top-right" />
-            <div>
+            <main className="max-w-7xl mx-auto">
               {children}
-            </div>
+            </main>
           </ClientLayout>
         </SessionProvider>
 

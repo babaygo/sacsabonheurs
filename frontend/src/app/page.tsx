@@ -38,8 +38,7 @@ export default function HomePage() {
         <meta name="description" content="Boutique artisanale de sacs faits main en France" />
       </Head>
 
-      <main className="flex flex-col max-w-7xl mx-auto items-center justify-center">
-        {/* Section Hero */}
+      <div className="flex flex-col items-center justify-center">
         <section className="w-full py-20 text-center px-6">
           <div className="space-y-2">
             <TextType
@@ -51,22 +50,38 @@ export default function HomePage() {
               textColors={["var(--primary)"]}
               className="text-4xl font-bold font-serif"
             />
-            <p className="text-lg text-gray-700">
+            <p className="text-lg">
               Découvrez mes sacs faits main en France et avec passion !
             </p>
-            <Link href="/boutique">
-              <Button className="mt-4 py-5 px-6 text-base group flex items-center gap-2 mx-auto">
-                <span>Explorer la boutique</span>
-                <MoveRight className="scale-125 transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-150" />
-              </Button>
-            </Link>
+            <div className="flex flex-col py-8">
+              <h2 className="text-2xl text-left font-bold p-4">
+                Les dernières créations
+              </h2>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+                {products
+                  .sort(
+                    (a, b) =>
+                      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                  )
+                  .slice(0, 4)
+                  .map((product) => (
+                    <PreviewProduct key={product.id} product={product} />
+                  ))}
+              </div>
+
+              <Link href="/boutique">
+                <Button className="mt-4 py-5 px-6 text-base group flex items-center gap-2 mx-auto">
+                  <span>Explorer la boutique</span>
+                  <MoveRight className="scale-125 transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-150" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Section Présentation */}
         <section className="py-20 w-full bg-secondary rounded-full">
           <div className=" grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
-            {/* Image */}
             <div className="flex justify-center">
               <TiltedCard
                 imageSrc="/sac-presentation.png"
@@ -89,7 +104,6 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Texte */}
             <div className="flex flex-col justify-center text-center md:text-left space-y-6">
               <h2 className="text-4xl font-bold">Le projet</h2>
               <p className="text-lg text-justify leading-relaxed pr-6">
@@ -106,35 +120,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-
-        {/* Les dernières créations */}
-        <section className="flex flex-col items-center w-full py-20">
-          <div>
-            <h2 className="text-2xl font-bold mb-10">
-              Les dernières créations
-            </h2>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-              {products
-                .sort(
-                  (a, b) =>
-                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                )
-                .slice(0, 4)
-                .map((product) => (
-                  <PreviewProduct key={product.id} product={product} />
-                ))}
-            </div>
-          </div>
-
-          <Link href="/boutique">
-            <Button className="px-8 rounded-full">
-              Tout afficher
-            </Button>
-          </Link>
-        </section>
-
-      </main>
+      </div>
     </>
   );
 }
