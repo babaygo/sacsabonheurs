@@ -10,12 +10,16 @@ export interface Order {
     email: string;
     total: number;
     subtotal?: number;
+    shippingOption?: string;
     shippingCost?: number;
     taxes?: number;
     deliveryMethod?: string;
     relayId?: string;
     relayName?: string;
     relayAddress?: string;
+    trackingNumber?: string
+    trackingUrl?: string
+    labelUrl?: string
     billingAddress?: string;
     detailsBillingAddress?: string;
     postalCode?: string;

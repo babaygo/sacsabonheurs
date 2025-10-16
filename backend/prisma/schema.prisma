@@ -123,12 +123,16 @@ model Order {
   email                 String
   total                 Float
   subtotal              Float?
+  shippingOption        String?
   shippingCost          Float?
   taxes                 Float?
   deliveryMethod        String?
   relayId               String?
   relayName             String?
   relayAddress          String?
+  trackingNumber        String?
+  trackingUrl           String?
+  labelUrl              String?
   billingAddress        String?
   detailsBillingAddress String?
   postalCode            String?
