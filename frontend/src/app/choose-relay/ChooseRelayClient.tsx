@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { notFound, useSearchParams } from "next/navigation";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -11,6 +11,7 @@ import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
+import { Order } from "@/types/Order";
 
 declare global {
     interface Window {
@@ -24,6 +25,7 @@ export default function ChooseRelayClient() {
     const searchParams = useSearchParams();
     const sessionId = searchParams.get("session_id");
     const [relay, setRelay] = useState<any>(null);
+    const [order, setOrder] = useState<Order | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [loadingConfirmRelay, setLoadingConfirmRelay] = useState(false);
     const [errorConfirmRelay, setErrorConfirmRelay] = useState<string | null>(null);
@@ -39,7 +41,21 @@ export default function ChooseRelayClient() {
             return;
         }
 
-        if (widgetInitialized.current) return;
+        fetch(`${getBaseUrl()}/api/order-by-session-id?session_id=${sessionId}`, { credentials: "include" })
+            .then((res) => (res.ok ? res.json() : null))
+            .then((data) => {
+                if (!data) {
+                    notFound();
+                } else {
+                    setOrder(data);
+                }
+            });
+    }, [sessionId, isValid]);
+
+
+    useEffect(() => {
+        if (!order || widgetInitialized.current) return;
+
         widgetInitialized.current = true;
 
         const loadScript = (src: string): Promise<void> => {
@@ -86,17 +102,20 @@ export default function ChooseRelayClient() {
 
                 if (!window.$.fn.MR_ParcelShopPicker) throw new Error("Le plugin Mondial Relay n'a pas pu être chargé");
 
+                console.log(order?.shippingOption)
+
                 window.$("#Zone_Widget").MR_ParcelShopPicker({
                     Target: "#Target_Widget",
                     TargetDisplay: "#TargetDisplay_Widget",
                     TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
                     Brand: process.env.NEXT_PUBLIC_CODE_MARCHAND_MR,
                     Country: "FR",
-                    ColLivMod: "24R",
+                    ColLivMod: order?.shippingOption,
                     NbResults: 10,
                     Responsive: true,
                     ShowResultsOnMap: true,
-                    OnParcelShopSelected: (data: any) => setRelay(data),
+                    EnableGmap: true,
+                    OnParcelShopSelected: (data: any) => setRelay(data)
                 });
 
                 setIsLoading(false);
@@ -107,7 +126,7 @@ export default function ChooseRelayClient() {
         };
 
         initWidget();
-    }, [isValid]);
+    }, [order]);
 
     const handleConfirm = async () => {
         setLoadingConfirmRelay(true);
