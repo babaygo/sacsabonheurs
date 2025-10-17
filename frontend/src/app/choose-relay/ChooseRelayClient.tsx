@@ -164,6 +164,17 @@ export default function ChooseRelayClient() {
         );
     }
 
+    if (order?.relayId) {
+        return (
+            <div className="min-h-screen flex items-center justify-center p-4">
+                <p className="text-center">
+                    Point relais déjà sélectionné, pour cette commande. Pour tout changement veuillez{" "}
+                    <a href="/contact" className="font-semibold">contacter le support</a>.
+                </p>
+            </div>
+        );
+    }
+
     return (
         <div className="p-4 max-w-6xl mx-auto min-h-screen">
             <h1 className="text-2xl font-bold mb-6">Choisissez votre point relais</h1>
