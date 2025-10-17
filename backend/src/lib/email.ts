@@ -30,7 +30,7 @@ export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
         <tr>
           <td><img src="${item.imageUrl}" alt="${item.name}" width="50" /></td>
           <td>${item.name}</td>
-          <td>${item.price.toFixed(2)} €</td>
+          <td>${item.price.toFixed(2)}</td>
         </tr>`
     )
     .join("");
