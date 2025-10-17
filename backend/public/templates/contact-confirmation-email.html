@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmation de contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            padding: 2rem;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background-color: #ffffff;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #222;
+        }
+
+        p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+
+        .footer {
+            margin-top: 32px;
+            font-size: 14px;
+            color: #999999;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Votre demande a bien été reçue</h1>
+        <p>Bonjour <strong>{{name}}</strong>,</p>
+        <p>
+            Merci de nous avoir contactés. Nous avons bien reçu votre message et notre équipe va le traiter dans les
+            meilleurs délais.
+        </p>
+        <p>
+            Si votre demande concerne une commande, n'hésitez pas à vérifier que vous avez bien indiqué votre numéro de
+            commande ou toute information utile pour faciliter le traitement.
+        </p>
+        <p><strong>Récapitulatif :</strong></p>
+        <p><strong>Email :</strong> {{email}}</p>
+        <p><strong>Commande :</strong> {{order}}</p>
+        <p><strong>Message :</strong><br />{{message}}</p>
+        <p>
+            Vous recevrez une réponse dès que possible.
+        </p>
+        <div class="footer">
+            L'équipe Sacs à Bonheurs<br />
+        </div>
+    </div>
+</body>
+
+</html>
