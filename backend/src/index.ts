@@ -47,7 +47,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
     }
 
     if (event.type === "checkout.session.completed") {
-        const session = event.data.object;
+        const session: Stripe.Checkout.Session = event.data.object;
         const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
         const slugs: string[] = JSON.parse(session.metadata!.slugs);
         const billingAddress = session.customer_details?.address;
@@ -61,6 +61,10 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             }))
         );
 
+        const shippingRateId = session.shipping_cost?.shipping_rate;
+        const shippingRate = await stripe.shippingRates.retrieve(String(shippingRateId));
+        const deliveryMode = shippingRate.metadata.ColLivMod;
+
         try {
             await prisma.order.create({
                 data: {
@@ -69,6 +73,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     email: session.customer_email!,
                     total: session.amount_total! / 100,
                     subtotal: session.amount_subtotal! / 100,
+                    shippingOption: deliveryMode,
                     shippingCost: session.total_details?.amount_shipping! / 100,
                     taxes: session.total_details?.amount_tax,
                     deliveryMethod: session.metadata?.deliveryMethod ?? null,
@@ -86,8 +91,6 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         } catch (error: any) {
             console.error("Erreur sur la création d'une commande :", error);
         }
-    } else {
-        console.log("Problème dans l'évènement reçu :", event);
     }
     res.status(200).json({ received: true });
 });
@@ -214,9 +217,8 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
         mode: "payment",
         customer_email: user.email,
         automatic_tax: { enabled: true },
-        shipping_options: [{
-            shipping_rate: process.env.ID_TARIF_LIVRAISON
-        }],
+        shipping_options: [{ shipping_rate: process.env.ID_TARIF_LIVRAISON_POINT_RELAIS },
+        { shipping_rate: process.env.ID_TARIF_LIVRAISON_LOCKER }],
         metadata: {
             userId: user.id,
             deliveryMethod: "mondial_relay",
@@ -286,10 +288,10 @@ app.get("/api/orders", requireAuth, async (req, res) => {
     }
 });
 
-app.post("/api/order/:id/relay", requireAuth, async (req, res) => {
+app.post("/api/order/:sessionId/relay", requireAuth, async (req, res) => {
     const relay = req.body.relay
     const user = (req as any).user;
-    const sessionId = req.params.id as string;
+    const sessionId = req.params.sessionId as string;
 
     if (!sessionId) {
         return res.status(400).json({ error: "Missing session_id" });
