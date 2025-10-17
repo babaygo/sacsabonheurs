@@ -108,7 +108,7 @@ export default function ChooseRelayClient() {
                     Target: "#Target_Widget",
                     TargetDisplay: "#TargetDisplay_Widget",
                     TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
-                    Brand: process.env.NEXT_PUBLIC_CODE_MARCHAND_MR,
+                    Brand: process.env.MONDIAL_RELAY_BRAND_ID,
                     Country: "FR",
                     ColLivMod: order?.shippingOption,
                     NbResults: 10,
