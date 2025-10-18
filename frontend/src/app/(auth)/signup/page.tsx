@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useSignup } from "@/lib/useSignup";
 import { signupSchema } from "@/lib/validation/signupSchema";
 import {
     Card,
@@ -17,16 +15,17 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { useSessionContext } from "@/components/SessionProvider";
-import toast from "react-hot-toast";
+import { authClient } from "@/lib/authClient";
+import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [lastname, setLastName] = useState("");
     const [fisrtname, setFisrtName] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
-    const { refreshSession } = useSessionContext();
     const router = useRouter();
 
     const handleSignup = async (e: React.FormEvent) => {
@@ -48,8 +47,11 @@ export default function SignupPage() {
         const name = `${fisrtname} ${lastname}`.trim();
 
         try {
-            await useSignup({ name, email, password });
-            await refreshSession();
+            await authClient.signUp.email({
+                name,
+                email,
+                password
+            });
             router.push("/");
         } catch (error: any) {
             setErrorMessage(error.message || "Erreur lors de l'inscription");
@@ -57,7 +59,7 @@ export default function SignupPage() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen bg-gray-100">
+        <div className="flex justify-center items-center min-h-screen">
             <Card className="w-full max-w-sm">
                 <CardHeader>
                     <CardTitle>Créer un compte</CardTitle>
@@ -103,13 +105,24 @@ export default function SignupPage() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password">Mot de passe *</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                required
-                            />
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? "text" : "password"}
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    required
+                                    className="pr-10" // espace pour l'icône
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowPassword((prev) => !prev)}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
+                                    tabIndex={-1} // évite de perturber la tabulation
+                                >
+                                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                                </button>
+                            </div>
                         </div>
                         {errorMessage && (
                             <p className="text-sm text-red-500">{errorMessage}</p>
