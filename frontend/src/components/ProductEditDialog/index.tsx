@@ -45,7 +45,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         try {
             await fetch(`${getBaseUrl()}/api/admin/products/images/${url}`, {
                 method: "DELETE",
-                credentials:"include"
+                credentials: "include"
             });
         } catch (err) {
             console.warn("Erreur suppression image R2 :", err);
@@ -64,8 +64,13 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
             formData.append(key, String(value))
         );
 
-        formData.append("keptImages", JSON.stringify(keptImages));
-        files.forEach((file) => formData.append("images", file));
+        keptImages.forEach((url) => {
+            formData.append("keptImages", url);
+        });
+
+        files.forEach((file) => {
+            formData.append("images", file);
+        });
 
         try {
             const res = await fetch(`${getBaseUrl()}/api/admin/products/${product.id}`, {

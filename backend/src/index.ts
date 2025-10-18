@@ -441,13 +441,17 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
     } = req.body;
 
     try {
-        const parsedImages: string[] = keptImages || "[]";
+        const keptImages = req.body.keptImages
+            ? Array.isArray(req.body.keptImages)
+                ? req.body.keptImages
+                : [req.body.keptImages]
+            : [];
 
         const uploaded = req.files && Array.isArray(req.files)
             ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
             : [];
 
-        const finalImages = [...parsedImages, ...uploaded].slice(0, 5);
+        const finalImages = [...keptImages, ...uploaded].slice(0, 5);
 
         const product = await prisma.product.update({
             where: { id: parseInt(id) },
