@@ -23,6 +23,7 @@ import { ImageUploader } from "../ImageUploader";
 import { Category } from "@/types/Category";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { Plus } from "lucide-react";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -118,6 +119,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" onClick={() => setOpen(true)}>
+                    <Plus />
                     Ajouter un sac
                 </Button>
             </DialogTrigger>
