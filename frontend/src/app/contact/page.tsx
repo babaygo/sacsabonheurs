@@ -47,7 +47,7 @@ export default function ContactPage() {
     };
 
     return (
-        <div className="min-h-screen p-4">
+        <div className="min-h-screen pt-4">
             <h1 className="text-2xl font-bold">Contact</h1>
             <p className="py-4">
                 Besoin d'aide ?<br />
