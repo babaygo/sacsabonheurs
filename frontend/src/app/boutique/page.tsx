@@ -51,7 +51,7 @@ export default function BoutiquePage() {
 
 
     return (
-        <div>
+        <div className="min-h-screen pt-2">
             <div className="px-4">
                 <ProductFilters
                     selectedCategory={selectedCategory}

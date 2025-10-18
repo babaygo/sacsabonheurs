@@ -50,7 +50,7 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
                     <AddToCartDrawer product={product} />
 
                     <div className="flex flex-col">
-                        <Accordion type="multiple">
+                        <Accordion type="multiple" defaultValue={["item-1"]}>
                             <AccordionItem value="item-1">
                                 <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
                                 <AccordionContent>
