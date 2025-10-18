@@ -8,13 +8,29 @@ import toast from "react-hot-toast";
 export function ImageUploader({ onChange }: { onChange: (files: File[]) => void }) {
     const [files, setFiles] = useState<File[]>([]);
 
+    function sanitizeFileName(name: string): string {
+        return name
+            .normalize("NFD") // décompose les accents
+            .replace(/[\u0300-\u036f]/g, "") // supprime les diacritiques
+            .replace(/[^a-zA-Z0-9._-]/g, "_") // remplace les caractères spéciaux
+            .replace(/_+/g, "_") // évite les doublons
+            .replace(/^_+|_+$/g, "") // nettoie début/fin
+            .toLowerCase();
+    }
+
     const onDrop = useCallback(
         (newFiles: File[]) => {
-            const combined = [...files, ...newFiles];
+            const sanitizedFiles = newFiles.map((file) => {
+                const cleanName = sanitizeFileName(file.name);
+                return new File([file], cleanName, { type: file.type });
+            });
+
+            const combined = [...files, ...sanitizedFiles];
             if (combined.length > 5) {
                 toast.error("Maximum 5 images autorisées");
                 return;
             }
+
             setFiles(combined);
             onChange(combined);
         },
