@@ -43,7 +43,7 @@ export default function CGVPage() {
 
     return (
         <div className="max-w-3xl mx-auto py-10 space-y-6">
-            <h1 className="text-3xl font-semibold">Conditions générales de vente</h1>
+            <h1 className="text-2xl font-bold">Conditions générales de vente</h1>
             <p className="whitespace-pre-line">{cgv}</p>
         </div>
     );
