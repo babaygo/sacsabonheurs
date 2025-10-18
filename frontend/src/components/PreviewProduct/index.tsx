@@ -6,7 +6,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
         <Link
             key={product.id}
             href={`/products/${product.slug}`}
-            className="flex flex-col items-center p-4 group"
+            className="flex flex-col items-center py-4 group"
         >
             <div className="relative w-full h-100 rounded overflow-hidden">
                 <img

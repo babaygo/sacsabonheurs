@@ -52,15 +52,13 @@ export default function BoutiquePage() {
 
     return (
         <div className="min-h-screen pt-2">
-            <div className="px-4">
-                <ProductFilters
-                    selectedCategory={selectedCategory}
-                    sortOption={sortOption}
-                    onCategoryChange={setSelectedCategory}
-                    onSortChange={setSortOption}
-                    showCategoryFilter={true}
-                />
-            </div>
+            <ProductFilters
+                selectedCategory={selectedCategory}
+                sortOption={sortOption}
+                onCategoryChange={setSelectedCategory}
+                onSortChange={setSortOption}
+                showCategoryFilter={true}
+            />
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
                 {sorted.map((product) => (
