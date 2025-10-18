@@ -45,7 +45,7 @@ export default function StatusBadge({ status, onChange, clickable = true }: Stat
             )}
 
             {clickable && open && (
-                <ul className="absolute z-10 mt-1 w-32 bg-white border rounded shadow">
+                <ul className="absolute z-10 mt-1 w-32 border rounded shadow">
                     {Object.keys(statusMap).map((s) => (
                         <li
                             key={s}

@@ -8,7 +8,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
             href={`/products/${product.slug}`}
             className="flex flex-col items-center p-4 group"
         >
-            <div className="relative w-full h-100 bg-white rounded overflow-hidden">
+            <div className="relative w-full h-100 rounded overflow-hidden">
                 <img
                     src={product.images?.[0]}
                     alt={product.name}
