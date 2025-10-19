@@ -152,43 +152,6 @@ app.get("/api/categories", async (req, res) => {
     res.json(categories);
 });
 
-app.get("/api/categories/first-product-by-category", async (req, res) => {
-    const categories = await prisma.category.findMany({
-        include: {
-            products: {
-                take: 1,
-                orderBy: { createdAt: "asc" },
-            },
-        },
-        orderBy: { id: "desc" },
-    });
-
-    res.json(categories);
-})
-
-app.get("/api/categories/:slug/products", async (req, res) => {
-    const { slug } = req.params;
-    try {
-        const category = await prisma.category.findUnique({
-            where: { slug: slug },
-            include: { products: true },
-        });
-
-        if (!category) {
-            return res.status(404).json({ error: "Catégorie non trouvée" });
-        }
-
-        if (!category.products.length) {
-            return res.status(204).json({ message: "Aucun produit dans cette catégorie" });
-        }
-
-        res.json(category.products);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
@@ -197,7 +160,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         if (err.code === 'LIMIT_UNEXPECTED_FILE') {
             return res.status(400).json({ error: 'Trop de fichiers envoyés' });
         }
-        return res.status(400).json({ error: `Erreur d’upload: ${err.message}` });
+        return res.status(400).json({ error: `Erreur d'upload: ${err.message}` });
     } else if (err) {
         return res.status(400).json({ error: err.message || 'Erreur serveur' });
     }
