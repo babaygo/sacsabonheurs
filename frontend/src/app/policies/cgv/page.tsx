@@ -1,45 +1,32 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import BreadCrumb from "@/components/BreadCrumb";
 
-export default function CGVPage() {
-    const [cgv, setCgv] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+export const metadata = {
+    title: "Conditions générales de vente - Sacs à Bonheur",
+    description: "Consultez nos conditions générales de vente pour mieux comprendre vos droits et obligations.",
+};
 
-    useEffect(() => {
-        const fetchCGV = async () => {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
-                    credentials: "include",
-                });
+export default async function CGVPage() {
+    let cgv = "";
 
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Erreur API : ${res.status} – ${text}`);
-                }
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
+            cache: "no-store",
+        });
 
-                const data = await res.json();
-                setCgv(data.cgv || "");
-            } catch (err: any) {
-                console.error("Erreur CGV :", err.message);
-                setError("Impossible de charger les CGV.");
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (!res.ok) {
+            return (
+                <div className="min-h-screen pt-4 text-center text-red-500">
+                    Impossible de charger les conditions générales de vente.
+                </div>
+            );
+        }
 
-        fetchCGV();
-    }, []);
-
-    if (loading) {
-        return <p className="text-center py-10">Chargement des CGV...</p>;
-    }
-
-    if (error) {
-        return <p className="text-center py-10 text-red-500">{error}</p>;
+        const data = await res.json();
+        cgv = data.cgv || "";
+    } catch (error: any) {
+        console.error("Erreur Conditions générales de vente :", error.message);
+        cgv = "Impossible de charger les conditions générales de vente.";
     }
 
     return (
@@ -47,7 +34,7 @@ export default function CGVPage() {
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
-                    { label: "Conditions générales de vente" }
+                    { label: "Conditions générales de vente" },
                 ]}
             />
             <h1 className="text-2xl font-bold">Conditions générales de vente</h1>
@@ -55,4 +42,3 @@ export default function CGVPage() {
         </div>
     );
 }
-

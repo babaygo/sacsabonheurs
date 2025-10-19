@@ -1,45 +1,32 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import BreadCrumb from "@/components/BreadCrumb";
 
-export default function PrivacyPolicyPage() {
-    const [privacy, setPrivacy] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+export const metadata = {
+    title: "Politique de confidentialité - Sacs à Bonheur",
+    description:
+        "Découvrez comment nous protégeons vos données personnelles sur sacsabonheur.fr. Transparence et respect de votre vie privée.",
+};
 
-    useEffect(() => {
-        const fetchPrivacy = async () => {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
-                    credentials: "include",
-                });
+export default async function PrivacyPolicyPage() {
+    let privacy = "";
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
+            cache: "no-store",
+        });
 
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Erreur API : ${res.status} – ${text}`);
-                }
+        if (!res.ok) {
+            return (
+                <div className="min-h-screen pt-4 text-center text-red-500">
+                    Impossible de charger la politique de confidentialité.
+                </div>
+            );
+        }
 
-                const data = await res.json();
-                setPrivacy(data.privacy || "");
-            } catch (err: any) {
-                console.error("Erreur Politique de confidentialité :", err.message);
-                setError("Impossible de charger la politique de confidentialité.");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPrivacy();
-    }, []);
-
-    if (loading) {
-        return <p className="text-center py-10">Chargement de la politique de confidentialité...</p>;
-    }
-
-    if (error) {
-        return <p className="text-center py-10 text-red-500">{error}</p>;
+        const data = await res.json();
+        privacy = data.privacy || "";
+    } catch (error: any) {
+        console.error("Erreur Politique de confidentialité :", error.message);
+        privacy = "Impossible de charger la politique de confidentialité.";
     }
 
     return (
@@ -47,7 +34,7 @@ export default function PrivacyPolicyPage() {
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
-                    { label: "Politique de confidentialité" }
+                    { label: "Politique de confidentialité" },
                 ]}
             />
             <h1 className="text-2xl font-bold">Politique de confidentialité</h1>

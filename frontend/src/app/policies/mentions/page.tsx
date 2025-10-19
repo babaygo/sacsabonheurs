@@ -1,45 +1,32 @@
-"use client";
-
-import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import BreadCrumb from "@/components/BreadCrumb";
 
-export default function MentionsLegalesPage() {
-    const [mentions, setMentions] = useState("");
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState("");
+export const metadata = {
+    title: "Mentions légales - Sacs à Bonheur",
+    description: "Consultez les mentions légales du site Sacs à Bonheur : informations légales, hébergeur, propriété intellectuelle.",
+};
 
-    useEffect(() => {
-        const fetchMentions = async () => {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
-                    credentials: "include",
-                });
+export default async function MentionsLegalesPage() {
+    let mentions = "";
 
-                if (!res.ok) {
-                    const text = await res.text();
-                    throw new Error(`Erreur API : ${res.status} – ${text}`);
-                }
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
+            cache: "no-store"
+        });
 
-                const data = await res.json();
-                setMentions(data.mentions || "");
-            } catch (err: any) {
-                console.error("Erreur Mentions légales :", err.message);
-                setError("Impossible de charger les mentions légales.");
-            } finally {
-                setLoading(false);
-            }
-        };
+        if (!res.ok) {
+            return (
+                <div className="min-h-screen pt-4 text-center text-red-500">
+                    Impossible de charger les mentions légales.
+                </div>
+            );
+        }
 
-        fetchMentions();
-    }, []);
-
-    if (loading) {
-        return <p className="text-center py-10">Chargement des mentions légales...</p>;
-    }
-
-    if (error) {
-        return <p className="text-center py-10 text-red-500">{error}</p>;
+        const data = await res.json();
+        mentions = data.mentions || "";
+    } catch (error: any) {
+        console.error("Erreur Mentions légales :", error.message);
+        mentions = "Impossible de charger les mentions légales.";
     }
 
     return (
@@ -47,7 +34,7 @@ export default function MentionsLegalesPage() {
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
-                    { label: "Mentions légales" }
+                    { label: "Mentions légales" },
                 ]}
             />
             <h1 className="text-2xl font-bold">Mentions légales</h1>
