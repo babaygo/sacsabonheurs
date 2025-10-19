@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import BreadCrumb from "@/components/BreadCrumb";
 
 export default function MentionsLegalesPage() {
     const [mentions, setMentions] = useState("");
@@ -42,9 +43,15 @@ export default function MentionsLegalesPage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-10 space-y-6">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Mentions légales" }
+                ]}
+            />
             <h1 className="text-2xl font-bold">Mentions légales</h1>
-            <p className="whitespace-pre-line">{mentions}</p>
+            <p className="whitespace-pre-line py-4">{mentions}</p>
         </div>
     );
 }

@@ -176,7 +176,7 @@ export default function ChooseRelayClient() {
     }
 
     return (
-        <div className="p-4 max-w-6xl mx-auto min-h-screen">
+        <div className="pt-4 min-h-screen">
             <h1 className="text-2xl font-bold mb-6">Choisissez votre point relais</h1>
 
             {error && (

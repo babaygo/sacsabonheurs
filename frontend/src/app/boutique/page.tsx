@@ -1,5 +1,6 @@
 "use client";
 
+import BreadCrumb from "@/components/BreadCrumb";
 import PreviewProduct from "@/components/PreviewProduct";
 import ProductFilters from "@/components/ProductsFilters";
 import { getBaseUrl } from "@/lib/getBaseUrl";
@@ -51,7 +52,13 @@ export default function BoutiquePage() {
 
 
     return (
-        <div className="min-h-screen pt-2">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Boutique" }
+                ]}
+            />
             <ProductFilters
                 selectedCategory={selectedCategory}
                 sortOption={sortOption}

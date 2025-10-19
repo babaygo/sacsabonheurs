@@ -12,6 +12,7 @@ import { Product } from "@/types/Product";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import ZoomableImage from "@/components/ZoomableImage";
 import { use, useEffect, useState } from "react";
+import BreadCrumb from "@/components/BreadCrumb";
 
 export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
     const { slug } = use(params);
@@ -30,7 +31,14 @@ export default function ProductPage({ params }: { params: Promise<{ slug: string
     }, []);
 
     return (
-        <div className="max-w-7xl mx-auto min-h-screen p-4 mt-8">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Boutique", href: "/boutique" },
+                    { label: product?.name! },
+                ]}
+            />
             <div className="grid grid-cols-2 gap-8">
                 <div className="grid justify-items-center grid-cols-1 gap-4">
                     {product?.images.map((src, i) => (

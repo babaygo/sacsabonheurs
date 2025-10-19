@@ -1,5 +1,6 @@
 "use client";
 
+import BreadCrumb from "@/components/BreadCrumb";
 import StatusBadge from "@/components/StatusBadge";
 import { Spinner } from "@/components/ui/spinner";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -73,7 +74,13 @@ export default function OrdersClient() {
 
     if (orders.length === 0) {
         return (
-            <div className="min-h-screen max-w-2xl mx-auto py-12 text-center">
+            <div className="min-h-screen py-12 text-center">
+                <BreadCrumb
+                    items={[
+                        { label: "Accueil", href: "/" },
+                        { label: "Mes commandes", }
+                    ]}
+                />
                 <h1 className="text-2xl font-bold mb-4">Aucune commande trouvée</h1>
                 <p className="text-gray-600">
                     {sessionId
@@ -85,7 +92,13 @@ export default function OrdersClient() {
     }
 
     return (
-        <div className="min-h-screen pt-6">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Mes commandes", }
+                ]}
+            />
             <h1 className="text-2xl font-bold">Historique des commandes</h1>
             <div className="py-4 w-full">
                 <Table>

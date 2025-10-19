@@ -1,5 +1,6 @@
 "use client";
 
+import BreadCrumb from "@/components/BreadCrumb";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -48,6 +49,12 @@ export default function ContactPage() {
 
     return (
         <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Contact", }
+                ]}
+            />
             <h1 className="text-2xl font-bold">Contact</h1>
             <p className="py-4">
                 Besoin d'aide ?<br />

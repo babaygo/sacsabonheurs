@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import BreadCrumb from "@/components/BreadCrumb";
 
 export default function CGVPage() {
     const [cgv, setCgv] = useState("");
@@ -42,9 +43,15 @@ export default function CGVPage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-10 space-y-6">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Conditions générales de vente" }
+                ]}
+            />
             <h1 className="text-2xl font-bold">Conditions générales de vente</h1>
-            <p className="whitespace-pre-line">{cgv}</p>
+            <p className="whitespace-pre-line py-4">{cgv}</p>
         </div>
     );
 }

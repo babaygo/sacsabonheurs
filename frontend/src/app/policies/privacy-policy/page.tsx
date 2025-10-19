@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import BreadCrumb from "@/components/BreadCrumb";
 
 export default function PrivacyPolicyPage() {
     const [privacy, setPrivacy] = useState("");
@@ -42,9 +43,15 @@ export default function PrivacyPolicyPage() {
     }
 
     return (
-        <div className="max-w-3xl mx-auto py-10 space-y-6">
+        <div className="min-h-screen pt-4">
+            <BreadCrumb
+                items={[
+                    { label: "Accueil", href: "/" },
+                    { label: "Politique de confidentialité" }
+                ]}
+            />
             <h1 className="text-2xl font-bold">Politique de confidentialité</h1>
-            <p className="whitespace-pre-line">{privacy}</p>
+            <p className="whitespace-pre-line py-4">{privacy}</p>
         </div>
     );
 }
