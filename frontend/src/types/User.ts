@@ -6,7 +6,6 @@ export interface User {
   email: string;
   name: string;
   emailVerified: boolean
-  phone: string | null
   image: string | null
   createdAt: Date
   updatedAt: Date

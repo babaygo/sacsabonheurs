@@ -8,6 +8,7 @@ export interface Order {
     user: User;
     stripeSessionId: string;
     email: string;
+    phone?: string;
     total: number;
     subtotal?: number;
     shippingOption?: string;

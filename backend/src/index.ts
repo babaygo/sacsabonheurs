@@ -37,7 +37,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
     const sig = req.headers["stripe-signature"]!;
-    let event;
+    let event: Stripe.Event;
 
     try {
         event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
@@ -71,6 +71,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     stripeSessionId: session.id,
                     user: { connect: { id: session.metadata!.userId } },
                     email: session.customer_email!,
+                    
                     total: session.amount_total! / 100,
                     subtotal: session.amount_subtotal! / 100,
                     shippingOption: deliveryMode,
@@ -179,6 +180,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
         billing_address_collection: 'required',
         mode: "payment",
         customer_email: user.email,
+        phone_number_collection: { enabled: true },
         automatic_tax: { enabled: true },
         shipping_options: [{ shipping_rate: process.env.ID_TARIF_LIVRAISON_POINT_RELAIS },
         { shipping_rate: process.env.ID_TARIF_LIVRAISON_LOCKER }],
