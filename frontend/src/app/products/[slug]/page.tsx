@@ -1,86 +1,50 @@
-"use client";
-
-import { notFound } from "next/navigation";
-import AddToCartDrawer from "@/components/AddToCartDrawer";
-import {
-    Accordion,
-    AccordionContent,
-    AccordionItem,
-    AccordionTrigger,
-} from "@/components/ui/accordion"
-import { Product } from "@/types/Product";
+import ProductClient from "@/components/Product/ProductClient";
 import { getBaseUrl } from "@/lib/getBaseUrl";
-import ZoomableImage from "@/components/ZoomableImage";
-import { use, useEffect, useState } from "react";
-import BreadCrumb from "@/components/BreadCrumb";
+import { Product } from "@/types/Product";
+import { notFound } from "next/navigation";
 
-export default function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
-    const { slug } = use(params);
-    const [product, setProduct] = useState<Product | null>(null);
+const productCache = new Map<string, Product | null>();
 
-    useEffect(() => {
-        fetch(`${getBaseUrl()}/api/products/${slug}`, { credentials: "include" })
-            .then((res) => (res.ok ? res.json() : null))
-            .then((data) => {
-                if (!data) {
-                    notFound();
-                } else {
-                    setProduct(data);
-                }
-            });
-    }, []);
+async function getProduct(slug: string): Promise<Product | null> {
+    if (productCache.has(slug)) return productCache.get(slug)!;
 
-    return (
-        <div className="min-h-screen pt-4">
-            <BreadCrumb
-                items={[
-                    { label: "Accueil", href: "/" },
-                    { label: "Boutique", href: "/boutique" },
-                    { label: product?.name! },
-                ]}
-            />
-            <div className="grid grid-cols-2 gap-8">
-                <div className="grid justify-items-center grid-cols-1 gap-4">
-                    {product?.images.map((src, i) => (
-                        <ZoomableImage
-                            key={i}
-                            images={product.images}
-                            index={i}
-                            alt={`${product.name} ${i + 1}`}
-                        />
-                    ))}
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
+            cache: "no-store",
+        });
 
-                </div>
-                <div className="flex flex-col mr-38">
-                    <p className="text-2xl mt-4">{product?.name}</p>
-                    <p className="text-lg font-semibold my-4">{product?.price} €</p>
+        if (!res.ok) {
+            console.error(`Erreur API produit ${slug} : ${res.status}`);
+            productCache.set(slug, null);
+            return null;
+        }
 
-                    <AddToCartDrawer product={product} />
-
-                    <div className="flex flex-col">
-                        <Accordion type="multiple" defaultValue={["item-1"]}>
-                            <AccordionItem value="item-1">
-                                <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
-                                <AccordionContent>
-                                    {product?.description}
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="item-2">
-                                <AccordionTrigger className="font-semibold">Dimensions</AccordionTrigger>
-                                <AccordionContent>
-                                    {product?.height}*{product?.lenght}*{product?.width} cm
-                                </AccordionContent>
-                            </AccordionItem>
-                            <AccordionItem value="item-3">
-                                <AccordionTrigger className="font-semibold">Poids</AccordionTrigger>
-                                <AccordionContent>
-                                    {product?.weight} g
-                                </AccordionContent>
-                            </AccordionItem>
-                        </Accordion>
-                    </div>
-                </div>
-            </div>
-        </div>
-    );
+        const data = await res.json();
+        productCache.set(slug, data);
+        return data;
+    } catch (err: any) {
+        console.error(`Erreur réseau produit ${slug} :`, err.message);
+        productCache.set(slug, null);
+        return null;
+    }
 }
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const product = await getProduct(slug);
+
+    return {
+        title: product ? `${product.name} - Sacs à Bonheurs` : "Produit introuvable - Sacs à Bonheurs",
+        description: product?.description?.slice(0, 160) || "Découvrez nos sacs faits main en France.",
+    };
+}
+
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
+    const { slug } = await params;
+    const product = await getProduct(slug);
+
+    if (!product) return notFound();
+
+    return <ProductClient product={product} />;
+}
+

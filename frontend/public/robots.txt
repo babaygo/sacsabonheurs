@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+Disallow: /auth/
+Disallow: /admin/
+Disallow: /choose-relay/
+Disallow: /orders/
+Disallow: /api/
+
+Sitemap: https://sacsabonheur.fr/sitemap.xml

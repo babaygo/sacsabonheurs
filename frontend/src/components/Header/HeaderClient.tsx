@@ -13,13 +13,11 @@ import { useRouter } from "next/navigation";
 import CartDrawer from "@/components/CartDrawer";
 import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
-import { useCategoryStore } from "@/lib/categoryStore";
 import { Menu, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
-    const categories = useCategoryStore((state) => state.categories);
     const router = useRouter();
     const { setOpen, count } = useCart();
     let isAdmin: boolean = false;

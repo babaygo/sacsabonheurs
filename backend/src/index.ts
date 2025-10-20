@@ -474,7 +474,7 @@ app.delete("/api/admin/products/images/:url", requireAuth, requireAdmin, async (
     }
 });
 
-app.get("/api/admin/legal", requireAuth, requireAdmin, async (req, res) => {
+app.get("/api/admin/legal", async (req, res) => {
     try {
         const legal = await prisma.legal.findUnique({ where: { id: 1 } });
 

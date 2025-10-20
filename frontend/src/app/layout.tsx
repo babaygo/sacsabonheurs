@@ -19,7 +19,7 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Sacs à Bonheurs",
-  description: "Boutique de sacs artisanaux, fait à la main en France.",
+  description: "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
 };
 
 export default function RootLayout({
