@@ -1,60 +1,62 @@
 "use client";
 
-import { Product } from "@/types/Product";
-import { Button } from "../ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
-import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
-import { Field, FieldGroup, FieldLabel } from "../ui/field";
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-} from "../ui/select";
-import { Textarea } from "../ui/textarea";
-import { useCategoryStore } from "@/lib/categoryStore";
-import { ImageUploader } from "../ImageUploader";
+import { useState } from "react";
+import { Category } from "@/types/Category";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { Plus } from "lucide-react";
+import { useCategoryStore } from "@/lib/categoryStore";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
+import { ImageUploader } from "@/components/ImageUploader";
 
-export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
+export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
-    const [form, setForm] = useState(product);
 
+    const [form, setForm] = useState({
+        name: "",
+        slug: "",
+        description: "",
+        price: "",
+        stock: 1,
+        weight: "",
+        height: "",
+        lenght: "",
+        width: "",
+        categoryId: 0,
+    });
+
+    const [files, setFiles] = useState<File[]>([]);
     const categories = useCategoryStore((state) => state.categories);
+
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
     );
 
-    const existingImages = product.images as string[];
+    const handleChange = (field: string, value: any) => {
+        setForm((prev) => {
+            const updatedForm = { ...prev, [field]: value };
 
-    const [files, setFiles] = useState<File[]>([]);
-    const [keptImages, setKeptImages] = useState<string[]>(existingImages);
+            if (field === "name") {
+                const slug = value
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .replace(/[^a-z0-9\s-]/g, "")
+                    .trim()
+                    .replace(/\s+/g, "-");
 
-    useEffect(() => {
-        if (open) {
-            setKeptImages(product.images);
-            setFiles([]);
-        }
-    }, [open]);
+                updatedForm.slug = slug;
+            }
 
-    const removeImage = async (url: string) => {
-        setKeptImages((prev) => prev.filter((img) => img !== url));
-
-        try {
-            await fetch(`${getBaseUrl()}/api/admin/products/images/${url}`, {
-                method: "DELETE",
-                credentials: "include"
-            });
-        } catch (err) {
-            console.warn("Erreur suppression image R2 :", err);
-        }
+            return updatedForm;
+        });
     };
 
-    const handleChange = (field: keyof Product, value: any) => {
-        setForm((prev) => ({ ...prev, [field]: value }));
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -63,18 +65,11 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         Object.entries(form).forEach(([key, value]) =>
             formData.append(key, String(value))
         );
-
-        keptImages.forEach((url) => {
-            formData.append("keptImages", url);
-        });
-
-        files.forEach((file) => {
-            formData.append("images", file);
-        });
+        files.forEach((file) => formData.append("images", file));
 
         try {
-            const res = await fetch(`${getBaseUrl()}/api/admin/products/${product.id}`, {
-                method: "PUT",
+            const res = await fetch(`${getBaseUrl()}/api/admin/products`, {
+                method: "POST",
                 credentials: "include",
                 body: formData,
             });
@@ -84,10 +79,28 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                 throw new Error(error || "Erreur inconnue");
             }
 
-            setOpen(false);
-            onSuccess();
-        } catch (err: any) {
-            toast.error(err.message);
+            const data = await res.json();
+
+            if (data) {
+                setForm({
+                    name: "",
+                    slug: "",
+                    description: "",
+                    price: "",
+                    stock: 1,
+                    weight: "",
+                    height: "",
+                    lenght: "",
+                    width: "",
+                    categoryId: 0,
+                });
+                setFiles([]);
+                setOpen(false);
+                onSuccess();
+            }
+
+        } catch (error: any) {
+            toast.error(error.message);
         }
     };
 
@@ -95,13 +108,14 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" onClick={() => setOpen(true)}>
-                    Modifier le sac
+                    <Plus />
+                    Ajouter un sac
                 </Button>
             </DialogTrigger>
 
             <DialogContent>
                 <DialogHeader>
-                    <DialogTitle>Modifier le sac</DialogTitle>
+                    <DialogTitle>Ajouter un sac</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -239,7 +253,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                                         : "Choisir une catégorie"}
                                 </SelectTrigger>
                                 <SelectContent>
-                                    {categories.map((cat) => (
+                                    {categories.map((cat: Category) => (
                                         <SelectItem key={cat.id} value={String(cat.id)}>
                                             {cat.name}
                                         </SelectItem>
@@ -250,16 +264,6 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
                         <Field>
                             <FieldLabel>Photos</FieldLabel>
-                            <ul className="mt-2 text-sm">
-                                {keptImages.map((url, i) => (
-                                    <li key={i} className="flex justify-between items-center text-muted-foreground">
-                                        <span className="truncate">{url.split("/").pop()}</span>
-                                        <button type="button" onClick={() => removeImage(url)} className="text-red-500 text-xs">
-                                            Supprimer
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
                             <ImageUploader onChange={setFiles} />
                         </Field>
 
