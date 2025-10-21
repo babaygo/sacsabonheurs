@@ -58,6 +58,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                 price: item.amount_total ? item.amount_total / 100 : 0,
                 quantity: item.quantity ?? 1,
                 imageUrl: await getImageUrl(slugs[index]),
+                productId: await prisma.product.findFirst({ where: { slug: slugs[index] } }).then(p => p?.id),
             }))
         );
 
@@ -245,7 +246,7 @@ app.get("/api/order-by-session-id", requireAuth, async (req, res) => {
 
 app.get("/api/order/:id", requireAuth, async (req, res) => {
     const orderId = Number(req.params.id);
-        
+
     if (!orderId) {
         return res.status(400).json({ error: "Missing or invalid order_id" });
     }
@@ -255,7 +256,7 @@ app.get("/api/order/:id", requireAuth, async (req, res) => {
             where: { id: orderId },
             include: { items: true },
         });
-        
+
         if (!order) {
             return res.status(404).json({ error: "Order not found" });
         }
@@ -366,22 +367,33 @@ app.put("/api/admin/orders/:orderId/status", requireAuth, requireAdmin, async (r
     }
 });
 
-app.get("/api/admin/orders/:id", requireAuth, requireAdmin, async (req, res) => {
+app.get("/api/admin/order/:id", requireAuth, requireAdmin, async (req, res) => {
     const orderId = Number(req.params.id);
-    if (!Number.isFinite(orderId)) return res.status(400).json({ error: "ID invalide" });
+
+    if (!orderId) {
+        return res.status(400).json({ error: "Missing or invalid order_id" });
+    }
 
     try {
         const order = await prisma.order.findUnique({
             where: { id: orderId },
             include: {
-                user: true,
-                items: true,
-            },
+                user: true, items: {
+                    include: {
+                        product: true
+                    }
+                }
+            }
         });
-        if (!order) return res.status(404).json({ error: "Commande introuvable" });
+
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
         res.json(order);
-    } catch (error) {
-        res.status(500).json({ error: "Erreur serveur", details: error });
+    } catch (err) {
+        console.error("Erreur lors de la récupération de la commande :", err);
+        res.status(500).json({ error: "Internal server error" });
     }
 });
 

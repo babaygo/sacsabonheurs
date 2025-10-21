@@ -16,6 +16,7 @@ export interface Product {
     status: string;
     categoryId: number;
     category: Category;
+    orderItems: OrderItem[];
     createdAt: Date;
     updatedAt: Date;
 }

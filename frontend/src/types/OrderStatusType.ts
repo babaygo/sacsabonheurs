@@ -1,1 +1,1 @@
-export type OrderStatusType = "pending" | "paid" | "shipped" | "delivered" | "cancelled";
+export type OrderStatusType = "pending" | "shipped" | "delivered" | "cancelled";

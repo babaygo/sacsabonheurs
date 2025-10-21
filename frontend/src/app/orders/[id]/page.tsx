@@ -12,7 +12,6 @@ import BreadCrumb from "@/components/BreadCrumb";
 
 const statusMap: Record<OrderStatusType, { label: string; color: string }> = {
     pending: { label: "En attente", color: "bg-yellow-100 text-yellow-800" },
-    paid: { label: "Payée", color: "bg-blue-100 text-blue-800" },
     shipped: { label: "Expédiée", color: "bg-purple-100 text-purple-800" },
     delivered: { label: "Livrée", color: "bg-green-100 text-green-800" },
     cancelled: { label: "Annulée", color: "bg-red-100 text-red-800" },
@@ -141,6 +140,5 @@ export default function OrderPage() {
                 </div>
             </div>
         </div>
-
     );
 }

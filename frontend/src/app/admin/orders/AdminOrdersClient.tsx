@@ -3,10 +3,12 @@
 import { useSessionContext } from "@/components/SessionProvider";
 import StatusBadge from "@/components/StatusBadge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ErrorView } from "@/components/Views/ErrorView";
+import { LoadingView } from "@/components/Views/LoadingView";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Order } from "@/types/Order";
 import { OrderStatusType } from "@/types/OrderStatusType";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
@@ -18,16 +20,16 @@ export default function AdminOrdersClient() {
 
     const updateOrderStatus = async (orderId: number, newStatus: OrderStatusType) => {
         try {
-            const response = await fetch(`${getBaseUrl()}/api/admin/orders/${orderId}/status`, {
+            const res = await fetch(`${getBaseUrl()}/api/admin/orders/${orderId}/status`, {
                 method: "PUT",
                 body: JSON.stringify({ status: newStatus }),
                 headers: { "Content-Type": "application/json" },
                 credentials: "include",
             });
 
-            if (!response.ok) {
-                console.error("Erreur mise à jour statut commande :", await response.text());
-                return;
+            if (!res.ok) {
+                console.error("Erreur mise à jour statut commande :", await res.text());
+                return <ErrorView error="Impossible de mettre à jour le status" />;;
             }
 
             const updatedOrders = await getOrders();
@@ -35,9 +37,9 @@ export default function AdminOrdersClient() {
             toast.success("Statut mis à jour !");
         } catch (err) {
             console.error("Erreur réseau ou serveur :", err);
+            notFound();
         }
     };
-
 
     async function getOrders() {
         try {
@@ -46,36 +48,29 @@ export default function AdminOrdersClient() {
             });
             if (!res.ok) {
                 console.error("Erreur API :", res.status, await res.text());
-                return [];
+                return <ErrorView error="Impossible de charger les commandes." />;
             }
             return res.json();
         } catch (err) {
             console.error("Erreur réseau :", err);
-            return [];
+            notFound();
         }
     }
 
     useEffect(() => {
-        if (!loadingUser) {
-            if (user?.role != "admin") {
-                router.push("/");
-            } else {
-                const fetchOrders = async () => {
-                    const data = await getOrders();
-
-                    setOrders(data ?? []);
-                }
-                fetchOrders();
-            }
+        if (loadingUser) return;
+        if (user?.role !== "admin") {
+            router.push("/");
+            return;
         }
+
+        getOrders().then((data) => setOrders(data ?? []));
     }, [user, loadingUser, router]);
 
-    if (loadingUser) {
-        return <p>Chargement...</p>;
-    }
+    if (loadingUser) return <LoadingView />;
 
     return (
-        <div className="p-6">
+        <div className="min-h-screen pt-4">
             <h1 className="text-2xl font-bold mb-4">Commandes</h1>
             <Table>
                 <TableHeader>
@@ -89,7 +84,7 @@ export default function AdminOrdersClient() {
                 </TableHeader>
                 <TableBody>
                     {orders.map((order) => (
-                        <TableRow key={order.id}>
+                        <TableRow key={order.id} className="cursor-pointer" onClick={() => router.push(`/admin/orders/${order.id}`)}>
                             <TableCell>{order.id}</TableCell>
                             <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
                             <TableCell>{order.user?.email ?? "—"}</TableCell>
