@@ -8,6 +8,7 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 import { AddDialog } from "@/components/Dialogs/ProductAddDialog";
 import { EditDialog } from "@/components/Dialogs/ProductEditDialog";
 import { DeleteDialog } from "@/components/Dialogs/ProductDeleteDialog";
+import { LoadingView } from "@/components/Views/LoadingView";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
@@ -37,18 +38,13 @@ export default function AdminProducts() {
         if (!loadingUser) {
             if (user?.role != "admin") {
                 router.push("/");
-            } else {
-                const fetchProducts = async () => {
-                    refreshProducts();
-                }
-                fetchProducts();
             }
+
+            refreshProducts();
         }
     }, [user, loadingUser, router]);
 
-    if (loadingUser) {
-        return <p>Chargement...</p>;
-    }
+    if (loadingUser) return <LoadingView />;
 
     return (
         <div className="p-6">

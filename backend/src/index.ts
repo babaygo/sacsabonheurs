@@ -92,8 +92,8 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
             await prisma.product.updateMany({
                 where: { slug: { in: slugs } },
-                data: { 
-                    stock: { decrement: 1 } 
+                data: {
+                    stock: { decrement: 1 }
                 },
             });
         } catch (error: any) {
@@ -236,6 +236,29 @@ app.get("/api/order-by-session-id", requireAuth, async (req, res) => {
             return res.status(404).json({ error: "Order not found" });
         }
 
+        res.json(order);
+    } catch (err) {
+        console.error("Erreur lors de la récupération de la commande :", err);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+app.get("/api/order/:id", requireAuth, async (req, res) => {
+    const orderId = Number(req.params.id);
+        
+    if (!orderId) {
+        return res.status(400).json({ error: "Missing or invalid order_id" });
+    }
+
+    try {
+        const order = await prisma.order.findFirst({
+            where: { id: orderId },
+            include: { items: true },
+        });
+        
+        if (!order) {
+            return res.status(404).json({ error: "Order not found" });
+        }
         res.json(order);
     } catch (err) {
         console.error("Erreur lors de la récupération de la commande :", err);

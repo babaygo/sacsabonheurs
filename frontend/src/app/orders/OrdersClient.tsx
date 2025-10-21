@@ -3,37 +3,16 @@
 import BreadCrumb from "@/components/BreadCrumb";
 import StatusBadge from "@/components/StatusBadge";
 import { Spinner } from "@/components/ui/spinner";
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Order } from "@/types/Order";
-import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function OrdersClient() {
-    const searchParams = useSearchParams();
-    const sessionId = searchParams.get("session_id");
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
-
-    async function getLastOrderBySessionId(sessionId: string) {
-        try {
-            setLoading(true);
-            const res = await fetch(
-                `${getBaseUrl()}/api/order-by-session-id?session_id=${sessionId}`, {
-                credentials: "include"
-            }
-            );
-            if (!res.ok) {
-                console.error("Erreur API :", res.status, await res.text());
-                return null;
-            }
-            const order = await res.json();
-            return order ? [order] : [];
-        } catch (err) {
-            console.error("Erreur réseau :", err);
-            return [];
-        }
-    }
+    const router = useRouter();
 
     async function getUserOrders() {
         try {
@@ -53,16 +32,14 @@ export default function OrdersClient() {
 
     useEffect(() => {
         const fetchOrders = async () => {
-            const data = sessionId
-                ? await getLastOrderBySessionId(sessionId)
-                : await getUserOrders();
+            const data = await getUserOrders();
 
             setOrders(data ?? []);
             setLoading(false);
         };
 
         fetchOrders();
-    }, [sessionId]);
+    }, []);
 
     if (loading) {
         return (
@@ -83,9 +60,7 @@ export default function OrdersClient() {
                 />
                 <h1 className="text-2xl font-bold mb-4">Aucune commande trouvée</h1>
                 <p className="text-gray-600">
-                    {sessionId
-                        ? "Aucune commande associée à cette session."
-                        : "Vous n’avez pas encore passé de commande."}
+                     Vous n'avez pas encore passé de commande.
                 </p>
             </div>
         );
@@ -112,7 +87,7 @@ export default function OrdersClient() {
                     </TableHeader>
                     <TableBody>
                         {orders.map((order: Order) => (
-                            <TableRow key={order.id}>
+                            <TableRow key={order.id} className="cursor-pointer" onClick={() => router.push(`/orders/${order.id}`)}>
                                 <TableCell className="font-medium">{order.id}</TableCell>
                                 <TableCell>
                                     {order.createdAt
