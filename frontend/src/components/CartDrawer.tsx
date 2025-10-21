@@ -21,21 +21,29 @@ export default function CartDrawer() {
     const { open, setOpen } = useCartDrawerStore();
     const items = useCartStore((s) => s.items);
     const removeFromCart = useCartStore((s) => s.removeFromCart);
+    const clearCart = useCartStore((s) => s.clearCart);
 
     const total = useMemo(() => {
         return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
     }, [items]);
 
     async function handleCheckout() {
-        const res = await fetch(`${getBaseUrl()}/api/checkout`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ items: items }),
-            credentials: "include",
-        });
+        try {
+            const res = await fetch(`${getBaseUrl()}/api/checkout`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ items: items }),
+                credentials: "include",
+            });
 
-        const data = await res.json();
-        window.location.href = data.url;
+            const data = await res.json();
+            window.location.href = data.url;
+        } catch (error) {
+            console.error("Erreur lors du passage à la caisse :", error);
+        } finally {
+            clearCart();
+            setOpen(false);
+        }
     }
 
     return (
