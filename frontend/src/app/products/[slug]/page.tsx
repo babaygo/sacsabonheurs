@@ -3,11 +3,7 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
 
-const productCache = new Map<string, Product | null>();
-
 async function getProduct(slug: string): Promise<Product | null> {
-    if (productCache.has(slug)) return productCache.get(slug)!;
-
     try {
         const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
             cache: "no-store",
@@ -15,16 +11,13 @@ async function getProduct(slug: string): Promise<Product | null> {
 
         if (!res.ok) {
             console.error(`Erreur API produit ${slug} : ${res.status}`);
-            productCache.set(slug, null);
             return null;
         }
 
         const data = await res.json();
-        productCache.set(slug, data);
         return data;
     } catch (err: any) {
         console.error(`Erreur réseau produit ${slug} :`, err.message);
-        productCache.set(slug, null);
         return null;
     }
 }
@@ -47,4 +40,3 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
 
     return <ProductClient product={product} />;
 }
-

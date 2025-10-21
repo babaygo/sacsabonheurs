@@ -1,4 +1,5 @@
 import { Category } from "./Category";
+import { OrderItem } from "./OrderItem";
 
 export interface Product {
     id: number;
@@ -12,6 +13,7 @@ export interface Product {
     lenght: number;
     width: number;
     images: string[];
+    status: string;
     categoryId: number;
     category: Category;
     createdAt: Date;

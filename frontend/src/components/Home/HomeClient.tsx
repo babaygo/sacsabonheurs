@@ -15,7 +15,7 @@ export default function HomeClient() {
     const [products, setProducts] = useState<Product[]>([]);
 
     useEffect(() => {
-        fetch(`${getBaseUrl()}/api/products`, { credentials: "include" })
+        fetch(`${getBaseUrl()}/api/products`)
             .then((res) => (res.ok ? res.json() : null))
             .then((data) => {
                 if (!data) {

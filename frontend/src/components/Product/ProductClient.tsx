@@ -1,3 +1,5 @@
+"use client";
+
 import AddToCartDrawer from "@/components/AddToCartDrawer";
 import {
     Accordion,
@@ -8,8 +10,26 @@ import {
 import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/ZoomableImage";
 import BreadCrumb from "@/components/BreadCrumb";
+import { useEffect, useState } from "react";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
-export default function ProductClient({ product }: { product: Product }) {
+export default function ProductClient({ product: initialProduct }: { product: Product }) {
+    const [product, setProduct] = useState<Product>(initialProduct);
+
+    useEffect(() => {
+        const refetch = async () => {
+            const res = await fetch(`${getBaseUrl()}/api/products/${initialProduct.slug}`, {
+                cache: "no-store",
+            });
+            if (res.ok) {
+                const fresh = await res.json();
+                setProduct(fresh);
+            }
+        };
+
+        refetch();
+    }, [initialProduct.slug]);
+
     return (
         <div className="min-h-screen pt-4">
             <BreadCrumb

@@ -20,7 +20,7 @@ declare global {
     }
 }
 
-export default function ChooseRelayClient() {
+export default function ChooseRelayClient({ brandId }: { brandId: string }) {
     const { user } = useSessionContext();
     const searchParams = useSearchParams();
     const sessionId = searchParams.get("session_id");
@@ -51,7 +51,6 @@ export default function ChooseRelayClient() {
                 }
             });
     }, [sessionId, isValid]);
-
 
     useEffect(() => {
         if (!order || widgetInitialized.current) return;
@@ -102,13 +101,11 @@ export default function ChooseRelayClient() {
 
                 if (!window.$.fn.MR_ParcelShopPicker) throw new Error("Le plugin Mondial Relay n'a pas pu être chargé");
 
-                console.log(order?.shippingOption)
-
                 window.$("#Zone_Widget").MR_ParcelShopPicker({
                     Target: "#Target_Widget",
                     TargetDisplay: "#TargetDisplay_Widget",
                     TargetDisplayInfoPR: "#TargetDisplayInfoPR_Widget",
-                    Brand: process.env.MONDIAL_RELAY_BRAND_ID,
+                    Brand: brandId,
                     Country: "FR",
                     ColLivMod: order?.shippingOption,
                     NbResults: 10,

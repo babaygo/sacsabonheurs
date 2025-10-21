@@ -71,7 +71,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     stripeSessionId: session.id,
                     user: { connect: { id: session.metadata!.userId } },
                     email: session.customer_email!,
-                    
+                    phone: session.customer_details?.phone ?? null,
                     total: session.amount_total! / 100,
                     subtotal: session.amount_subtotal! / 100,
                     shippingOption: deliveryMode,
@@ -87,6 +87,13 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     city: billingAddress?.city ?? null,
                     country: billingAddress?.country ?? "FR",
                     items: { create: items },
+                },
+            });
+
+            await prisma.product.updateMany({
+                where: { slug: { in: slugs } },
+                data: { 
+                    stock: { decrement: 1 } 
                 },
             });
         } catch (error: any) {
@@ -203,7 +210,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
             },
             quantity: item.quantity,
         })),
-        success_url: process.env.URL_FRONT + "/choose-relay?session_id={CHECKOUT_SESSION_ID}",
+        success_url: process.env.URL_FRONT + "/choose-relay?session_id={CHECKOUT_SESSION_ID}&refresh=true",
         cancel_url: process.env.URL_FRONT + "/",
     });
 

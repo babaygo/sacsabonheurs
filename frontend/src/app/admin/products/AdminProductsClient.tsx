@@ -1,29 +1,22 @@
 "use client"
 
-import { AddDialog } from "@/components/ProductAddDialog";
-import { EditDialog } from "@/components/ProductEditDialog";
 import { Product } from "@/types/Product";
-import { DeleteDialog } from "@/components/ProductDeleteDialog";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { AddDialog } from "@/components/Product/ProductAddDialog";
+import { EditDialog } from "@/components/Product/ProductEditDialog";
+import { DeleteDialog } from "@/components/Product/ProductDeleteDialog";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
     const router = useRouter()
     const [products, setProducts] = useState<Product[]>([]);
-    let imageSrc;
 
     async function getProducts() {
         try {
-            const res = await fetch(`${getBaseUrl()}/api/products`, {
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                cache: "no-store",
-            });
+            const res = await fetch(`${getBaseUrl()}/api/products`);
             if (!res.ok) {
                 console.error("Erreur API :", res.status, await res.text());
                 return [];
