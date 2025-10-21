@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ZoomableCarousel from "../ZoomableCarousel.tsx";
+import ZoomableCarousel from "./ZoomableCarousel";
 
 type Props = {
   images: string[];

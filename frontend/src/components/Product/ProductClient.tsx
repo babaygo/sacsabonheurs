@@ -1,6 +1,5 @@
 "use client";
 
-import AddToCartDrawer from "@/components/AddToCartDrawer";
 import {
     Accordion,
     AccordionContent,
@@ -12,9 +11,23 @@ import ZoomableImage from "@/components/ZoomableImage";
 import BreadCrumb from "@/components/BreadCrumb";
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { useCart } from "@/lib/useCart";
+import { Button } from "../ui/button";
 
 export default function ProductClient({ product: initialProduct }: { product: Product }) {
     const [product, setProduct] = useState<Product>(initialProduct);
+    const { addToCart, setOpen } = useCart();
+
+    const handleClick = () => {
+        addToCart({
+            id: product.id,
+            name: product.name,
+            slug: product.slug,
+            price: product.price,
+            image: product.images[0],
+        });
+        setOpen(true);
+    };
 
     useEffect(() => {
         const refetch = async () => {
@@ -55,7 +68,14 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                     <p className="text-2xl mt-4">{product?.name}</p>
                     <p className="text-lg font-semibold my-4">{product?.price} €</p>
 
-                    <AddToCartDrawer product={product} />
+                    <Button
+                        onClick={handleClick}
+                        disabled={product?.stock <= 0}
+                        variant={product?.stock > 0 ? "default" : "secondary"}
+                        className={product?.stock > 0 ? "my-4 hover:opacity-75" : "my-4 text-gray-600"}
+                    >
+                        {product?.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
+                    </Button>
 
                     <div className="flex flex-col">
                         <Accordion type="multiple" defaultValue={["item-1"]}>

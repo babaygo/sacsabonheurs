@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import { Product } from "@/types/Product";
 import { SortOption } from "@/types/SortOptions";
-import ProductFilters from ".";
+import ProductFilters from "./ProductFilters";
 import PreviewProduct from "../PreviewProduct";
 
 export default function ProductFiltersClient({ products }: { products: Product[] }) {

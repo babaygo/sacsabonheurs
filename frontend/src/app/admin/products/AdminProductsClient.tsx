@@ -5,9 +5,9 @@ import { useSessionContext } from "@/components/SessionProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getBaseUrl } from "@/lib/getBaseUrl";
-import { AddDialog } from "@/components/Product/ProductAddDialog";
-import { EditDialog } from "@/components/Product/ProductEditDialog";
-import { DeleteDialog } from "@/components/Product/ProductDeleteDialog";
+import { AddDialog } from "@/components/Dialogs/ProductAddDialog";
+import { EditDialog } from "@/components/Dialogs/ProductEditDialog";
+import { DeleteDialog } from "@/components/Dialogs/ProductDeleteDialog";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
