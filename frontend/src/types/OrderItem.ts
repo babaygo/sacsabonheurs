@@ -9,4 +9,6 @@ export interface OrderItem {
     imageUrl?: string;
     orderId: number;
     order: Order;
+    productId?: number;
+    product?: Product;
 }
