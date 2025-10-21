@@ -6,13 +6,15 @@ import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Plus } from "lucide-react";
 import { useCategoryStore } from "@/lib/categoryStore";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/ui/select";
 import { ImageUploader } from "@/components/ImageUploader";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -21,6 +23,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
         name: "",
         slug: "",
         description: "",
+        hidden: "false",
         price: "",
         stock: 1,
         weight: "",
@@ -86,6 +89,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                     name: "",
                     slug: "",
                     description: "",
+                    hidden: "false",
                     price: "",
                     stock: 1,
                     weight: "",
@@ -116,6 +120,10 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Ajouter un sac</DialogTitle>
+                    <DialogDescription>
+                        Remplissez les informations du sac et cliquez sur "Enregistrer" pour
+                        l'ajouter à la boutique.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -147,6 +155,16 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                                 required
                                 onChange={(e) => handleChange("description", e.target.value)}
                             />
+                        </Field>
+
+                        <Field>
+                            <div className="flex items-start gap-3">
+                                <Checkbox id="hidden" checked={form.hidden === "false" ? false : true}
+                                    onCheckedChange={(checked) => handleChange("hidden", checked)} />
+                                <div className="grid gap-2">
+                                    <Label htmlFor="hidden">Masquer dans la boutique</Label>
+                                </div>
+                            </div>
                         </Field>
 
                         <div className="grid grid-cols-2 gap-4">

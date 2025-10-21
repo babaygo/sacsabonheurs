@@ -401,7 +401,7 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
     try {
         const {
             name, slug, description, price, categoryId,
-            stock, weight, height, lenght, width
+            stock, weight, height, lenght, width, hidden
         } = req.body;
 
         const files = req.files as Express.Multer.File[];
@@ -424,6 +424,7 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
                 width: parseFloat(width),
                 categoryId: parseInt(categoryId),
                 images: urls,
+                hidden: hidden === 'true' ? true : false,
             },
         });
 
@@ -444,7 +445,7 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
     const { id } = req.params;
     const {
         name, slug, description, price, stock,
-        weight, height, lenght, width, categoryId, keptImages
+        weight, height, lenght, width, categoryId, hidden
     } = req.body;
 
     try {
@@ -474,6 +475,7 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
                 width: parseFloat(width),
                 categoryId: parseInt(categoryId),
                 images: finalImages,
+                hidden: hidden === 'true' ? true : false,
             },
         });
 

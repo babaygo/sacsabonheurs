@@ -1,5 +1,4 @@
 import BreadCrumb from "@/components/BreadCrumb";
-import PreviewProduct from "@/components/Product/PreviewProduct";
 import ProductFiltersClient from "@/components/Product/ProductsFilters/ProductFiltersClient";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Product } from "@/types/Product";
@@ -21,7 +20,7 @@ async function getProducts(): Promise<Product[]> {
         }
 
         const data = await res.json();
-        return Array.isArray(data) ? data : [];
+        return Array.isArray(data) ? data.filter((product: Product) => !product.hidden) : [];
     } catch (err: any) {
         console.error("Erreur réseau produits :", err.message);
         return [];
@@ -41,12 +40,6 @@ export default async function BoutiquePage() {
             />
 
             <ProductFiltersClient products={products} />
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                {products.map((product) => (
-                    <PreviewProduct key={product.id} product={product} />
-                ))}
-            </div>
         </div>
     );
 }

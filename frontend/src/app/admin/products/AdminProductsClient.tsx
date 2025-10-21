@@ -9,6 +9,7 @@ import { AddDialog } from "@/components/Dialogs/ProductAddDialog";
 import { EditDialog } from "@/components/Dialogs/ProductEditDialog";
 import { DeleteDialog } from "@/components/Dialogs/ProductDeleteDialog";
 import { LoadingView } from "@/components/Views/LoadingView";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
@@ -55,7 +56,6 @@ export default function AdminProducts() {
 
             <div className="grid grid-cols-5 gap-6">
                 {products.map((product) => (
-
                     <div key={product.id} className="border rounded p-4 space-y-2">
                         <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover rounded" />
                         <h2 className="text-lg font-semibold">{product.name}</h2>

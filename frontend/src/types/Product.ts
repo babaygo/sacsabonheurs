@@ -13,10 +13,10 @@ export interface Product {
     lenght: number;
     width: number;
     images: string[];
-    status: string;
     categoryId: number;
     category: Category;
     orderItems: OrderItem[];
     createdAt: Date;
     updatedAt: Date;
+    hidden: boolean;
 }

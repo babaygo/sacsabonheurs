@@ -2,7 +2,7 @@
 
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -12,6 +12,8 @@ import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "@/components/ImageUploader";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import { Checkbox } from "../ui/checkbox";
+import { Label } from "../ui/label";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -55,9 +57,10 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
         e.preventDefault();
 
         const formData = new FormData();
-        Object.entries(form).forEach(([key, value]) =>
-            formData.append(key, String(value))
-        );
+        Object.entries(form).forEach(([key, value]) => {
+            const val = typeof value === "boolean" ? (value ? "true" : "false") : String(value);
+            formData.append(key, val);
+        });
 
         keptImages.forEach((url) => {
             formData.append("keptImages", url);
@@ -97,6 +100,10 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Modifier le sac</DialogTitle>
+                    <DialogDescription>
+                        Modifiez les informations du sac et cliquez sur "Enregistrer" pour
+                        sauvegarder les modifications.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
@@ -130,6 +137,16 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                             />
                         </Field>
 
+                        <Field>
+                            <div className="flex items-start gap-3">
+                                <Checkbox id="hidden" checked={form.hidden}
+                                    onCheckedChange={(checked) => handleChange("hidden", checked)} />
+                                <div className="grid gap-2">
+                                    <Label htmlFor="hidden">Masquer dans la boutique</Label>
+                                </div>
+                            </div>
+                        </Field>
+
                         <div className="grid grid-cols-2 gap-4">
                             <Field>
                                 <FieldLabel>Prix (€)</FieldLabel>
@@ -161,7 +178,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                             </Field>
                         </div>
 
-                        <div className="grid grid-cols-4 gap-4">
+                        <div className="grid grid-cols-4 gap-4 items-end">
                             <Field>
                                 <FieldLabel>Poids (g)</FieldLabel>
                                 <Input
