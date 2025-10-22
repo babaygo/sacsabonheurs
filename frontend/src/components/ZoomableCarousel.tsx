@@ -43,7 +43,7 @@ export default function ZoomableCarousel({
                             <img
                                 src={src}
                                 alt={`Image ${i + 1}`}
-                                className="max-h-[80vh] object-contain rounded-md"
+                                className="max-h-[80vh] object-contain"
                             />
                         </div>
                     ))}

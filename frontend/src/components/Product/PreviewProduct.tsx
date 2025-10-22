@@ -9,7 +9,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
             href={`/products/${product.slug}`}
             className="flex flex-col items-center py-4 group"
         >
-            <div className="relative w-full h-[400px] overflow-hidden rounded-xl">
+            <div className="relative w-full h-[400px] overflow-hidden">
                 <div
                     className="absolute inset-0 w-full h-full bg-center bg-cover bg-no-repeat transition-opacity duration-300 opacity-100 group-hover:opacity-0"
                     style={{ backgroundImage: `url(${product.images?.[0]})` }}
