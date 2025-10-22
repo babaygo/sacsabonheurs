@@ -32,7 +32,7 @@ export default function ProductFilters({
     };
 
     return (
-        <div className="flex flex-wrap gap-4 mb-8">
+        <div className="flex gap-4 mb-8">
             {showCategoryFilter && (
                 <Select value={selectedCategory ?? undefined} onValueChange={onCategoryChange}>
                     <SelectTrigger className="w-[200px]" aria-label="Filtrer par catégorie">

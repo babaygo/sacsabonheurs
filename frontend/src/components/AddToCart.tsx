@@ -30,7 +30,7 @@ export default function AddToCart({ product, className, variant }: AddToCartProp
             onClick={handleClick}
             disabled={product?.stock <= 0}
             variant={variant ?? (product?.stock > 0 ? "default" : "secondary")}
-            className="w-full hover:opacity-100 rounded-none"
+            className={`hover:opacity-100" ${className}`}
         >
              {product?.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
         </Button>

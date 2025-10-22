@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 
@@ -40,6 +40,9 @@ export function DeleteDialog({ productId, onSuccess }: { productId: number, onSu
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Confirmer la suppression</DialogTitle>
+                    <DialogDescription>
+                        Êtes-vous sûr de vouloir supprimer ce produit ?
+                    </DialogDescription>
                 </DialogHeader>
                 <p>Ce produit sera définitivement supprimé.</p>
                 <Button
