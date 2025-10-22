@@ -28,6 +28,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
     const [files, setFiles] = useState<File[]>([]);
     const [keptImages, setKeptImages] = useState<string[]>(existingImages);
+    const [removeImages, setRemoveImages] = useState<string[]>([]);
 
     useEffect(() => {
         if (open) {
@@ -38,15 +39,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
     const removeImage = async (url: string) => {
         setKeptImages((prev) => prev.filter((img) => img !== url));
-
-        try {
-            await fetch(`${getBaseUrl()}/api/admin/products/images/${url}`, {
-                method: "DELETE",
-                credentials: "include"
-            });
-        } catch (err) {
-            console.warn("Erreur suppression image R2 :", err);
-        }
+        setRemoveImages((prev) => [...prev, url]);
     };
 
     const handleChange = (field: keyof Product, value: any) => {
@@ -64,6 +57,10 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
         keptImages.forEach((url) => {
             formData.append("keptImages", url);
+        });
+
+        removeImages.forEach((url) => {
+            formData.append("removedImages", url);
         });
 
         files.forEach((file) => {

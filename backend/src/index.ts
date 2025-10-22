@@ -456,6 +456,12 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
     } = req.body;
 
     try {
+        if (req.body.removedImages) {
+            Array.isArray(req.body.removedImages)
+                ? await deleteImagesFromR2(req.body.removedImages)
+                : await deleteImagesFromR2([req.body.removedImages]);
+        }
+
         const keptImages = req.body.keptImages
             ? Array.isArray(req.body.keptImages)
                 ? req.body.keptImages
@@ -513,17 +519,6 @@ app.delete("/api/admin/products/:id", requireAuth, requireAdmin, async (req, res
     } catch (error) {
         console.error("Erreur suppression produit :", error);
         res.status(500).json({ error: "Erreur serveur" });
-    }
-});
-
-app.delete("/api/admin/products/images/:url", requireAuth, requireAdmin, async (req, res) => {
-    const url = req.params.url;
-    try {
-        await deleteImagesFromR2([url]);
-        res.status(200).json({ success: true });
-    } catch (err) {
-        console.error("Erreur suppression R2 :", err);
-        res.status(500).json({ error: "Erreur suppression image" });
     }
 });
 

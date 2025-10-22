@@ -37,7 +37,10 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         [files, onChange]
     );
 
-    const removeFile = (index: number) => {
+    const removeFile = (e: React.MouseEvent, index: number) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         const updated = files.filter((_, i) => i !== index);
         setFiles(updated);
         onChange(updated);
@@ -69,7 +72,7 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
                             <span className="truncate">{file.name}</span>
                             <button
                                 type="button"
-                                onClick={() => removeFile(i)}
+                                onClick={(e) => removeFile(e, i)}
                                 className="text-red-500 text-xs ml-2"
                             >
                                 <Trash />
