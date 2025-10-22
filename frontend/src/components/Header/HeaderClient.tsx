@@ -14,7 +14,7 @@ import CartDrawer from "@/components/CartDrawer";
 import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Menu, ShoppingBasket, UserRound } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../ui/sheet";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
@@ -42,12 +42,14 @@ export default function HeaderClient() {
 
             <div className="flex flex-col items-center space-y-1">
                 <div className="flex items-center space-x-3">
-                    <img
-                        src="/sacs-a-bonheurs-logo.png"
-                        alt="Logo Sacs à Bonheurs"
-                        className="h-12 w-auto"
-                    />
-                    <Link href="/" className="text-4xl font-playfair-display font-semibold">
+                    <Link href={"/"}>
+                        <img
+                            src="/sacs-a-bonheurs-logo.png"
+                            alt="Logo Sacs à Bonheurs"
+                            className="h-12 w-auto"
+                        />
+                    </Link>
+                    <Link href="/" className="hidden md:flex text-4xl font-playfair-display font-semibold">
                         Sacs à Bonheurs
                     </Link>
                 </div>
@@ -110,12 +112,14 @@ export default function HeaderClient() {
 
             <div className="md:hidden absolute top-6 left-2">
                 <Sheet>
+                    <SheetTitle />
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
                             <Menu className="size-6" />
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-64">
+                        <SheetDescription />
                         <div className="mt-6 space-y-6">
                             {!loadingUser && user ? (
                                 <div className="space-y-2">
@@ -128,16 +132,13 @@ export default function HeaderClient() {
                                     </div>
                                     <Separator />
                                     <div className="flex flex-col space-y-2">
-                                        <Link href="/profile" className="text-sm hover:underline">Profil</Link>
                                         <Link href="/orders" className="text-sm hover:underline">Mes commandes</Link>
                                         <Link href="/boutique" className="text-sm hover:underline">Boutique</Link>
-                                        <Link href="/a-propos" className="text-sm hover:underline">À propos</Link>
-                                        <Link href="/contact" className="text-sm hover:underline">Contact</Link>
                                         {isAdmin && <Link href="/admin" className="text-sm hover:underline">Admin</Link>}
                                         <Button
                                             variant="ghost"
                                             onClick={handleLogout}
-                                            className="text-sm text-left px-0 hover:underline"
+                                            className="text-sm justify-start px-0 hover:underline"
                                         >
                                             Se déconnecter
                                         </Button>

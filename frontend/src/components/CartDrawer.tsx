@@ -9,6 +9,7 @@ import {
     DrawerTitle,
     DrawerClose,
     DrawerFooter,
+    DrawerDescription,
 } from "@/components/ui/drawer";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
@@ -52,6 +53,7 @@ export default function CartDrawer() {
         <>
             <Drawer open={open} onOpenChange={setOpen}>
                 <DrawerContent className="max-w-md ml-auto h-full flex flex-col">
+                    <DrawerDescription />
                     <DrawerHeader className="flex items-center justify-between px-4 py-4 border-b">
                         <DrawerTitle>Ton panier</DrawerTitle>
                         <DrawerClose asChild>
