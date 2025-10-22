@@ -1,11 +1,8 @@
+import { Product } from "./Product";
+
 export interface Category {
     id: number;
     name: string;
     slug: string;
-    products: {
-        id: number;
-        name: string;
-        price: number;
-        images: string;
-    }[];
+    products: Product[];
 }
