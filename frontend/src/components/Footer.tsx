@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 import { Separator } from "./ui/separator";
+import Image from "next/image";
 
 export default function Footer() {
     return (
@@ -12,10 +13,13 @@ export default function Footer() {
                 <div className="flex items-center space-x-4">
                     <div className="space-y-2 items-center text-center md:items-start md:text-left">
                         <div className="flex items-center space-x-2">
-                            <img
+                            <Image
                                 src="/sacs-a-bonheurs-logo.png"
                                 alt="Logo Sacs à Bonheurs"
+                                width={32}
+                                height={32}
                                 className="h-6 w-auto md:h-8"
+                                loading="lazy"
                             />
                             <p className="font-semibold">Sacs à Bonheurs</p>
                         </div>

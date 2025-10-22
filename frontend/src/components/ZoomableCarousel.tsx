@@ -4,6 +4,7 @@ import useEmblaCarousel from "embla-carousel-react";
 import { CircleChevronLeft, CircleChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 export default function ZoomableCarousel({
     images,
@@ -40,10 +41,14 @@ export default function ZoomableCarousel({
                 <div className="w-full flex">
                     {images.map((src, i) => (
                         <div key={i} className="w-full flex-[0_0_100%] flex justify-center">
-                            <img
+                            <Image
                                 src={src}
                                 alt={`Image ${i + 1}`}
                                 className="max-h-[80vh] object-contain"
+                                sizes="(max-width: 768px) 100vw, 33vw"
+                                width={800}
+                                height={800}
+                                fetchPriority={i === selectedIndex ? "high" : "auto"}
                             />
                         </div>
                     ))}

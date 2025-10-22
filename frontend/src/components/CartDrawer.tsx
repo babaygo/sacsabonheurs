@@ -18,6 +18,7 @@ import { useCartDrawerStore } from "@/lib/cartDrawerStore";
 import { useCartStore } from "@/lib/cartStore";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 export default function CartDrawer() {
     const { open, setOpen } = useCartDrawerStore();
@@ -67,12 +68,15 @@ export default function CartDrawer() {
                         {items.length === 0 ? (
                             <p className="text-sm text-gray-500">Ton panier est vide.</p>
                         ) : (
-                            items.map((item) => (
+                            items.map((item, i) => (
                                 <div key={item.id} className="flex items-center gap-4">
-                                    <img
+                                    <Image
                                         src={item.image}
                                         alt={item.name}
+                                        width={64}
+                                        height={64}
                                         className="w-16 h-16 object-cover rounded"
+                                        fetchPriority={ i === 0 ? "high" : "auto" }
                                     />
                                     <div className="flex-1">
                                         <p className="font-medium">{item.name}</p>
