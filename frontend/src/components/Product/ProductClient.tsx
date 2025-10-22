@@ -8,6 +8,8 @@ import BreadCrumb from "@/components/BreadCrumb";
 import { useEffect, useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import AddToCart from "../AddToCart";
+import Image from "next/image";
+import { Separator } from "../ui/separator";
 
 export default function ProductClient({ product: initialProduct }: { product: Product }) {
     const [product, setProduct] = useState<Product>(initialProduct);
@@ -49,7 +51,7 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                 ]}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-5 mt-6">
                 <div className="hidden md:grid md:col-span-3 justify-items-center grid-cols-1 gap-4">
                     {product?.images.map((src, i) => (
                         <ZoomableImage
@@ -68,11 +70,16 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                         <CarouselContent>
                             {product?.images.map((src, indexImages) => (
                                 <CarouselItem key={indexImages}>
-                                    <div
-                                        className="w-full h-[400px] bg-center bg-cover bg-no-repeat"
-                                        style={{ backgroundImage: `url(${src})` }}
-                                        role="img"
-                                    />
+                                    <div className="relative w-full aspect-square overflow-hidden">
+                                        <Image
+                                            src={src}
+                                            alt={`${product.name} ${indexImages + 1}`}
+                                            fill
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            className="object-cover"
+                                            priority={indexImages === 0}
+                                        />
+                                    </div>
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
@@ -82,8 +89,7 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                             {product?.images.map((_, i) => (
                                 <span
                                     key={i}
-                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"
-                                        }`}
+                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"}`}
                                 />
                             ))}
                         </div>
@@ -91,14 +97,15 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                 </div>
 
                 <div className="col-span-1 md:col-span-2 flex flex-col space-y-4">
-                    <p className="text-2xl mt-2 md:mt-4 text-center md:text-left">{product?.name}</p>
-                    <p className="text-lg font-semibold text-center md:text-left">{product?.price} €</p>
+                    <p className="text-2xl mt-2 md:mt-4 text-left">{product?.name}</p>
+                    <p className="text-lg font-semibold text-left">{product?.price} €</p>
 
-                    <div className="flex justify-center md:justify-start">
-                        <AddToCart product={initialProduct} className="w-fit md:w-full" />
+                    <div className="flex">
+                        <AddToCart product={initialProduct} className="w-full" />
                     </div>
-
+                    
                     <Accordion type="multiple" defaultValue={["item-1"]}>
+                        <Separator />
                         <AccordionItem value="item-1">
                             <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
                             <AccordionContent>{product?.description}</AccordionContent>
