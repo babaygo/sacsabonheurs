@@ -9,7 +9,6 @@ import { AddDialog } from "@/components/Dialogs/ProductAddDialog";
 import { EditDialog } from "@/components/Dialogs/ProductEditDialog";
 import { DeleteDialog } from "@/components/Dialogs/ProductDeleteDialog";
 import { LoadingView } from "@/components/Views/LoadingView";
-import { Checkbox } from "@/components/ui/checkbox";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();

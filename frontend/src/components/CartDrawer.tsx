@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { useCartDrawerStore } from "@/lib/cartDrawerStore";
 import { useCartStore } from "@/lib/cartStore";
 import { getBaseUrl } from "@/lib/getBaseUrl";
+import toast from "react-hot-toast";
 
 export default function CartDrawer() {
     const { open, setOpen } = useCartDrawerStore();
@@ -40,6 +41,7 @@ export default function CartDrawer() {
             window.location.href = data.url;
         } catch (error) {
             console.error("Erreur lors du passage à la caisse :", error);
+            toast.error(`Une erreur est survenue. ${error}`);
         } finally {
             clearCart();
             setOpen(false);
