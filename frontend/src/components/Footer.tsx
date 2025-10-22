@@ -100,7 +100,7 @@ export default function Footer() {
                     </AccordionItem>
                 </Accordion>
                 <div className="mt-4">
-                    <p className="text-xs">© {new Date().getFullYear()} &nbsp; Sacs à Bonheurs</p>
+                    <p className="text-xs">© &nbsp; Sacs à Bonheurs &nbsp; {new Date().getFullYear()}</p>
                 </div>
             </div>
         </footer>
