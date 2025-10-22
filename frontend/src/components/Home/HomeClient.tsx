@@ -21,7 +21,7 @@ export default function HomeClient() {
                 if (!data) {
                     notFound();
                 } else {
-                    const sorted = data
+                    const sorted = data.filter((product: Product) => !product.hidden)
                         .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                         .slice(0, 4);
                     setProducts(sorted);
