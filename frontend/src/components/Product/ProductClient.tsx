@@ -77,7 +77,7 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                                             fill
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             className="object-cover"
-                                            priority={indexImages === 0}
+                                            fetchPriority={indexImages === 0 ? "high" : "auto"}
                                         />
                                     </div>
                                 </CarouselItem>
@@ -103,7 +103,7 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                     <div className="flex">
                         <AddToCart product={initialProduct} className="w-full" />
                     </div>
-                    
+
                     <Accordion type="multiple" defaultValue={["item-1"]}>
                         <Separator />
                         <AccordionItem value="item-1">

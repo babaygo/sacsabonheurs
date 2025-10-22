@@ -15,6 +15,7 @@ import { useCart } from "@/lib/useCart";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Menu, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../ui/sheet";
+import Image from "next/image";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
@@ -43,9 +44,12 @@ export default function HeaderClient() {
             <div className="flex flex-col items-center space-y-1">
                 <div className="flex items-center space-x-3">
                     <Link href={"/"}>
-                        <img
+                        <Image
                             src="/sacs-a-bonheurs-logo.png"
                             alt="Logo Sacs à Bonheurs"
+                            loading="lazy"
+                            width={48}
+                            height={48}
                             className="h-12 w-auto"
                         />
                     </Link>
