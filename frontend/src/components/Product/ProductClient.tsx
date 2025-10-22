@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/ZoomableImage";
 import BreadCrumb from "@/components/BreadCrumb";
@@ -11,6 +11,19 @@ import AddToCart from "../AddToCart";
 
 export default function ProductClient({ product: initialProduct }: { product: Product }) {
     const [product, setProduct] = useState<Product>(initialProduct);
+    const [api, setApi] = useState<CarouselApi>()
+    const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        if (!api) {
+            return
+        }
+
+        setCurrent(api.selectedScrollSnap())
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap())
+        });
+    }, [api]);
 
     useEffect(() => {
         const refetch = async () => {
@@ -36,8 +49,8 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                 ]}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-6">
-                <div className="hidden md:grid justify-items-center grid-cols-1 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mt-6">
+                <div className="hidden md:grid md:col-span-3 justify-items-center grid-cols-1 gap-4">
                     {product?.images.map((src, i) => (
                         <ZoomableImage
                             key={i}
@@ -47,13 +60,16 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                         />
                     ))}
                 </div>
-                <div className="md:hidden my-4">
-                    <Carousel>
+                <div className="md:hidden col-span-1 my-4">
+                    <Carousel
+                        className="w-full"
+                        setApi={setApi}
+                    >
                         <CarouselContent>
-                            {product?.images.map((src, i) => (
-                                <CarouselItem key={i}>
+                            {product?.images.map((src, indexImages) => (
+                                <CarouselItem key={indexImages}>
                                     <div
-                                        className="w-full h-[400px] bg-center bg-cover bg-no-repeat rounded-xl"
+                                        className="w-full h-[400px] bg-center bg-cover bg-no-repeat"
                                         style={{ backgroundImage: `url(${src})` }}
                                         role="img"
                                     />
@@ -61,14 +77,25 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                             ))}
                         </CarouselContent>
                     </Carousel>
+                    <div className="flex justify-end mt-2">
+                        <div className="flex gap-2 px-3 py-2 bg-gray-200/60 backdrop-blur-md rounded-full">
+                            {product?.images.map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"
+                                        }`}
+                                />
+                            ))}
+                        </div>
+                    </div>
                 </div>
 
-                <div className="flex flex-col space-y-4">
+                <div className="col-span-1 md:col-span-2 flex flex-col space-y-4">
                     <p className="text-2xl mt-2 md:mt-4 text-center md:text-left">{product?.name}</p>
                     <p className="text-lg font-semibold text-center md:text-left">{product?.price} €</p>
 
                     <div className="flex justify-center md:justify-start">
-                        <AddToCart product={initialProduct} className="w-full max-w-xs" />
+                        <AddToCart product={initialProduct} className="w-fit md:w-full" />
                     </div>
 
                     <Accordion type="multiple" defaultValue={["item-1"]}>
