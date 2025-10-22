@@ -64,7 +64,7 @@ export default function HomeClient() {
                             </div>
 
                             <Link href="/boutique">
-                                <Button className="mt-4 py-5 px-6 text-base group flex items-center gap-2 mx-auto">
+                                <Button className="rounded-full">
                                     <span>Explorer la boutique</span>
                                     <MoveRight className="scale-125 transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-150" />
                                 </Button>
@@ -73,17 +73,17 @@ export default function HomeClient() {
                     </div>
                 </section>
 
-                <section className="py-20 w-full bg-secondary rounded-full">
-                    <div className=" grid grid-cols-1 md:grid-cols-2 gap-12 px-6 items-center">
-                        <div className="flex justify-center">
+                <section className="px-4 py-10 md:p-20 w-full bg-secondary rounded-3xl md:rounded-full">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-2 md:px-6 items-center">
+                        <div className="flex justify-center w-[250px] h-[250px] md:w-[450px] md:h-[450px] pt-6 md:pt-0 mx-auto">
                             <TiltedCard
                                 imageSrc="/sac-presentation.png"
                                 altText="Sac de présentation"
                                 captionText="Sac tubulaire"
-                                containerHeight="450px"
-                                containerWidth="450px"
-                                imageHeight="450px"
-                                imageWidth="450px"
+                                containerHeight="100%"
+                                containerWidth="100%"
+                                imageHeight="100%"
+                                imageWidth="100%"
                                 rotateAmplitude={10}
                                 scaleOnHover={1.05}
                                 showMobileWarning={false}
@@ -97,17 +97,25 @@ export default function HomeClient() {
                             />
                         </div>
 
-                        <div className="flex flex-col justify-center text-center md:text-left space-y-6">
-                            <h2 className="text-4xl font-bold">Le projet</h2>
-                            <p className="text-lg text-justify leading-relaxed pr-6">
-                                Bienvenue dans mon univers ! <br /> Je m'appelle Sophie et je suis passionnée de créations artisanales depuis toujours.
-                                J'ai commencé la couture en 2013 et je me suis vite spécialisée dans la couture de sacs et accessoires.
-                                J'apporte beaucoup d'attention et de soins à mes créations, et j'utilise des matériaux de qualité.
-                                Toutes mes créations sont des pièces uniques, dont je créé les patrons. Je vous souhaite une bonne visite !
+                        <div className="flex flex-col justify-center justify-items-center md:items-start text-center md:text-left space-y-6">
+                            <h2 className="text-4xl font-bold">La boutique</h2>
+                            <p className="text-base md:text-lg leading-relaxed text-left md:text-justify pr-0 md:pr-6">
+                                Sacs à Bonheurs est une boutique artisanale où tout est confectionné
+                                dans mon atelier, en Loire-Atlantique. Chaque sac fabriqué est unique, vous ne trouverez pas deux sacs identiques.
+                                En choisissant un sac Sacs à Bonheurs, vous soutenez le savoir-faire local et l'artisanat français.<br />
+                                <br />En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.
+                                N'hésitez pas à suivre mon compte
+                                <a
+                                    href="https://www.instagram.com/sacs_a_bonheurs/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-pink-500 transition"
+                                >&nbsp;Instagram&nbsp;</a>
+                                pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.
                             </p>
                             <Link href="/a-propos">
-                                <Button className="w-fit px-6 py-3 rounded-full">
-                                    À propos de moi
+                                <Button className="rounded-full">
+                                    Pour en savoir plus
                                 </Button>
                             </Link>
                         </div>

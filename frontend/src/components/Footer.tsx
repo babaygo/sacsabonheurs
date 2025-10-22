@@ -2,18 +2,19 @@
 
 import Link from "next/link";
 import { Instagram } from "lucide-react";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
 
 export default function Footer() {
     return (
-        <footer className="relative mt-8 top-6 bottom-6 left-1/2 transform -translate-x-1/2 w-4/5 bg-secondary rounded-t-xl shadow-sm">
-            <div className="p-8 flex flex-col md:flex-row justify-between gap-6 text-sm">
+        <footer className="w-full mt-8 bg-secondary p-6 text-sm">
+            <div className="max-w-7xl mx-auto hidden md:flex justify-between gap-6">
                 <div className="flex items-center space-x-4">
-                    <div className="space-y-2">
+                    <div className="space-y-2 items-center text-center md:items-start md:text-left">
                         <div className="flex items-center space-x-2">
                             <img
                                 src="/sacs-a-bonheurs-logo.png"
                                 alt="Logo Sacs à Bonheurs"
-                                className="h-8 w-auto"
+                                className="h-6 w-auto md:h-8"
                             />
                             <p className="font-semibold">Sacs à Bonheurs</p>
                         </div>
@@ -23,7 +24,7 @@ export default function Footer() {
                     </div>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 items-center text-center md:items-start md:text-left">
                     <p className="font-semibold">Navigation</p>
                     <ul className="space-y-1">
                         <li><Link href="/" className="hover:underline">Accueil</Link></li>
@@ -32,7 +33,7 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 items-center text-center md:items-start md:text-left">
                     <p className="font-semibold">Légal</p>
                     <ul className="space-y-1">
                         <li><Link href="/policies/mentions" className="hover:underline">Mentions légales</Link></li>
@@ -41,7 +42,7 @@ export default function Footer() {
                     </ul>
                 </div>
 
-                <div className="space-y-2">
+                <div className="space-y-2 items-center text-center md:items-start md:text-left">
                     <p className="font-semibold">Suivez-nous</p>
                     <div className="flex items-center gap-2">
                         <a
@@ -55,6 +56,48 @@ export default function Footer() {
                         <span className="text-sm">Instagram</span>
                     </div>
                 </div>
+            </div>
+            <div className="md:hidden">
+                <Accordion type="single" collapsible className="w-full">
+                    <AccordionItem value="navigation">
+                        <AccordionTrigger>Navigation</AccordionTrigger>
+                        <AccordionContent>
+                            <ul className="space-y-1">
+                                <li><Link href="/">Accueil</Link></li>
+                                <li><Link href="/a-propos">À propos</Link></li>
+                                <li><Link href="/contact">Contact</Link></li>
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="legal">
+                        <AccordionTrigger>Légal</AccordionTrigger>
+                        <AccordionContent>
+                            <ul className="space-y-1">
+                                <li><Link href="/policies/mentions">Mentions légales</Link></li>
+                                <li><Link href="/policies/cgv">Conditions générales</Link></li>
+                                <li><Link href="/policies/privacy-policy">Politique de confidentialité</Link></li>
+                            </ul>
+                        </AccordionContent>
+                    </AccordionItem>
+
+                    <AccordionItem value="social">
+                        <AccordionTrigger>Suivez-nous</AccordionTrigger>
+                        <AccordionContent>
+                            <div className="flex items-center gap-2">
+                                <a
+                                    href="https://www.instagram.com/sacs_a_bonheurs/"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="hover:text-pink-500 transition"
+                                >
+                                    <Instagram className="w-5 h-5" />
+                                </a>
+                                <span className="text-sm">Instagram</span>
+                            </div>
+                        </AccordionContent>
+                    </AccordionItem>
+                </Accordion>
             </div>
         </footer>
     );
