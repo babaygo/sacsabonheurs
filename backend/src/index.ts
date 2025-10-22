@@ -52,6 +52,13 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         const slugs: string[] = JSON.parse(session.metadata!.slugs);
         const billingAddress = session.customer_details?.address;
 
+        await prisma.product.updateMany({
+            where: { slug: { in: slugs } },
+            data: {
+                stock: { decrement: 1 }
+            },
+        });
+
         const items = await Promise.all(
             lineItems.data.map(async (item, index) => ({
                 name: item.description ?? "Produit inconnu",
@@ -87,15 +94,8 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     postalCode: billingAddress?.postal_code ?? null,
                     city: billingAddress?.city ?? null,
                     country: billingAddress?.country ?? "FR",
-                    items: { create: items },
-                },
-            });
-
-            await prisma.product.updateMany({
-                where: { slug: { in: slugs } },
-                data: {
-                    stock: { decrement: 1 }
-                },
+                    items: { create: items }
+                }
             });
         } catch (error: any) {
             console.error("Erreur sur la création d'une commande :", error);
@@ -182,6 +182,13 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     const user: User = (req as any).user;
     const relay = (req as any)?.relay
     const slugs = items.map((item: any) => item.slug);
+
+    for (const item of items) {
+        const product = await prisma.product.findUnique({ where: { slug: item.slug } });
+        if (!product || product.stock < item.quantity || product.hidden || item.quantity < 1) {
+            return res.status(400).json({ error: `Le produit ${item.name} n'est plus disponible.` });
+        }
+    }
 
     const session = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
