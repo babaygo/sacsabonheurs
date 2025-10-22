@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Instagram } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "./ui/accordion";
+import { Separator } from "./ui/separator";
 
 export default function Footer() {
     return (
@@ -98,6 +99,9 @@ export default function Footer() {
                         </AccordionContent>
                     </AccordionItem>
                 </Accordion>
+                <div className="mt-4">
+                    <p className="text-xs">© {new Date().getFullYear()} &nbsp; Sacs à Bonheurs</p>
+                </div>
             </div>
         </footer>
     );
