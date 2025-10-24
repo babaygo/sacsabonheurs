@@ -38,7 +38,10 @@ export default async function MentionsLegalesPage() {
                 ]}
             />
             <h1 className="text-2xl font-bold">Mentions légales</h1>
-            <p className="whitespace-pre-line py-4">{mentions}</p>
+            <div
+                className="prose prose-sm max-w-none py-4"
+                dangerouslySetInnerHTML={{ __html: mentions }}
+            />
         </div>
     );
 }

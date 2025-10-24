@@ -37,8 +37,11 @@ export default async function CGVPage() {
                     { label: "Conditions générales de vente" },
                 ]}
             />
-            <h1 className="text-2xl font-bold">Conditions générales de vente</h1>
-            <p className="whitespace-pre-line py-4">{cgv}</p>
+            <h1 className="text-2xl font-bold mb-4">Conditions générales de vente</h1>
+            <div
+                className="prose prose-sm max-w-none py-4"
+                dangerouslySetInnerHTML={{ __html: cgv }}
+            />
         </div>
     );
 }

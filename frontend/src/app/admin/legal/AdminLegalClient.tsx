@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
@@ -9,6 +8,7 @@ import { getBaseUrl } from "@/lib/getBaseUrl";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useRouter } from "next/navigation";
 import { PdfExtractor } from "@/components/PdfExtractor";
+import { RichTextEditor } from "@/components/RichEditorText";
 
 export default function AdminLegalClient() {
     const [legal, setLegal] = useState({
@@ -61,12 +61,17 @@ export default function AdminLegalClient() {
         }
     }, [user, loadingUser, router]);
 
-    const handleChange = (field: keyof typeof legal) => (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-        setLegal({ ...legal, [field]: e.target.value });
+    const handleChange = (field: keyof typeof legal) => (value: string) => {
+        setLegal({ ...legal, [field]: value });
     };
 
     const handleExtract = (field: keyof typeof legal) => (text: string) => {
-        setLegal({ ...legal, [field]: text });
+        // Convertir le texte brut en HTML avec des paragraphes
+        const htmlContent = text
+            .split("\n\n")
+            .map((paragraph) => `<p>${paragraph.trim()}</p>`)
+            .join("");
+        setLegal({ ...legal, [field]: htmlContent });
     };
 
     const handleSave = async () => {
@@ -107,9 +112,7 @@ export default function AdminLegalClient() {
             <div className="space-y-4">
                 <Label htmlFor="mentions">Mentions légales</Label>
                 <PdfExtractor onExtract={handleExtract("mentions")} />
-                <Textarea
-                    id="mentions"
-                    rows={8}
+                <RichTextEditor
                     value={legal.mentions}
                     onChange={handleChange("mentions")}
                 />
@@ -118,9 +121,7 @@ export default function AdminLegalClient() {
             <div className="space-y-4">
                 <Label htmlFor="cgv">Conditions générales de vente</Label>
                 <PdfExtractor onExtract={handleExtract("cgv")} />
-                <Textarea
-                    id="cgv"
-                    rows={8}
+                <RichTextEditor
                     value={legal.cgv}
                     onChange={handleChange("cgv")}
                 />
@@ -129,9 +130,7 @@ export default function AdminLegalClient() {
             <div className="space-y-4">
                 <Label htmlFor="privacy">Politique de confidentialité</Label>
                 <PdfExtractor onExtract={handleExtract("privacy")} />
-                <Textarea
-                    id="privacy"
-                    rows={8}
+                <RichTextEditor
                     value={legal.privacy}
                     onChange={handleChange("privacy")}
                 />

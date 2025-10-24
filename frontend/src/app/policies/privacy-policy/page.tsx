@@ -38,7 +38,10 @@ export default async function PrivacyPolicyPage() {
                 ]}
             />
             <h1 className="text-2xl font-bold">Politique de confidentialité</h1>
-            <p className="whitespace-pre-line py-4">{privacy}</p>
+            <div
+                className="prose prose-sm max-w-none py-4"
+                dangerouslySetInnerHTML={{ __html: privacy }}
+            />
         </div>
     );
 }
