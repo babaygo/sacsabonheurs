@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
   },
   images: {
     remotePatterns: [new URL('https://media.sacsabonheurs.fr/**')],
-  },
+  }
 };
 
 export default nextConfig;

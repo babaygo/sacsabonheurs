@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useRouter } from "next/navigation";
+import { PdfExtractor } from "@/components/PdfExtractor";
 
 export default function AdminLegalClient() {
     const [legal, setLegal] = useState({
@@ -64,6 +65,10 @@ export default function AdminLegalClient() {
         setLegal({ ...legal, [field]: e.target.value });
     };
 
+    const handleExtract = (field: keyof typeof legal) => (text: string) => {
+        setLegal({ ...legal, [field]: text });
+    };
+
     const handleSave = async () => {
         setLoading(true);
         try {
@@ -101,6 +106,7 @@ export default function AdminLegalClient() {
 
             <div className="space-y-4">
                 <Label htmlFor="mentions">Mentions légales</Label>
+                <PdfExtractor onExtract={handleExtract("mentions")} />
                 <Textarea
                     id="mentions"
                     rows={8}
@@ -111,6 +117,7 @@ export default function AdminLegalClient() {
 
             <div className="space-y-4">
                 <Label htmlFor="cgv">Conditions générales de vente</Label>
+                <PdfExtractor onExtract={handleExtract("cgv")} />
                 <Textarea
                     id="cgv"
                     rows={8}
@@ -121,6 +128,7 @@ export default function AdminLegalClient() {
 
             <div className="space-y-4">
                 <Label htmlFor="privacy">Politique de confidentialité</Label>
+                <PdfExtractor onExtract={handleExtract("privacy")} />
                 <Textarea
                     id="privacy"
                     rows={8}
