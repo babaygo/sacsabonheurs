@@ -29,12 +29,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable} `}>
-      <body>
+      <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <SessionProvider>
           <CategoryHydrator />
           <ClientLayout>
             <Toaster position="top-right" />
-            <main className="max-w-7xl mx-auto">
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
             </main>
           </ClientLayout>

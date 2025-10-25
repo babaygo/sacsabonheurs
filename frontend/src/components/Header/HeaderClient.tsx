@@ -34,8 +34,8 @@ export default function HeaderClient() {
     };
 
     return (
-        <header className="max-w-7xl mx-auto sticky top-0 left-0 w-full z-50 bg-primary-foreground py-4">
-            <nav className="hidden md:flex absolute top-6 left-0 flex space-x-6 text-l font-medium">
+        <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sticky top-0 left-0 w-full z-50 bg-primary-foreground py-4">
+            <nav className="hidden md:flex absolute top-6 left-2 flex space-x-6 text-l font-medium">
                 <Link href="/contact">Contact</Link>
                 <Link href="/a-propos">À propos</Link>
                 <Link href="/boutique">Boutique</Link>
@@ -60,7 +60,7 @@ export default function HeaderClient() {
                 <p className="text-sm text-muted-foreground">Fabriqué à la main, en France</p>
             </div>
 
-            <div className="hidden md:flex absolute top-6 right-0 flex items-center space-x-2">
+            <div className="hidden md:flex absolute top-6 right-2 flex items-center space-x-2">
                 <CartDrawer />
                 {!loadingUser && user ? (
                     <Popover>
