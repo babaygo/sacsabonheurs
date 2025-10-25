@@ -23,6 +23,9 @@ RUN npm run build
 FROM node:20 AS runner
 WORKDIR /app
 
+# Installe bash
+RUN apt-get update && apt-get install -y bash
+
 # Copie node_modules complet (avec @prisma/client et .prisma)
 COPY --from=builder /app/node_modules ./node_modules
 
@@ -35,4 +38,4 @@ COPY entrypoint.sh ./
 RUN chmod +x ./entrypoint.sh
 
 EXPOSE 3001
-ENTRYPOINT ["/bin/sh", "./entrypoint.sh"]
+ENTRYPOINT ["bash", "./entrypoint.sh"]
