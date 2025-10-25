@@ -39,10 +39,51 @@ export function PdfExtractor({ onExtract }: PdfExtractorProps) {
             for (let i = 1; i <= pdf.numPages; i++) {
                 const page = await pdf.getPage(i);
                 const textContent = await page.getTextContent();
-                const pageText = textContent.items
-                    .map((item: any) => item.str)
-                    .join(" ");
-                fullText += pageText + "\n\n";
+
+                // Trier les éléments par position verticale puis horizontale
+                const items = textContent.items as any[];
+                items.sort((a, b) => {
+                    const yDiff = Math.abs(a.transform[5] - b.transform[5]);
+                    // Si sur la même ligne (différence Y < 5)
+                    if (yDiff < 5) {
+                        return a.transform[4] - b.transform[4]; // Trier par X
+                    }
+                    return b.transform[5] - a.transform[5]; // Trier par Y (inversé)
+                });
+
+                let lastY = -1;
+                let lineText = "";
+
+                items.forEach((item, index) => {
+                    const y = item.transform[5];
+                    const text = item.str;
+
+                    // Détection de nouvelle ligne
+                    if (lastY !== -1 && Math.abs(y - lastY) > 5) {
+                        fullText += lineText.trim() + "\n";
+                        lineText = "";
+                    }
+
+                    // Ajouter le texte avec l'espacement approprié
+                    if (item.hasEOL || (index < items.length - 1 &&
+                        Math.abs(items[index + 1].transform[4] - (item.transform[4] + item.width)) > 10)) {
+                        lineText += text + " ";
+                    } else {
+                        lineText += text;
+                    }
+
+                    lastY = y;
+                });
+
+                // Ajouter la dernière ligne
+                if (lineText.trim()) {
+                    fullText += lineText.trim() + "\n";
+                }
+
+                // Saut de page
+                if (i < pdf.numPages) {
+                    fullText += "\n---\n\n";
+                }
             }
 
             if (fullText.trim()) {
