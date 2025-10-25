@@ -47,7 +47,8 @@ export const auth = betterAuth({
             session_token: {
                 attributes: {
                     secure: true,
-                    sameSite: 'None'
+                    sameSite: 'None',
+                    domain: process.env.COOKIE_DOMAIN || undefined,
                 }
             }
         }
