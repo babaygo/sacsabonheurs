@@ -17,44 +17,39 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { authClient } from "@/lib/authClient";
 import { Eye, EyeOff } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { useSignup } from "@/lib/useSignup";
+import { useSessionContext } from "@/components/SessionProvider";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [lastname, setLastName] = useState("");
-    const [fisrtname, setFisrtName] = useState("");
+    const [firstname, setFirstName] = useState("");
+    const [loading, setLoading] = useState(false);
+    const { refreshSession } = useSessionContext();
     const [errorMessage, setErrorMessage] = useState("");
-    const router = useRouter();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        const result = signupSchema.safeParse({
-            email,
-            password,
-            firstname: fisrtname,
-            lastname,
-        });
-
+        const result = signupSchema.safeParse({ email, password, firstname, lastname });
         if (!result.success) {
             const firstError = result.error.issues?.[0]?.message;
             setErrorMessage(firstError || "Erreur de validation");
             return;
         }
-
-        const name = `${fisrtname} ${lastname}`.trim();
+        setLoading(true);
+        const name = `${firstname} ${lastname}`.trim();
 
         try {
-            await authClient.signUp.email({
-                name,
-                email,
-                password
-            });
-            router.push("/");
+            await useSignup({ name, email, password });
+            await refreshSession();
         } catch (error: any) {
             setErrorMessage(error.message || "Erreur lors de l'inscription");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -82,12 +77,12 @@ export default function SignupPage() {
                                 />
                             </div>
                             <div className="grid gap-2">
-                                <Label htmlFor="fisrtname">Prénom *</Label>
+                                <Label htmlFor="firstname">Prénom *</Label>
                                 <Input
-                                    id="fisrtname"
-                                    type="fisrtname"
-                                    value={fisrtname}
-                                    onChange={(e) => setFisrtName(e.target.value)}
+                                    id="firstname"
+                                    type="firstname"
+                                    value={firstname}
+                                    onChange={(e) => setFirstName(e.target.value)}
                                     required
                                 />
                             </div>
@@ -127,8 +122,8 @@ export default function SignupPage() {
                         {errorMessage && (
                             <p className="text-sm text-red-500">{errorMessage}</p>
                         )}
-                        <Button type="submit" className="w-full">
-                            Inscription
+                        <Button type="submit" className="w-full" disabled={loading}>
+                            {loading ? <Spinner /> : "Inscription"}
                         </Button>
                     </form>
                 </CardContent>

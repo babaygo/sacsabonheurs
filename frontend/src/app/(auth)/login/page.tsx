@@ -14,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import Link from "next/link";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { loginSchema } from "@/lib/validation/loginSchema";
 import { useLogin } from "@/lib/useLogin";
 import { useSessionContext } from "@/components/SessionProvider";
@@ -30,11 +29,9 @@ export default function LoginPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const { refreshSession } = useSessionContext();
-    const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        setErrorMessage("");
 
         const result = loginSchema.safeParse({ email, password });
         if (!result.success) {
@@ -47,7 +44,6 @@ export default function LoginPage() {
         try {
             await useLogin({ email, password });
             await refreshSession();
-            router.push("/");
         } catch (err: any) {
             setErrorMessage(err.message || "Erreur lors de la connexion");
         } finally {
