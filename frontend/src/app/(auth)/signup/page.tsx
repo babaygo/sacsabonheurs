@@ -16,10 +16,12 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff } from "lucide-react";
-import { useSignup } from "@/lib/useSignup";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/authClient";
+import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
@@ -45,9 +47,10 @@ export default function SignupPage() {
         const name = `${firstname} ${lastname}`.trim();
 
         try {
-            await useSignup({ name, email, password });
+            await authClient.signUp.email({ name, email, password, callbackURL: `${process.env.NEXT_PUBLIC_URL_FRONT}/` });
             await refreshSession();
             router.push("/");
+            toast.success("Compte créé. Vous avez reçu un email, pour vérifier votre email.");
         } catch (error: any) {
             setErrorMessage(error.message || "Erreur lors de l'inscription");
         } finally {
@@ -109,13 +112,13 @@ export default function SignupPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="pr-10" // espace pour l'icône
+                                    className="pr-10"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword((prev) => !prev)}
                                     className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 hover:text-gray-700"
-                                    tabIndex={-1} // évite de perturber la tabulation
+                                    tabIndex={-1}
                                 >
                                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                                 </button>
