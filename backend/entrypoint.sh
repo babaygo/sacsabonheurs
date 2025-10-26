@@ -1,11 +1,15 @@
 #!/bin/bash
 set -e
 
-echo "Installing dependencies if needed..."
-npm install --silent
+if [ ! -d "node_modules" ]; then
+    echo "Installing dependencies..."
+    npm install --silent
+fi
 
-echo "Generating Prisma client..."
-npx prisma generate
+if [ ! -d "node_modules/.prisma/client" ]; then
+    echo "Generating Prisma client..."
+    npx prisma generate
+fi
 
 echo "Starting dev server with ts-node-dev..."
 exec npm run dev
