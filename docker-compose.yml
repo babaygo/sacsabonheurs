@@ -17,17 +17,15 @@ services:
     container_name: sacsabonheur_backend
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/app
-      - ./backend/node_modules:/app/node_modules
     ports:
       - "3001:3001"
       - "5555:5555"
     environment:
       NODE_ENV: development
       DATABASE_URL: ${POSTGRES_DATABASE_URL}
-    command: npm run dev
     depends_on:
       - postgres
 
