@@ -15,11 +15,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { authClient } from "@/lib/authClient";
 import { Eye, EyeOff } from "lucide-react";
 import { useSignup } from "@/lib/useSignup";
 import { useSessionContext } from "@/components/SessionProvider";
 import { Spinner } from "@/components/ui/spinner";
+import { useRouter } from "next/navigation";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
@@ -30,6 +30,7 @@ export default function SignupPage() {
     const [loading, setLoading] = useState(false);
     const { refreshSession } = useSessionContext();
     const [errorMessage, setErrorMessage] = useState("");
+    const router = useRouter();
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -46,6 +47,7 @@ export default function SignupPage() {
         try {
             await useSignup({ name, email, password });
             await refreshSession();
+            router.push("/");
         } catch (error: any) {
             setErrorMessage(error.message || "Erreur lors de l'inscription");
         } finally {

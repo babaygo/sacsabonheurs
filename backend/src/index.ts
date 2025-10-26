@@ -8,7 +8,7 @@ import { requireAdmin, requireAuth } from './middleware/middleware';
 import { sendContactConfirmationEmail, sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
-import { deleteImagesFromR2, s3, uploadToR2 } from './lib/bucket';
+import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
 
 const app = express();
 

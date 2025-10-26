@@ -21,6 +21,7 @@ import toast from "react-hot-toast";
 import { authClient } from "@/lib/authClient";
 import { Spinner } from "@/components/ui/spinner";
 import { Eye, EyeOff } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -29,6 +30,7 @@ export default function LoginPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const { refreshSession } = useSessionContext();
+    const router = useRouter();
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -44,6 +46,7 @@ export default function LoginPage() {
         try {
             await useLogin({ email, password });
             await refreshSession();
+            router.push("/");
         } catch (err: any) {
             setErrorMessage(err.message || "Erreur lors de la connexion");
         } finally {
