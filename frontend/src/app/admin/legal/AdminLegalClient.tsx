@@ -94,51 +94,53 @@ export default function AdminLegalClient() {
     };
 
     return (
-        <div className="space-y-8">
-            <h1 className="text-2xl font-bold">Contenu légal</h1>
+        <div className="min-h-screen pt-4">
+            <div className="space-y-8">
+                <h1 className="text-2xl font-bold">Contenu légal</h1>
 
-            <p>
-                Dernière mise à jour le{" "}
-                {legal.updatedAt && !isNaN(Date.parse(legal.updatedAt))
-                    ? new Date(legal.updatedAt).toLocaleDateString("fr-FR", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                    })
-                    : "non renseignée"}
-                .
-            </p>
+                <p>
+                    Dernière mise à jour le{" "}
+                    {legal.updatedAt && !isNaN(Date.parse(legal.updatedAt))
+                        ? new Date(legal.updatedAt).toLocaleDateString("fr-FR", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                        })
+                        : "non renseignée"}
+                    .
+                </p>
 
-            <div className="space-y-4">
-                <Label htmlFor="mentions">Mentions légales</Label>
-                <PdfExtractor onExtract={handleExtract("mentions")} />
-                <RichTextEditor
-                    value={legal.mentions}
-                    onChange={handleChange("mentions")}
-                />
+                <div className="space-y-4">
+                    <Label htmlFor="mentions">Mentions légales</Label>
+                    <PdfExtractor onExtract={handleExtract("mentions")} />
+                    <RichTextEditor
+                        value={legal.mentions}
+                        onChange={handleChange("mentions")}
+                    />
+                </div>
+
+                <div className="space-y-4">
+                    <Label htmlFor="cgv">Conditions générales de vente</Label>
+                    <PdfExtractor onExtract={handleExtract("cgv")} />
+                    <RichTextEditor
+                        value={legal.cgv}
+                        onChange={handleChange("cgv")}
+                    />
+                </div>
+
+                <div className="space-y-4">
+                    <Label htmlFor="privacy">Politique de confidentialité</Label>
+                    <PdfExtractor onExtract={handleExtract("privacy")} />
+                    <RichTextEditor
+                        value={legal.privacy}
+                        onChange={handleChange("privacy")}
+                    />
+                </div>
+
+                <Button onClick={handleSave} disabled={loading}>
+                    {loading ? "Enregistrement..." : "Enregistrer"}
+                </Button>
             </div>
-
-            <div className="space-y-4">
-                <Label htmlFor="cgv">Conditions générales de vente</Label>
-                <PdfExtractor onExtract={handleExtract("cgv")} />
-                <RichTextEditor
-                    value={legal.cgv}
-                    onChange={handleChange("cgv")}
-                />
-            </div>
-
-            <div className="space-y-4">
-                <Label htmlFor="privacy">Politique de confidentialité</Label>
-                <PdfExtractor onExtract={handleExtract("privacy")} />
-                <RichTextEditor
-                    value={legal.privacy}
-                    onChange={handleChange("privacy")}
-                />
-            </div>
-
-            <Button onClick={handleSave} disabled={loading}>
-                {loading ? "Enregistrement..." : "Enregistrer"}
-            </Button>
         </div>
     );
 }

@@ -35,45 +35,47 @@ export default function AdminCategoriesClient() {
     if (error) return <ErrorView error={error} />;
 
     return (
-        <div className="space-y-8">
-            <div className="flex justify-between">
-                <h1 className="text-2xl font-bold">Catégories</h1>
-                <AddCategoryDialog onSuccess={refreshCategories} />
-            </div>
+        <div className="min-h-screen pt-4">
+            <div className="space-y-8">
+                <div className="flex justify-between">
+                    <h1 className="text-2xl font-bold">Catégories</h1>
+                    <AddCategoryDialog onSuccess={refreshCategories} />
+                </div>
 
-            {categories.length > 0 ? (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Nom</TableHead>
-                            <TableHead>Slug</TableHead>
-                            <TableHead>Produits</TableHead>
-                            <TableHead className="text-right">Actions</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {categories.map((category: Category) => (
-                            <TableRow key={category.id}>
-                                <TableCell>{category.name}</TableCell>
-                                <TableCell>{category.slug}</TableCell>
-                                <TableCell>{category.products?.length}</TableCell>
-                                <TableCell className="text-right space-x-2">
-                                    <EditCategoryDialog
-                                        category={category}
-                                        onSuccess={refreshCategories}
-                                    />
-                                    <DeleteCategoryDialog
-                                        category={category}
-                                        onSuccess={refreshCategories}
-                                    />
-                                </TableCell>
+                {categories.length > 0 ? (
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead>Nom</TableHead>
+                                <TableHead>Slug</TableHead>
+                                <TableHead>Produits</TableHead>
+                                <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            ) : (
-                <p>Aucune catégorie disponible.</p>
-            )}
+                        </TableHeader>
+                        <TableBody>
+                            {categories.map((category: Category) => (
+                                <TableRow key={category.id}>
+                                    <TableCell>{category.name}</TableCell>
+                                    <TableCell>{category.slug}</TableCell>
+                                    <TableCell>{category.products?.length}</TableCell>
+                                    <TableCell className="text-right space-x-2">
+                                        <EditCategoryDialog
+                                            category={category}
+                                            onSuccess={refreshCategories}
+                                        />
+                                        <DeleteCategoryDialog
+                                            category={category}
+                                            onSuccess={refreshCategories}
+                                        />
+                                    </TableCell>
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                ) : (
+                    <p>Aucune catégorie disponible.</p>
+                )}
+            </div>
         </div>
     );
 }

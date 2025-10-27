@@ -47,7 +47,7 @@ export default function AdminProducts() {
     if (loadingUser) return <LoadingView />;
 
     return (
-        <div className="p-6">
+        <div className="min-h-screen pt-4">
             <div className="flex justify-between">
                 <h1 className="text-2xl font-bold mb-4">Produits</h1>
                 <AddDialog onSuccess={refreshProducts} />
@@ -55,7 +55,7 @@ export default function AdminProducts() {
 
             <div className="grid grid-cols-5 gap-6">
                 {products.map((product) => (
-                    <div key={product.id} className="border rounded p-4 space-y-2">
+                    <div key={product.id} className="p-4 space-y-2">
                         <img src={product.images[0]} alt={product.name} className="w-full h-48 object-cover rounded" />
                         <h2 className="text-lg font-semibold">{product.name}</h2>
 

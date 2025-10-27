@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { getBaseUrl } from "@/lib/getBaseUrl";
-import { Plus } from "lucide-react";
+import { Pen } from "lucide-react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -66,8 +66,8 @@ export function EditCategoryDialog({ category, onSuccess }: { category: Category
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button variant="outline" onClick={() => setOpen(true)}>
-                    <Plus />
-                    Modifier une catégorie
+                    <Pen />
+                    Modifier
                 </Button>
             </DialogTrigger>
 

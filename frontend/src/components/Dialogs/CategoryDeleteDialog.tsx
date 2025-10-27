@@ -6,6 +6,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Category } from "@/types/Category";
+import { Trash } from "lucide-react";
 
 async function deleteCategory(id: number) {
     try {
@@ -36,6 +37,7 @@ export function DeleteCategoryDialog({ category, onSuccess }: { category: Catego
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
                 <Button onClick={() => setOpen(true)} variant="destructive">
+                    <Trash />
                     Supprimer
                 </Button>
             </DialogTrigger>
