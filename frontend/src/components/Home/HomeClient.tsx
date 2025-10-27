@@ -32,7 +32,7 @@ export default function HomeClient() {
     return (
         <>
             <div className="flex flex-col items-center justify-center">
-                <section className="w-full py-20 text-center px-6">
+                <section className="w-full py-20 text-center">
                     <div className="space-y-2">
                         <TextType
                             text={["Bienvenue chez Sacs à Bonheurs"]}

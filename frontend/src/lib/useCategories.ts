@@ -1,43 +1,20 @@
-import { useEffect, useState } from "react";
-import { useCategoryStore } from "./categoryStore";
-import { getBaseUrl } from "./getBaseUrl";
+import { useEffect } from "react";
+import { useCategoriesStore } from "./useCategoriesStore";
 
 export function useCategories() {
-    const { categories, setCategories, hasFetched, setHasFetched } = useCategoryStore();
-    const [loadingCategories, setLoading] = useState(!hasFetched);
-    const [error, setError] = useState<null | string>(null);
+    const {
+        categories,
+        hasFetched,
+        loading,
+        error,
+        refreshCategories,
+    } = useCategoriesStore();
 
     useEffect(() => {
-        if (hasFetched) return;
+        if (!hasFetched) {
+            refreshCategories();
+        }
+    }, [hasFetched, refreshCategories]);
 
-        let cancelled = false;
-
-        const fetchCategories = async () => {
-            try {
-                const res = await fetch(`${getBaseUrl()}/api/categories`, {
-                    credentials: "include"
-                });
-                if (!res.ok) throw new Error("Erreur serveur");
-                const data = await res.json();
-                if (!cancelled) {
-                    setCategories(data);
-                    setHasFetched(true);
-                }
-            } catch (err) {
-                if (!cancelled) {
-                    setError("Impossible de charger les catégories");
-                    setCategories([]);
-                }
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        };
-
-        fetchCategories();
-        return () => {
-            cancelled = true;
-        };
-    }, [hasFetched]);
-
-    return { categories, loadingCategories, error };
+    return { categories, loading, error, refreshCategories };
 }

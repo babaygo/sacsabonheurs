@@ -1,7 +1,9 @@
 "use client";
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useCategoryStore } from "@/lib/categoryStore";
+import { ErrorView } from "@/components/Views/ErrorView";
+import { LoadingView } from "@/components/Views/LoadingView";
+import { useCategories } from "@/lib/useCategories";
 import { Category } from "@/types/Category";
 import { SortOption } from "@/types/SortOptions";
 
@@ -20,7 +22,7 @@ export default function ProductFilters({
     onSortChange,
     showCategoryFilter = true,
 }: ProductFiltersProps) {
-    const categories: Category[] = useCategoryStore((state) => state.categories) ?? [];
+    const { categories, loading, error } = useCategories();
 
     const sortLabels: Record<SortOption, string> = {
         "date-desc": "Ajout récent",
@@ -31,29 +33,40 @@ export default function ProductFilters({
         "name-desc": "Nom Z → A",
     };
 
+    if (error) return <ErrorView error={error} />;
+    if (loading) return <LoadingView />;
+
     return (
         <div className="flex gap-4 mb-8">
             {showCategoryFilter && (
-                <Select value={selectedCategory ?? undefined} onValueChange={onCategoryChange}>
+                <Select
+                    value={selectedCategory ?? undefined}
+                    onValueChange={onCategoryChange}
+                >
                     <SelectTrigger className="w-[200px]" aria-label="Filtrer par catégorie">
                         <SelectValue placeholder="Catégories" />
                     </SelectTrigger>
                     <SelectContent>
                         <SelectItem value="all">Toutes les catégories</SelectItem>
                         {categories.length > 0 ? (
-                            categories.map((cat) => (
-                                <SelectItem key={cat.id} value={cat.name}>
-                                    {cat.name}
+                            categories.map((category: Category) => (
+                                <SelectItem key={category.id} value={category.name}>
+                                    {category.name}
                                 </SelectItem>
                             ))
                         ) : (
-                            <SelectItem value="all" disabled>Aucune catégorie</SelectItem>
+                            <SelectItem value="all" disabled>
+                                Aucune catégorie
+                            </SelectItem>
                         )}
                     </SelectContent>
                 </Select>
             )}
 
-            <Select value={sortOption ?? undefined} onValueChange={(v) => onSortChange(v as SortOption)}>
+            <Select
+                value={sortOption ?? undefined}
+                onValueChange={(v) => onSortChange(v as SortOption)}
+            >
                 <SelectTrigger className="w-[200px]" aria-label="Trier les produits">
                     <SelectValue placeholder="Trier par" />
                 </SelectTrigger>

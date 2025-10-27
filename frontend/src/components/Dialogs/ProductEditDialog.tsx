@@ -8,18 +8,28 @@ import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useCategoryStore } from "@/lib/categoryStore";
 import { ImageUploader } from "@/components/ImageUploader";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { useCategories } from "@/lib/useCategories";
+import { LoadingView } from "../Views/LoadingView";
+import { ErrorView } from "../Views/ErrorView";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState(product);
+    const {
+        categories,
+        loading,
+        error,
+        refreshCategories,
+    } = useCategories();
 
-    const categories = useCategoryStore((state) => state.categories);
+    if (loading) return <LoadingView />;
+    if (error) return <ErrorView error={error} />;
+
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
     );

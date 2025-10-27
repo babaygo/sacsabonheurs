@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PackageSearch, Handbag, Scale } from "lucide-react";
+import { PackageSearch, Handbag, Scale, ListTree } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionContext } from "@/components/SessionProvider";
 import { useEffect } from "react";
+import { LoadingView } from "@/components/Views/LoadingView";
 
 export default function AdminHomePage() {
     const { user, loadingUser } = useSessionContext();
@@ -20,7 +21,7 @@ export default function AdminHomePage() {
     }, [user, loadingUser, router]);
 
     if (loadingUser) {
-        return <p>Chargement...</p>;
+        return <LoadingView />;
     }
 
     return (
@@ -71,6 +72,22 @@ export default function AdminHomePage() {
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
                                 Saisir les Mentions légales, les Conditions générales et la Politique de confidentialité.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </Link>
+
+                <Link href="/admin/categories" className="h-full w-full">
+                    <Card className="h-full w-full hover:shadow-md transition">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <ListTree className="w-5 h-5" />
+                                Catégories
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                Ajouter, supprimer, modifier les catégories des produits.
                             </p>
                         </CardContent>
                     </Card>

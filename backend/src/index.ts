@@ -153,14 +153,6 @@ app.get("/api/products/:slug", async (req, res) => {
     }
 });
 
-// Catégories
-app.get("/api/categories", async (req, res) => {
-    const categories = await prisma.category.findMany({
-        select: { id: true, name: true, slug: true },
-    });
-    res.json(categories);
-});
-
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {
@@ -174,6 +166,14 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
         return res.status(400).json({ error: err.message || 'Erreur serveur' });
     }
     next();
+});
+
+// Catégories
+app.get("/api/categories", async (req, res) => {
+    const categories = await prisma.category.findMany({
+        select: { id: true, name: true, slug: true, products: true }
+    });
+    res.json(categories);
 });
 
 // Checkout with Stripe
@@ -550,6 +550,71 @@ app.post("/api/admin/legal", requireAuth, requireAdmin, async (req, res) => {
         res.status(200).json({ success: true });
     } catch (error: any) {
         console.error("Erreur dans l'insertion des policies :", error.message);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.post("/api/admin/categories", requireAuth, requireAdmin, upload.none(), async (req, res) => {
+    try {
+        const { name, slug, } = req.body;
+        const category = await prisma.category.create({
+            data: {
+                name,
+                slug
+            },
+        });
+
+        res.json(category);
+    } catch (error: any) {
+        console.error("Erreur création catégorie :", error);
+
+        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
+            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
+        }
+
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.put("/api/admin/categories/:id", requireAuth, requireAdmin, upload.none(), async (req, res) => {
+    const { id } = req.params;
+    const { name, slug, } = req.body;
+
+    try {
+        const category = await prisma.category.update({
+            where: { id: parseInt(id) },
+            data: {
+                name,
+                slug
+            },
+        });
+
+        res.json({ success: true, category });
+    } catch (error) {
+        console.error("Erreur mise à jour produit :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.delete("/api/admin/categories/:id", requireAuth, requireAdmin, async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "ID invalide" });
+    }
+
+    try {
+        const category = await prisma.category.findUnique({ where: { id } });
+
+        if (!category) {
+            return res.status(404).json({ error: "Catégorie introuvable" });
+        }
+
+        await prisma.product.deleteMany({ where: { categoryId: id } });
+        await prisma.category.delete({ where: { id } });
+
+        res.json({ message: "Catégorie supprimé avec succès" });
+    } catch (error) {
+        console.error("Erreur suppression catégorie :", error);
         res.status(500).json({ error: "Erreur serveur" });
     }
 });

@@ -5,7 +5,6 @@ import { Category } from "@/types/Category";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/getBaseUrl";
 import { Plus } from "lucide-react";
-import { useCategoryStore } from "@/lib/categoryStore";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -15,10 +14,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "@/components/u
 import { ImageUploader } from "@/components/ImageUploader";
 import { Checkbox } from "../ui/checkbox";
 import { Label } from "../ui/label";
+import { useCategories } from "@/lib/useCategories";
+import { LoadingView } from "../Views/LoadingView";
+import { ErrorView } from "../Views/ErrorView";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
-
     const [form, setForm] = useState({
         name: "",
         slug: "",
@@ -32,9 +33,16 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
         width: "",
         categoryId: 0,
     });
-
     const [files, setFiles] = useState<File[]>([]);
-    const categories = useCategoryStore((state) => state.categories);
+    const {
+        categories,
+        loading,
+        error,
+        refreshCategories,
+    } = useCategories();
+
+    if (loading) return <LoadingView />;
+    if (error) return <ErrorView error={error} />;
 
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId

@@ -4,7 +4,6 @@ import "./globals.css";
 import ClientLayout from "./clientLayout";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "@/components/SessionProvider";
-import { CategoryHydrator } from "@/components/CategoryHydrator";
 import { Toaster } from "react-hot-toast";
 
 const montserrat = Montserrat({
@@ -31,7 +30,6 @@ export default function RootLayout({
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable} `}>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <SessionProvider>
-          <CategoryHydrator />
           <ClientLayout>
             <Toaster position="top-right" />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
