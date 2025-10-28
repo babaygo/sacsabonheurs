@@ -26,8 +26,8 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
             });
 
             const combined = [...files, ...sanitizedFiles];
-            if (combined.length > 5) {
-                toast.error("Maximum 5 images autorisées");
+            if (combined.length > 7) {
+                toast.error("Maximum 7 images autorisées");
                 return;
             }
 
@@ -50,7 +50,7 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         onDrop,
         accept: { "image/*": [] },
         multiple: true,
-        maxFiles: 5,
+        maxFiles: 7,
     });
 
     return (
@@ -60,9 +60,9 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         >
             <input {...getInputProps()} />
             {isDragActive ? (
-                <p>Déposez jusqu’à 5 images…</p>
+                <p>Déposez jusqu'à 7 images…</p>
             ) : (
-                <p>Glissez vos images ici ou cliquez (max 5)</p>
+                <p>Glissez vos images ici ou cliquez (max 7)</p>
             )}
 
             {files.length > 0 && (

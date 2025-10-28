@@ -30,7 +30,7 @@ const upload = multer({
             cb(new Error('Seuls les fichiers .jpg et .png sont autorisés'));
         }
     },
-    limits: { fileSize: 5 * 1024 * 1024 }
+    limits: { fileSize: 7 * 1024 * 1024 }
 });
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
@@ -404,7 +404,7 @@ app.get("/api/admin/order/:id", requireAuth, requireAdmin, async (req, res) => {
     }
 });
 
-app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images", 5), async (req, res) => {
+app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images", 7), async (req, res) => {
     try {
         const {
             name, slug, description, price, categoryId,
@@ -448,7 +448,7 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
 });
 
 
-app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("images", 5), async (req, res) => {
+app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("images", 7), async (req, res) => {
     const { id } = req.params;
     const {
         name, slug, description, price, stock,
@@ -472,7 +472,7 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
             ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
             : [];
 
-        const finalImages = [...keptImages, ...uploaded].slice(0, 5);
+        const finalImages = [...keptImages, ...uploaded].slice(0, 7);
 
         const product = await prisma.product.update({
             where: { id: parseInt(id) },
