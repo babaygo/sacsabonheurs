@@ -50,21 +50,19 @@
 
         <h4>Coordonnées</h4>
         {{email}}
+        {{phone}}
 
         <h4>Point Relais sélectionné</h4>
         <p>{{relayName}}</p>
         <p>{{relayAddress}}</p>
 
         <h4>Adresse de facturation</h4>
-        <p>{{billingAddress}}</p>
-        <p>{{detailsBillingAddress}}</p>
-        <p>{{codePostal}}</p>
-        <p>{{city}}</p>
+        <p>{{billingAddress}}, {{detailsBillingAddress}}</p>
+        <p>{{codePostal}}, {{city}}</p>
         <p>{{country}}</p>
 
         <h4>Paiement</h4>
-        <p>{{prixTotal}}</p>
-        <p>{{datePaiement}}</p>
+        <p>{{prixTotal}} le {{datePaiement}}</p>
 
         <h4>Articles commandés</h4>
         <table>
@@ -81,13 +79,12 @@
         </table>
 
         <h4>Récapitulatif</h4>
-        <p>Sous-total : {{subtotal}} €</p>
+        <p>Sous-total : {{subtotal}}</p>
         <p>Taxes : {{taxes}}</p>
-        <p>Frais de livraison : {{shippingCost}} €</p>
-        <p>Total : {{total}} €</p>
+        <p>Frais de livraison : {{shippingCost}}</p>
+        <p>Total : {{total}}</p>
 
         <div class="footer">
-            <p>Vous recevrez un email dès que votre commande sera expédiée.</p>
             <p>Merci pour votre confiance,</p>
             <p>{{storeName}}</p>
         </div>

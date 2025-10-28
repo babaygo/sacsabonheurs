@@ -40,6 +40,7 @@ export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
     orderDate: order.createdAt.toLocaleDateString("fr-FR") ?? "",
     orderId: String(order.id) ?? "",
     email: order.user.email ?? "",
+    phone: order.phone ?? "",
     relayName: order.relayName ?? "",
     relayAddress: order.relayAddress ?? "",
     billingAddress: order.billingAddress ?? "",
