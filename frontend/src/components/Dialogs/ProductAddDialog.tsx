@@ -17,6 +17,7 @@ import { Label } from "../ui/label";
 import { useCategories } from "@/lib/useCategories";
 import { LoadingView } from "../Views/LoadingView";
 import { ErrorView } from "../Views/ErrorView";
+import { RichTextEditor } from "../RichEditorText";
 
 export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -125,7 +126,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                 </Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className="max-h-screen overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Ajouter un sac</DialogTitle>
                     <DialogDescription>
@@ -158,10 +159,9 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
 
                         <Field>
                             <FieldLabel>Description</FieldLabel>
-                            <Textarea
+                            <RichTextEditor
                                 value={form.description}
-                                required
-                                onChange={(e) => handleChange("description", e.target.value)}
+                                onChange={(value) => handleChange("description", value)}
                             />
                         </Field>
 

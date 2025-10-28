@@ -16,6 +16,7 @@ import { Label } from "../ui/label";
 import { useCategories } from "@/lib/useCategories";
 import { LoadingView } from "../Views/LoadingView";
 import { ErrorView } from "../Views/ErrorView";
+import { RichTextEditor } from "../RichEditorText";
 
 export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
@@ -104,7 +105,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
                 </Button>
             </DialogTrigger>
 
-            <DialogContent>
+            <DialogContent className="max-h-screen overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Modifier le sac</DialogTitle>
                     <DialogDescription>
@@ -137,11 +138,12 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
                         <Field>
                             <FieldLabel>Description</FieldLabel>
-                            <Textarea
-                                value={form.description}
-                                required
-                                onChange={(e) => handleChange("description", e.target.value)}
-                            />
+                            <div className="border rounded-md bg-white">
+                                <RichTextEditor
+                                    value={form.description}
+                                    onChange={(value) => handleChange("description", value)}
+                                />
+                            </div>
                         </Field>
 
                         <Field>

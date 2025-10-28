@@ -27,8 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const product = await getProduct(slug);
 
     return {
-        title: product ? `${product.name} - Sacs à Bonheurs` : "Produit introuvable - Sacs à Bonheurs",
-        description: product?.description?.slice(0, 160) || "Découvrez nos sacs faits main en France.",
+        title: product ? `${product.name} - Sacs à Bonheurs` : "Produit introuvable - Sacs à Bonheurs"
     };
 }
 

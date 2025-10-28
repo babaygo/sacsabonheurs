@@ -108,7 +108,12 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                         <Separator />
                         <AccordionItem value="item-1">
                             <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
-                            <AccordionContent>{product?.description}</AccordionContent>
+                            <AccordionContent>
+                                <div
+                                    className="prose prose-sm max-w-none"
+                                    dangerouslySetInnerHTML={{ __html: product?.description || "" }}
+                                />
+                            </AccordionContent>
                         </AccordionItem>
                         <AccordionItem value="item-2">
                             <AccordionTrigger className="font-semibold">Dimensions</AccordionTrigger>
