@@ -5,9 +5,9 @@ import ClientLayout from "./clientLayout";
 import Footer from "@/components/Footer";
 import { SessionProvider } from "@/components/SessionProvider";
 import { Toaster } from "react-hot-toast";
-import { CookieBanner } from "@/components/CookiesBanner";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { CookiesBanner } from "@/components/CookiesBanner";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -38,6 +38,7 @@ export default function RootLayout({
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
             </main>
+            <CookiesBanner />
             <Analytics />
             <SpeedInsights />
           </ClientLayout>
