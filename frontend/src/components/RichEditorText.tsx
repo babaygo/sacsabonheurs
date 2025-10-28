@@ -1,6 +1,7 @@
 "use client";
 
 import { useEditor, EditorContent } from "@tiptap/react";
+import HardBreak from "@tiptap/extension-hard-break";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { useEffect } from "react";
@@ -16,6 +17,7 @@ import {
     Link as LinkIcon,
     Undo,
     Redo,
+    Underline,
 } from "lucide-react";
 
 interface RichTextEditorProps {
@@ -31,6 +33,11 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                 heading: {
                     levels: [1, 2, 3],
                 },
+                paragraph: {
+                    HTMLAttributes: {
+                        class: "mb-3"
+                    }
+                }
             }),
             Link.configure({
                 openOnClick: false,
@@ -38,6 +45,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                     class: "text-blue-600 underline",
                 },
             }),
+            HardBreak
         ],
         content: value,
         onUpdate: ({ editor }) => {
@@ -89,6 +97,15 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                     className={editor.isActive("italic") ? "bg-gray-200" : ""}
                 >
                     <Italic className="h-4 w-4" />
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().toggleUnderline().run()}
+                    className={editor.isActive("underline") ? "bg-gray-200" : ""}
+                >
+                    <Underline className="h-4 w-4" />
                 </Button>
                 <div className="w-px h-6 bg-gray-300 mx-1" />
                 <Button
