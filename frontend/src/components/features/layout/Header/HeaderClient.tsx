@@ -16,11 +16,14 @@ import { useSessionContext } from "@/components/shared/SessionProvider";
 import { Menu, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../../ui/sheet";
 import Image from "next/image";
+import { useState } from "react";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
     const router = useRouter();
     const { setOpen, count } = useCart();
+    const [openSheet, setOpenSheet] = useState(false);
+
     let isAdmin: boolean = false;
 
     if (user?.role == "admin") {
@@ -115,7 +118,7 @@ export default function HeaderClient() {
             </div>
 
             <div className="md:hidden absolute top-6 left-2">
-                <Sheet>
+                <Sheet open={openSheet} onOpenChange={setOpenSheet}>
                     <SheetTitle />
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
@@ -127,25 +130,37 @@ export default function HeaderClient() {
                         <div className="mt-6 space-y-6">
                             {!loadingUser && user ? (
                                 <div className="space-y-2">
-                                    <div className="flex items-center space-x-2">
-                                        <UserRound className="size-5 text-primary" />
-                                        <div>
-                                            <p className="text-sm font-medium">{user.name}</p>
-                                            <p className="text-sm text-muted-foreground">{user.email}</p>
-                                        </div>
+                                    <div className="flex flex-col items-center space-y-2">
+                                        <p className="text-sm font-medium">{user.name}</p>
+                                        <p className="text-sm text-muted-foreground">{user.email}</p>
                                     </div>
                                     <Separator />
                                     <div className="flex flex-col space-y-2">
-                                        <Link href="/orders" className="text-sm hover:underline">Mes commandes</Link>
-                                        <Link href="/boutique" className="text-sm hover:underline">Boutique</Link>
-                                        {isAdmin && <Link href="/admin" className="text-sm hover:underline">Admin</Link>}
+                                        <Link href="/orders" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                            Mes commandes
+                                        </Link>
+
+                                        <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                            Boutique
+                                        </Link>
+
+                                        {isAdmin && (
+                                            <Link href="/admin" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                                Admin
+                                            </Link>
+                                        )}
+
                                         <Button
                                             variant="ghost"
-                                            onClick={handleLogout}
+                                            onClick={() => {
+                                                setOpenSheet(false);
+                                                handleLogout();
+                                            }}
                                             className="text-sm justify-start px-0 hover:underline"
                                         >
                                             Se déconnecter
                                         </Button>
+
                                     </div>
                                 </div>
                             ) : (
