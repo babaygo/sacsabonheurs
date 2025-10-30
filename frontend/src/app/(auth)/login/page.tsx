@@ -15,10 +15,10 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { loginSchema } from "@/lib/validation/loginSchema";
-import { useLogin } from "@/lib/useLogin";
-import { useSessionContext } from "@/components/SessionProvider";
+import { useLogin } from "@/hooks/useLogin";
+import { useSessionContext } from "@/components/shared/SessionProvider";
 import toast from "react-hot-toast";
-import { authClient } from "@/lib/authClient";
+import { authClient } from "@/lib/auth/authClient";
 import { Spinner } from "@/components/ui/spinner";
 import { Eye, EyeOff } from "lucide-react";
 import { useRouter } from "next/navigation";

@@ -1,4 +1,4 @@
-import HomeClient from "../components/Home/HomeClient";
+import HomeClient from "../components/features/Home/HomeClient";
 
 export const metadata = {
   title: "Sacs à Bonheurs - Boutique artisanale de sacs faits en France",

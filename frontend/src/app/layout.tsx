@@ -1,13 +1,13 @@
 import type { Metadata } from "next";
 import { Montserrat, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import ClientLayout from "./clientLayout";
-import Footer from "@/components/Footer";
-import { SessionProvider } from "@/components/SessionProvider";
+import { SessionProvider } from "@/components/shared/SessionProvider";
 import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { CookiesBanner } from "@/components/CookiesBanner";
+import { CookiesBanner } from "@/components/shared/CookiesBanner";
+import LayoutClient from "@/components/features/layout/LayoutClient";
+import Footer from "@/components/features/layout/Footer";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable} `}>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <SessionProvider>
-          <ClientLayout>
+          <LayoutClient>
             <Toaster position="top-right" />
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               {children}
@@ -41,7 +41,7 @@ export default function RootLayout({
             <CookiesBanner />
             <Analytics />
             <SpeedInsights />
-          </ClientLayout>
+          </LayoutClient>
         </SessionProvider>
 
         <Footer />

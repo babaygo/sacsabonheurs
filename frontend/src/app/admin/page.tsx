@@ -4,9 +4,8 @@ import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PackageSearch, Handbag, Scale, ListTree } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSessionContext } from "@/components/SessionProvider";
+import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useEffect } from "react";
-import { LoadingView } from "@/components/Views/LoadingView";
 
 export default function AdminHomePage() {
     const { user, loadingUser } = useSessionContext();
@@ -21,7 +20,7 @@ export default function AdminHomePage() {
     }, [user, loadingUser, router]);
 
     if (loadingUser) {
-        return <LoadingView />;
+        return null;
     }
 
     return (

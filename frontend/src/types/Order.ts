@@ -1,6 +1,6 @@
 import { User } from "better-auth";
 import { OrderItem } from "./OrderItem";
-import { OrderStatusType } from "./OrderStatusType";
+import { OrderStatusType } from "../lib/constants/OrderStatusType";
 
 export interface Order {
     id: number;

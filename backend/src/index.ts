@@ -171,7 +171,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Catégories
 app.get("/api/categories", async (req, res) => {
     const categories = await prisma.category.findMany({
-        select: { id: true, name: true, slug: true, products: true }
+        include: { products: true}
     });
     res.json(categories);
 });

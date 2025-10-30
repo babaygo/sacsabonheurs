@@ -4,11 +4,10 @@ import { useEffect, useState } from "react";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { Order } from "@/types/Order";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { LoadingView } from "@/components/Views/LoadingView";
-import { getBaseUrl } from "@/lib/getBaseUrl";
+import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { Separator } from "@/components/ui/separator";
-import { OrderStatusType } from "@/types/OrderStatusType";
-import BreadCrumb from "@/components/BreadCrumb";
+import { OrderStatusType } from "@/lib/constants/OrderStatusType";
+import BreadCrumb from "@/components/shared/BreadCrumb";
 
 const statusMap: Record<OrderStatusType, { label: string; color: string }> = {
     pending: { label: "En attente", color: "bg-yellow-100 text-yellow-800" },
@@ -52,7 +51,7 @@ export default function OrderPage() {
     }, [id, router]);
 
     if (loading) {
-        return <LoadingView />;
+        return null;
     }
 
     if (!order) return notFound();

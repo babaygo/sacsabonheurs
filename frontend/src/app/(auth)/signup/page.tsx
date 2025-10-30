@@ -16,12 +16,11 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeOff } from "lucide-react";
-import { useSessionContext } from "@/components/SessionProvider";
+import { useSessionContext } from "@/components/shared/SessionProvider";
 import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
-import { authClient } from "@/lib/authClient";
+import { authClient } from "@/lib/auth/authClient";
 import toast from "react-hot-toast";
-import { getBaseUrl } from "@/lib/getBaseUrl";
 
 export default function SignupPage() {
     const [email, setEmail] = useState("");
