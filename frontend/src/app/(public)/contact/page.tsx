@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
-import { sendContactMessage } from "@/lib/api/contact";
+import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -27,8 +27,14 @@ export default function ContactPage() {
         setIsLoading(true);
 
         try {
-            const response = sendContactMessage({name, email, order, message});
-            if ((await response).success === true) {
+            const response = await fetch(`${getBaseUrl()}/api/contact`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, email, order, message }),
+                credentials: "include",
+            });
+
+            if (response.ok) {
                 toast.success("Message envoyé !");
                 router.push("/");
             } else {

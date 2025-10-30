@@ -4,80 +4,94 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import toast from "react-hot-toast";
+import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
 import { PdfExtractor } from "@/components/shared/PdfExtractor";
 import { RichTextEditor } from "@/components/shared/RichEditorText";
-import { getLegalContent, updateLegalContent } from "@/lib/api/legal";
-import { Spinner } from "@/components/ui/spinner";
 
 export default function AdminLegalClient() {
     const [legal, setLegal] = useState({
         mentions: "",
         cgv: "",
         privacy: "",
-        updatedAt: new Date()
+        updatedAt: null
     });
-    const [loadingLegal, setLoadingLegal] = useState(false);
+    const [loading, setLoading] = useState(false);
     const { user, loadingUser } = useSessionContext();
     const router = useRouter();
 
-    const fetchLegalContent = async () => {
-        setLoadingLegal(true);
+    async function getLegals() {
         try {
-            const legal = await getLegalContent();
-            if (legal) {
-                setLegal({
-                    mentions: legal.mentions ?? "",
-                    cgv: legal.cgv ?? "",
-                    privacy: legal.privacy ?? "",
-                    updatedAt: legal.updatedAt,
-                });
+            const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
+                credentials: "include",
+            });
+            if (!res.ok) {
+                console.error("Erreur API :", res.status, await res.text());
+                return null;
             }
+            return res.json();
         } catch (err) {
             console.error("Erreur réseau :", err);
-            toast.error("Impossible de charger le contenu légal")
-        } finally {
-            setLoadingLegal(false);
+            return null;
         }
-    };
+    }
 
     useEffect(() => {
-        if (loadingUser) return;
-        if (user?.role !== "admin") {
-            router.push("/");
-            return;
+        if (!loadingUser) {
+            if (user?.role != "admin") {
+                router.push("/");
+            } else {
+                const fetchLegalContent = async () => {
+                    const data = await getLegals();
+
+                    if (!data) {
+                        return;
+                    }
+
+                    setLegal({
+                        mentions: data.mentions ?? "",
+                        cgv: data.cgv ?? "",
+                        privacy: data.privacy ?? "",
+                        updatedAt: data.updatedAt ?? null,
+                    });
+                }
+                fetchLegalContent();
+            }
         }
-        fetchLegalContent();
     }, [user, loadingUser, router]);
 
-
     const handleChange = (field: keyof typeof legal) => (value: string) => {
-        setLegal((prev) => ({ ...prev, [field]: value }));
+        setLegal({ ...legal, [field]: value });
     };
 
     const handleExtract = (field: keyof typeof legal) => (text: string) => {
+        // Convertir le texte brut en HTML avec des paragraphes
         const htmlContent = text
             .split("\n\n")
             .map((paragraph) => `<p>${paragraph.trim()}</p>`)
             .join("");
-        setLegal((legal) => ({ ...legal, [field]: htmlContent }));
+        setLegal({ ...legal, [field]: htmlContent });
     };
 
     const handleSave = async () => {
-        setLoadingLegal(true);
+        setLoading(true);
         try {
-            await updateLegalContent(legal)
+            const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(legal),
+                credentials: "include"
+            });
+
+            if (!res.ok) throw new Error("Erreur lors de l'enregistrement.");
             toast.success("Contenu légal enregistré avec succès !");
         } catch (err: any) {
-            console.error("Erreur réseau ou serveur :", err);
             toast.error(err.message || "Erreur inconnue.");
         } finally {
-            setLoadingLegal(false);
+            setLoading(false);
         }
     };
-
-    if (loadingUser || loadingLegal) return <Spinner />;
 
     return (
         <div className="min-h-screen pt-4">
@@ -86,7 +100,7 @@ export default function AdminLegalClient() {
 
                 <p>
                     Dernière mise à jour le{" "}
-                    {legal.updatedAt
+                    {legal.updatedAt && !isNaN(Date.parse(legal.updatedAt))
                         ? new Date(legal.updatedAt).toLocaleDateString("fr-FR", {
                             year: "numeric",
                             month: "long",
@@ -123,8 +137,8 @@ export default function AdminLegalClient() {
                     />
                 </div>
 
-                <Button onClick={handleSave} disabled={loadingLegal}>
-                    {loadingLegal ? <Spinner /> : "Enregistrer"}
+                <Button onClick={handleSave} disabled={loading}>
+                    {loading ? "Enregistrement..." : "Enregistrer"}
                 </Button>
             </div>
         </div>
