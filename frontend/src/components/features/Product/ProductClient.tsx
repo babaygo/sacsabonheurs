@@ -6,40 +6,22 @@ import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/shared/ZoomableImage";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { useEffect, useState } from "react";
-import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import AddToCart from "../Cart/AddToCart";
 
-export default function ProductClient({ product: initialProduct }: { product: Product }) {
-    const [product, setProduct] = useState<Product>(initialProduct);
+export default function ProductClient({ product }: { product: Product }) {
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
 
     useEffect(() => {
-        if (!api) {
-            return
-        }
+        if (!api) return
 
         setCurrent(api.selectedScrollSnap())
         api.on("select", () => {
             setCurrent(api.selectedScrollSnap())
         });
     }, [api]);
-
-    useEffect(() => {
-        const refetch = async () => {
-            const res = await fetch(`${getBaseUrl()}/api/products/${initialProduct.slug}`, {
-                cache: "no-store",
-            });
-            if (res.ok) {
-                const fresh = await res.json();
-                setProduct(fresh);
-            }
-        };
-
-        refetch();
-    }, [initialProduct.slug]);
 
     return (
         <div className="min-h-screen pt-4 px-4 md:px-8">
@@ -101,7 +83,7 @@ export default function ProductClient({ product: initialProduct }: { product: Pr
                     <p className="text-lg font-semibold text-left">{product?.price} €</p>
 
                     <div className="flex">
-                        <AddToCart product={initialProduct} className="w-full" />
+                        <AddToCart product={product} className="w-full" />
                     </div>
 
                     <Accordion type="multiple" defaultValue={["item-1"]}>
