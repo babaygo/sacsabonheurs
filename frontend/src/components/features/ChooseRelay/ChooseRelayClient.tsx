@@ -21,7 +21,7 @@ declare global {
 }
 
 export default function ChooseRelayClient({ brandId }: { brandId: string }) {
-    const { user } = useSessionContext();
+    const { user, loadingUser } = useSessionContext();
     const searchParams = useSearchParams();
     const sessionId = searchParams.get("session_id");
     const [relay, setRelay] = useState<any>(null);
@@ -152,6 +152,8 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
         }
     };
 
+    if (loadingUser) return <Spinner />;
+
     if (!isValid) {
         return (
             <Alert variant="destructive" className="max-w-xl mx-auto mt-10">
@@ -173,9 +175,8 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
     }
 
     return (
-        <div className="pt-4 min-h-screen">
-            <h1 className="text-2xl font-bold mb-6">Choisissez votre point relais</h1>
-
+        <div className="min-h-screen pt-4 px-4 md:px-4">
+            <h1>Choississez un point de livraison</h1>
             {error && (
                 <Alert variant="destructive" className="mb-6">
                     <AlertTitle>Erreur</AlertTitle>

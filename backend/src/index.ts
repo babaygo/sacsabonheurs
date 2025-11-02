@@ -9,6 +9,7 @@ import { sendContactConfirmationEmail, sendOrderConfirmationEmail } from './lib/
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
 import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
+import fetch from 'node-fetch';
 
 const app = express();
 
@@ -171,7 +172,7 @@ app.use((err: any, req: Request, res: Response, next: NextFunction) => {
 // Catégories
 app.get("/api/categories", async (req, res) => {
     const categories = await prisma.category.findMany({
-        include: { products: true}
+        include: { products: true }
     });
     res.json(categories);
 });
