@@ -10,14 +10,14 @@ export default function PreviewProduct({ product }: { product: Product }) {
             href={`/products/${product.slug}`}
             className="flex flex-col items-center py-4 group"
         >
-            <div className="relative w-full aspect-square overflow-hidden">
+            <div className="relative w-full aspect-square max-w-[450px] overflow-hidden">
                 <Image
                     src={product.images[0]}
                     alt={product.name}
                     fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     priority
-                    className="object-cover transition-opacity duration-300 group-hover:opacity-0"
+                    className="object-cover w-full h-auto block transition-opacity duration-300 group-hover:opacity-0"
                 />
 
                 {product.images[1] && (
@@ -26,7 +26,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
                         alt={`${product.name} alt`}
                         fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+                        className="object-cover w-full h-auto block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                     />
                 )}
 
