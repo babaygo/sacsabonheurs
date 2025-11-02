@@ -4,7 +4,6 @@ import { getBaseUrl } from "../utils/getBaseUrl";
 export async function getProducts(): Promise<Product[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products`, {
-            cache: "no-store",
             next: { revalidate: 3600 }
         });
 
@@ -22,7 +21,7 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProductBySlug(slug: string): Promise<Product | null> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
-            cache: "no-store",
+            next: { revalidate: 3600 }
         });
 
         if (!res.ok) {

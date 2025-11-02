@@ -10,10 +10,7 @@ export const metadata = {
 export default async function PrivacyPolicyPage() {
     let privacy = "";
     try {
-        const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
-            cache: "no-store",
-            next: { revalidate: 604800 }
-        });
+        const res = await fetch(`${getBaseUrl()}/api/admin/legal`);
 
         if (!res.ok) {
             return (
