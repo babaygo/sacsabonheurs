@@ -1,7 +1,7 @@
 "use client";
 
 import TextType from "@/components/shared/TextType";
-import TiltedCard from "@/components/shared/TiltedCard";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
 import { MoveRight } from "lucide-react";
@@ -52,44 +52,41 @@ export default function HomeClient({ products }: { products: Product[] }) {
                 </div>
             </section>
 
-            <section className="px-4 py-10 md:p-20 w-full bg-secondary rounded-3xl md:rounded-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 px-2 md:px-6 items-center">
-                    <div className="flex justify-center w-[250px] h-[250px] md:w-[450px] md:h-[450px] pt-6 md:pt-0 mx-auto">
-                        <TiltedCard
-                            imageSrc="/sac-presentation.png"
-                            altText="Sac de présentation"
-                            captionText="Sac tubulaire"
-                            containerHeight="100%"
-                            containerWidth="100%"
-                            imageHeight="100%"
-                            imageWidth="100%"
-                            rotateAmplitude={10}
-                            scaleOnHover={1.05}
-                            showMobileWarning={false}
-                            showTooltip={false}
-                            displayOverlayContent={true}
-                            overlayContent={
+            <section className="w-full p-10 md:p-20 bg-secondary rounded-4xl md:rounded-full">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
+                    <div className="flex justify-center">
+                        <div className="relative w-full aspect-square max-w-[450px] rounded-[15px] overflow-hidden">
+                            <Image
+                                src="/sac-presentation.png"
+                                alt="Image de présentation"
+                                fill
+                                className="object-cover w-full h-auto block"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                priority
+                            />
+
+                            <div className="absolute inset-0 flex items-start justify-start">
                                 <p className="text-white text-sm bg-black/40 rounded-xl m-5 px-4 py-2 shadow-lg">
-                                    Image d'exemple
+                                    Sac à main pour femme
                                 </p>
-                            }
-                        />
+                            </div>
+                        </div>
                     </div>
 
                     <div className="flex flex-col justify-center justify-items-center md:items-start text-center md:text-left space-y-6">
-                        <h2 className="text-4xl font-bold">La boutique</h2>
+                        <h2 className="text-4xl capitalize font-bold">La boutique</h2>
                         <p className="text-base md:text-lg leading-relaxed text-left md:text-justify pr-0 md:pr-6">
                             Sacs à Bonheurs est une boutique artisanale où tout est confectionné
                             dans mon atelier, en Loire-Atlantique. Chaque sac fabriqué est unique, vous ne trouverez pas deux sacs identiques.
                             En choisissant un sac Sacs à Bonheurs, vous soutenez le savoir-faire local et l'artisanat français.<br />
                             <br />En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.
                             N'hésitez pas à suivre mon compte
-                            <a
+                            <Link
                                 href="https://www.instagram.com/sacs_a_bonheurs/"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="hover:text-pink-500 transition"
-                            >&nbsp;Instagram&nbsp;</a>
+                                className="hover:text-pink-500 transition font-bold"
+                            >&nbsp;Instagram&nbsp;</Link>
                             pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.
                         </p>
                         <Link href="/a-propos">
