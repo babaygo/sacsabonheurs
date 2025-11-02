@@ -12,13 +12,11 @@ import Footer from "@/components/features/layout/Footer";
 const montserrat = Montserrat({
   variable: "--font-montserrat",
   subsets: ["latin"],
-  preload: false,
 });
 
 const playfairDisplay = Playfair_Display({
   variable: "--font-playfair-display",
   subsets: ["latin"],
-  preload: false,
 });
 
 export const metadata: Metadata = {
