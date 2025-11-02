@@ -22,6 +22,7 @@ export const useCategoriesStore = create<CategoriesStore>((set) => ({
         try {
             const res = await fetch(`${getBaseUrl()}/api/categories`, {
                 credentials: "include",
+                cache: "no-store"
             });
             if (!res.ok) {
                 const msg = await res.text();
