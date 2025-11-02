@@ -11,7 +11,8 @@ export default async function MentionsLegalesPage() {
 
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
-            cache: "no-store"
+            cache: "no-store",
+            next: { revalidate: 604800 }
         });
 
         if (!res.ok) {

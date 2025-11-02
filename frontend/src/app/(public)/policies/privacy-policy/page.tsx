@@ -12,6 +12,7 @@ export default async function PrivacyPolicyPage() {
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/legal`, {
             cache: "no-store",
+            next: { revalidate: 604800 }
         });
 
         if (!res.ok) {

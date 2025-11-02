@@ -4,7 +4,8 @@ import { getBaseUrl } from "../utils/getBaseUrl";
 export async function getProducts(): Promise<Product[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products`, {
-            cache: "no-store"
+            cache: "no-store",
+            next: { revalidate: 3600 }
         });
 
         if (!res.ok) {
