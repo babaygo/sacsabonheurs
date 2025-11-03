@@ -1,3 +1,4 @@
+# *
 User-agent: *
 Allow: /
 
@@ -5,6 +6,11 @@ Disallow: /reset-password/
 Disallow: /admin/
 Disallow: /choose-relay/
 Disallow: /orders/
-Disallow: /api/
+Disallow: /login/
+Disallow: /signup/
 
-Sitemap: https://sacsabonheur.fr/sitemap.xml
+# Host
+Host: https://sacsabonheurs.fr
+
+# Sitemaps
+Sitemap: https://sacsabonheurs.fr/sitemap.xml
