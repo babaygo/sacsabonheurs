@@ -29,7 +29,7 @@ const nextConfig: NextConfig = {
           {
             key: 'Content-Security-Policy',
             value:
-              `default-src 'self'; img-src 'self' data: https:; connect-src 'self' https: ${getBaseUrl()}; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; frame-ancestors 'none';`,
+              `default-src 'self'; img-src 'self' https:; connect-src 'self' https: ${getBaseUrl()}; script-src 'self' 'unsafe-inline' 'unsafe-eval' https:; style-src 'self' 'unsafe-inline' https:; frame-ancestors 'none'; frame-src https:;`,
           },
         ],
       },
