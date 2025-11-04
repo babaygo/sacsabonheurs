@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import CartDrawer from "@/components/features/Cart/CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { useSessionContext } from "@/components/shared/SessionProvider";
-import { Menu, ShoppingBasket, UserRound } from "lucide-react";
+import { Menu, ShoppingBag, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../../ui/sheet";
 import Image from "next/image";
 import { useState } from "react";
@@ -125,17 +125,30 @@ export default function HeaderClient() {
                             <Menu className="size-6" />
                         </Button>
                     </SheetTrigger>
-                    <SheetContent side="left" className="w-64">
+                    <SheetContent side="left" className="w-64 p-0">
                         <SheetDescription />
                         <div className="mt-6 space-y-6">
                             {!loadingUser && user ? (
-                                <div className="space-y-2">
-                                    <div className="flex flex-col items-center space-y-2">
+                                <div className="space-y-4">
+                                    <div className="flex flex-col space-y-2 px-3">
                                         <p className="text-sm font-medium">{user.name}</p>
                                         <p className="text-sm text-muted-foreground">{user.email}</p>
                                     </div>
-                                    <Separator />
-                                    <div className="flex flex-col space-y-2">
+                                    <div className="mb-5">
+                                        <Button
+                                            variant="link"
+                                            onClick={() => {
+                                                setOpenSheet(false);
+                                                handleLogout();
+                                            }}
+                                            className="text-sm justify-start px-3 hover:underline"
+                                        >
+                                            Se déconnecter
+                                        </Button>
+                                        <Separator />
+                                    </div>
+
+                                    <div className="flex flex-col space-y-6 px-3">
                                         <Link href="/orders" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
                                             Mes commandes
                                         </Link>
@@ -149,24 +162,20 @@ export default function HeaderClient() {
                                                 Admin
                                             </Link>
                                         )}
-
-                                        <Button
-                                            variant="ghost"
-                                            onClick={() => {
-                                                setOpenSheet(false);
-                                                handleLogout();
-                                            }}
-                                            className="text-sm justify-start px-0 hover:underline"
-                                        >
-                                            Se déconnecter
-                                        </Button>
-
                                     </div>
                                 </div>
                             ) : (
-                                <Link href="/login" className="text-sm hover:underline">
-                                    Se connecter
-                                </Link>
+
+
+                                <div className="flex flex-col space-y-4 ">
+                                    <Link href="/login" className="text-sm px-3 hover:underline">
+                                        Se connecter
+                                    </Link>
+                                    <Separator />
+                                    <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-sm px-3 hover:underline">
+                                        Boutique
+                                    </Link>
+                                </div>
                             )}
                         </div>
                     </SheetContent>

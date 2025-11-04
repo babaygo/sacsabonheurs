@@ -10,13 +10,18 @@ import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import toast from "react-hot-toast";
 import Image from "next/image";
 import { useProductsContext } from "@/contexts/ProductsContext";
+import { useSessionContext } from "@/components/shared/SessionProvider";
+import { useRouter } from "next/navigation";
+import { Info } from "lucide-react";
 
 export default function CartDrawer() {
+    const { user } = useSessionContext();
     const { refetch } = useProductsContext();
     const { open, setOpen } = useCartDrawerStore();
     const items = useCartStore((s) => s.items);
     const removeFromCart = useCartStore((s) => s.removeFromCart);
     const clearCart = useCartStore((s) => s.clearCart);
+    const router = useRouter();
 
     const total = useMemo(() => {
         return items.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -24,6 +29,12 @@ export default function CartDrawer() {
 
     async function handleCheckout() {
         try {
+            if (!user) {
+                router.push("/signup");
+                toast.success("Un compte est requis pour commander.", { icon: <Info /> })
+                return;
+            }
+
             const res = await fetch(`${getBaseUrl()}/api/checkout`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
