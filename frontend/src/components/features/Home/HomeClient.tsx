@@ -83,11 +83,11 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     <div className="flex flex-col justify-center justify-items-center md:items-start text-center md:text-left space-y-6">
                         <h2 className="text-4xl capitalize font-bold">La boutique</h2>
                         <p className="text-base md:text-lg leading-relaxed text-left md:text-justify pr-0 md:pr-6">
-                            Sacs à Bonheurs est une boutique artisanale où tout est confectionné
-                            dans mon atelier, en Loire-Atlantique. Chaque sac fabriqué est unique, vous ne trouverez pas deux sacs identiques.
-                            En choisissant un sac Sacs à Bonheurs, vous soutenez le savoir-faire local et l'artisanat français.<br />
-                            <br />En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.
-                            N'hésitez pas à suivre mon compte
+                            Chez Sacs à bonheurs toutes les créations artisanales, imaginées et confectionnées avec passion dans mon atelier à Saint-Nazaire, en Loire-Atlantique.<br />
+                            Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
+                            Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
+                            <br />
+                            En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations. N'hésitez pas à suivre mon compte.
                             <Link
                                 href="https://www.instagram.com/sacs_a_bonheurs/"
                                 target="_blank"
