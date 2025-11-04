@@ -9,10 +9,17 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import AddToCart from "../Cart/AddToCart";
+import { useProductBySlug } from "@/hooks/useProductBySlug";
 
-export default function ProductClient({ product }: { product: Product }) {
+export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string; }) {
+    const { product: liveProduct } = useProductBySlug(slug);
+    const [product, setProduct] = useState<Product>(initialProduct);
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
+
+    useEffect(() => {
+        if (liveProduct) setProduct(liveProduct);
+    }, [liveProduct]);
 
     useEffect(() => {
         if (!api) return

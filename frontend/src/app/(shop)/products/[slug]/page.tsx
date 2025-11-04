@@ -17,5 +17,5 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
     if (!product) return notFound();
 
-    return <ProductClient product={product} />;
+    return <ProductClient initialProduct={product} slug={slug} />;
 }
