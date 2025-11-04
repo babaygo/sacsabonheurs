@@ -51,7 +51,6 @@ export function EditCategoryDialog({ category, onSuccess }: { category: Category
 
             if (!res.ok) {
                 setOpen(false);
-                console.error("Erreur API :", res.status, await res.text());
                 toast.error("Erreur dans la modification de la catégorie");
             }
 
@@ -59,7 +58,6 @@ export function EditCategoryDialog({ category, onSuccess }: { category: Category
             onSuccess();
             toast.success("Catégorie modifiée avec succès !")
         } catch (error: any) {
-            console.error("Erreur réseau :", error);
             return error;
         }
     };

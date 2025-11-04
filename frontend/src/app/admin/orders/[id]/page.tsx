@@ -33,14 +33,12 @@ export default function OrderPage() {
                 });
 
                 if (!res.ok) {
-                    console.error("Erreur API :", res.status, await res.text());
                     notFound();
                 }
 
                 const data = await res.json();
                 setOrder(data);
             } catch (err) {
-                console.error("Erreur réseau :", err);
                 notFound();
             } finally {
                 setLoading(false);

@@ -23,7 +23,6 @@ export default async function PrivacyPolicyPage() {
         const data = await res.json();
         privacy = data.privacy || "";
     } catch (error: any) {
-        console.error("Erreur Politique de confidentialité :", error.message);
         privacy = "Impossible de charger la politique de confidentialité.";
     }
 

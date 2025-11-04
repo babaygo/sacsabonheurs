@@ -20,12 +20,10 @@ export default function OrdersClient() {
                 credentials: "include",
             });
             if (!res.ok) {
-                console.error("Erreur API :", res.status, await res.text());
                 return [];
             }
             return res.json();
         } catch (err) {
-            console.error("Erreur réseau :", err);
             return [];
         }
     }

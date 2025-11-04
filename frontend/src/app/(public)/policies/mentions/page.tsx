@@ -23,7 +23,6 @@ export default async function MentionsLegalesPage() {
         const data = await res.json();
         mentions = data.mentions || "";
     } catch (error: any) {
-        console.error("Erreur Mentions légales :", error.message);
         mentions = "Impossible de charger les mentions légales.";
     }
 

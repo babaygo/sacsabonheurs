@@ -93,7 +93,6 @@ export function PdfExtractor({ onExtract }: PdfExtractorProps) {
                 toast.error("Aucun texte trouvé dans le PDF");
             }
         } catch (error) {
-            console.error("Erreur lors de l'extraction du PDF:", error);
             toast.error("Erreur lors de l'extraction du texte");
         } finally {
             setLoading(false);

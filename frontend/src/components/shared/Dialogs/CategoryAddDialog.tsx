@@ -53,7 +53,6 @@ export function AddCategoryDialog({ onSuccess }: { onSuccess: () => void }) {
 
             if (!res.ok) {
                 setOpen(false);
-                console.error("Erreur API :", res.status, await res.text());
                 toast.error("Erreur dans l'ajout de la catégorie");
             }
 
@@ -70,7 +69,6 @@ export function AddCategoryDialog({ onSuccess }: { onSuccess: () => void }) {
             }
 
         } catch (error: any) {
-            console.error("Erreur réseau :", error);
             return error;
         }
     };

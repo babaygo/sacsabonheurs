@@ -25,7 +25,6 @@ export default function AdminOrdersClient() {
             });
 
             if (!res.ok) {
-                console.error("Erreur mise à jour statut commande :", await res.text());
                 return "Impossible de mettre à jour le status";
             }
 
@@ -33,7 +32,6 @@ export default function AdminOrdersClient() {
             setOrders(updatedOrders ?? []);
             toast.success("Statut mis à jour !");
         } catch (err) {
-            console.error("Erreur réseau ou serveur :", err);
             notFound();
         }
     };
@@ -44,12 +42,11 @@ export default function AdminOrdersClient() {
                 credentials: "include",
             });
             if (!res.ok) {
-                console.error("Erreur API :", res.status, await res.text());
-                return "Impossible de charger les commandes.";
+                toast.error("Impossible de charger les commandes.");
+                return null;
             }
             return res.json();
         } catch (err) {
-            console.error("Erreur réseau :", err);
             notFound();
         }
     }

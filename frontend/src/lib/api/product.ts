@@ -8,12 +8,10 @@ export async function getProducts(): Promise<Product[]> {
         });
 
         if (!res.ok) {
-            console.error("Erreur API produits :", res.status, await res.text());
             return [];
         }
         return await res.json();
     } catch (error: any) {
-        console.error("Erreur getProducts:", error);
         return [];
     }
 }
@@ -25,13 +23,11 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         });
 
         if (!res.ok) {
-            console.error(`Erreur API produit ${slug} :`, res.status, await res.text());
             return null;
         }
 
         return await res.json();
     } catch (err: any) {
-        console.error(`Erreur réseau produit ${slug} :`, err.message);
         return null;
     }
 }

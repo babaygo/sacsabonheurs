@@ -14,7 +14,6 @@ export function useProductBySlug(slug: string) {
             try {
                 const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, { cache: "no-store" });
                 if (!res.ok) {
-                    console.error(`Erreur API produit ${slug} :`, res.status, await res.text());
                     return null;
                 }
                 const data = await res.json();

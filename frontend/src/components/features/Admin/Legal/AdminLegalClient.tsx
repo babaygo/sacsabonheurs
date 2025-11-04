@@ -27,12 +27,10 @@ export default function AdminLegalClient() {
                 credentials: "include",
             });
             if (!res.ok) {
-                console.error("Erreur API :", res.status, await res.text());
                 return null;
             }
             return res.json();
         } catch (err) {
-            console.error("Erreur réseau :", err);
             return null;
         }
     }

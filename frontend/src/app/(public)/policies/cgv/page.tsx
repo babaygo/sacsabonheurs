@@ -23,7 +23,6 @@ export default async function CGVPage() {
         const data = await res.json();
         cgv = data.cgv || "";
     } catch (error: any) {
-        console.error("Erreur Conditions générales de vente :", error.message);
         cgv = "Impossible de charger les conditions générales de vente.";
     }
 
