@@ -12,21 +12,13 @@ import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { useCategories } from "@/hooks/useCategories";
 import { RichTextEditor } from "../RichEditorText";
+import { Category } from "@/types/Category";
 
-export function EditDialog({ product, onSuccess }: { product: Product, onSuccess: () => void }) {
+export function EditDialog({ product, categories, onSuccess }: { product: Product, categories: Category[], onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState(product);
-    const {
-        categories,
-        loading,
-        error,
-        refreshCategories,
-    } = useCategories();
 
-    if (loading) return null;
-    if (error) return error;
 
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
@@ -89,6 +81,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
 
             setOpen(false);
             onSuccess();
+            toast.success("Produit modifié avec succès !")
         } catch (err: any) {
             toast.error(err.message);
         }
@@ -97,7 +90,7 @@ export function EditDialog({ product, onSuccess }: { product: Product, onSuccess
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={() => setOpen(true)}>
+                <Button className="w-full" variant="outline" onClick={() => setOpen(true)}>
                     Modifier le sac
                 </Button>
             </DialogTrigger>

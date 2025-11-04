@@ -33,7 +33,7 @@ export function DeleteDialog({ productId, onSuccess }: { productId: number, onSu
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)} variant="destructive">
+                <Button className="w-full" onClick={() => setOpen(true)} variant="destructive">
                     Supprimer
                 </Button>
             </DialogTrigger>
@@ -53,6 +53,7 @@ export function DeleteDialog({ productId, onSuccess }: { productId: number, onSu
                         if (result) {
                             setOpen(false);
                             onSuccess();
+                            toast.success("Produit supprimé avec succès !")
                         }
                     }}
                 >

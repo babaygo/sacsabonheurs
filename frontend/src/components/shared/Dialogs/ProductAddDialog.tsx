@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 import { useCategories } from "@/hooks/useCategories";
 import { RichTextEditor } from "../RichEditorText";
 
-export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
+export function AddDialog({ categories, onSuccess }: { categories: Category[], onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
     const [form, setForm] = useState({
         name: "",
@@ -32,15 +32,6 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
         categoryId: 0,
     });
     const [files, setFiles] = useState<File[]>([]);
-    const {
-        categories,
-        loading,
-        error,
-        refreshCategories,
-    } = useCategories();
-
-    if (loading) return null;
-    if (error) return error;
 
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
@@ -107,6 +98,7 @@ export function AddDialog({ onSuccess }: { onSuccess: () => void }) {
                 setFiles([]);
                 setOpen(false);
                 onSuccess();
+                toast.success("Produit ajouté avec succès !")
             }
 
         } catch (error: any) {
