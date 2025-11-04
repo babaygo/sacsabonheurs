@@ -9,6 +9,7 @@ services:
       npm install
       npm run build
       npx prisma migrate deploy
+      npx prisma generate
     startCommand: npm run start
     envVars:
       - key: DATABASE_URL
@@ -16,6 +17,6 @@ services:
       - key: SESSION_SECRET
         sync: false
       - key: CORS_ORIGIN
-        value: https://sacsabonheur.vercel.app
+        value: https://sacsabonheurs.fr
       - key: NODE_ENV
         value: production
