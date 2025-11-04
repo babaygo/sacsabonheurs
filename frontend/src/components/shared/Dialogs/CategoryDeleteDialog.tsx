@@ -74,6 +74,7 @@ export function DeleteCategoryDialog({ category, onSuccess }: { category: Catego
                         if (result) {
                             setOpen(false);
                             onSuccess();
+                            toast.success("Catégorie supprimée avec succès !")
                         }
                     }}
                 >

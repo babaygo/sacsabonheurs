@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Category } from "@/types/Category";
+import toast from "react-hot-toast";
 
 export function EditCategoryDialog({ category, onSuccess }: { category: Category; onSuccess: () => void; }) {
     const [open, setOpen] = useState(false);
@@ -49,12 +50,14 @@ export function EditCategoryDialog({ category, onSuccess }: { category: Category
             });
 
             if (!res.ok) {
+                setOpen(false);
                 console.error("Erreur API :", res.status, await res.text());
-                return await res.text();
+                toast.error("Erreur dans la modification de la catégorie");
             }
 
             setOpen(false);
             onSuccess();
+            toast.success("Catégorie modifiée avec succès !")
         } catch (error: any) {
             console.error("Erreur réseau :", error);
             return error;

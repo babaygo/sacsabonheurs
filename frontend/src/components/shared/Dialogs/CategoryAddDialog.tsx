@@ -54,7 +54,7 @@ export function AddCategoryDialog({ onSuccess }: { onSuccess: () => void }) {
             if (!res.ok) {
                 setOpen(false);
                 console.error("Erreur API :", res.status, await res.text());
-                toast.error("Erreur dans l'enregistrement de la catégorie")
+                toast.error("Erreur dans l'ajout de la catégorie");
             }
 
             const data = await res.json();
@@ -66,6 +66,7 @@ export function AddCategoryDialog({ onSuccess }: { onSuccess: () => void }) {
                 });
                 setOpen(false);
                 onSuccess();
+                toast.success("Catégorie ajoutée avec succès !")
             }
 
         } catch (error: any) {
