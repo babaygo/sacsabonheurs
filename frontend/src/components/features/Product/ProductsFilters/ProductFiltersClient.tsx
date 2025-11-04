@@ -1,15 +1,21 @@
 "use client";
 
-import { useState } from "react";
-
-import { Product } from "@/types/Product";
+import { useEffect, useState } from "react";
 import { SortOption } from "@/lib/constants/SortOptions";
 import ProductFilters from "./ProductFilters";
 import PreviewProduct from "../PreviewProduct";
+import { Product } from "@/types/Product";
+import { useProductsContext } from "@/contexts/ProductsContext";
 
-export default function ProductFiltersClient({ products }: { products: Product[] }) {
+export default function ProductFiltersClient({ initialProducts }: { initialProducts: Product[] }) {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
+    const { products: liveProducts } = useProductsContext();
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+
+    useEffect(() => {
+        if (liveProducts) setProducts(liveProducts);
+    }, [liveProducts]);
 
     const filtered = !selectedCategory || selectedCategory === "all"
         ? products

@@ -7,8 +7,18 @@ import { Product } from "@/types/Product";
 import { MoveRight } from "lucide-react";
 import Link from "next/link";
 import PreviewProduct from "../Product/PreviewProduct";
+import { useEffect, useState } from "react";
+import { useProductsContext } from "@/contexts/ProductsContext";
 
-export default function HomeClient({ products }: { products: Product[] }) {
+export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
+    const { products: liveProducts } = useProductsContext();
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const productsFilters = products.filter((product: Product) => !product.hidden);
+
+    useEffect(() => {
+        if (liveProducts) setProducts(liveProducts);
+    }, [liveProducts]);
+
     return (
         <div className="flex flex-col items-center justify-center">
             <section className="w-full py-20 text-center">
@@ -31,11 +41,8 @@ export default function HomeClient({ products }: { products: Product[] }) {
                         </h2>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                            {products
-                                .sort(
-                                    (a, b) =>
-                                        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                                )
+                            {productsFilters
+                                .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                                 .slice(0, 4)
                                 .map((product) => (
                                     <PreviewProduct key={product.id} product={product} />

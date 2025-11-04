@@ -1,26 +1,18 @@
 "use client";
 
 import { useMemo } from "react";
-
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerClose,
-    DrawerFooter,
-    DrawerDescription,
-} from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose, DrawerFooter, DrawerDescription } from "@/components/ui/drawer";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
-
 import { useCartDrawerStore } from "@/lib/stores/cartDrawerStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import toast from "react-hot-toast";
 import Image from "next/image";
+import { useProductsContext } from "@/contexts/ProductsContext";
 
 export default function CartDrawer() {
+    const { refetch } = useProductsContext();
     const { open, setOpen } = useCartDrawerStore();
     const items = useCartStore((s) => s.items);
     const removeFromCart = useCartStore((s) => s.removeFromCart);
@@ -39,14 +31,20 @@ export default function CartDrawer() {
                 credentials: "include",
             });
 
+            if (!res.ok) {
+                const errorData = await res.json();
+                toast.error(errorData.error);
+                return null;
+            }
+
             const data = await res.json();
             window.location.href = data.url;
         } catch (error) {
-            console.error("Erreur lors du passage à la caisse :", error);
             toast.error(`Une erreur est survenue. ${error}`);
         } finally {
             clearCart();
             setOpen(false);
+            refetch();
         }
     }
 
@@ -76,7 +74,7 @@ export default function CartDrawer() {
                                         width={64}
                                         height={64}
                                         className="w-16 h-16 object-cover rounded"
-                                        fetchPriority={ i === 0 ? "high" : "auto" }
+                                        fetchPriority={i === 0 ? "high" : "auto"}
                                     />
                                     <div className="flex-1">
                                         <p className="font-medium">{item.name}</p>

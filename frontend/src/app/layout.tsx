@@ -8,6 +8,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 import { CookiesBanner } from "@/components/shared/CookiesBanner";
 import LayoutClient from "@/components/features/layout/LayoutClient";
 import Footer from "@/components/features/layout/Footer";
+import { ProductsProvider } from "@/contexts/ProductsContext";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -30,18 +31,20 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable} `}>
+    <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <SessionProvider>
-          <LayoutClient>
-            <Toaster position="top-right" />
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              {children}
-            </main>
-            <CookiesBanner />
-            <Analytics />
-            <SpeedInsights />
-          </LayoutClient>
+          <ProductsProvider>
+            <LayoutClient>
+              <Toaster position="top-right" />
+              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {children}
+              </main>
+              <CookiesBanner />
+              <Analytics />
+              <SpeedInsights />
+            </LayoutClient>
+          </ProductsProvider>
         </SessionProvider>
 
         <Footer />
