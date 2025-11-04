@@ -23,23 +23,23 @@ model Category {
 }
 
 model Product {
-  id          Int           @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
-  slug        String        @unique
+  slug        String      @unique
   description String
   price       Float
-  stock       Int           @default(1)
-  weight      Float         @default(0)
-  height      Float         @default(0)
-  lenght      Float         @default(0)
-  width       Float         @default(0)
+  stock       Int         @default(1)
+  weight      Float       @default(0)
+  height      Float       @default(0)
+  lenght      Float       @default(0)
+  width       Float       @default(0)
   images      String[]
   categoryId  Int
-  category    Category      @relation(fields: [categoryId], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id])
   orderItems  OrderItem[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  hidden      Boolean       @default(false)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  hidden      Boolean     @default(false)
 }
 
 model User {
@@ -164,4 +164,22 @@ model Legal {
   cgv       String   @db.Text
   privacy   String   @db.Text
   updatedAt DateTime @updatedAt
+}
+
+enum BannerVariant {
+  info
+  warning
+  primary
+}
+
+model Banner {
+  id          Int           @id @default(autoincrement())
+  message     String        @db.Text
+  variant     BannerVariant @default(primary)
+  ctaLabel    String?
+  ctaHref     String?
+  dismissible Boolean       @default(true)
+  active      Boolean       @default(false)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 }

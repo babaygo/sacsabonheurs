@@ -638,5 +638,96 @@ app.post("/api/contact", requireAuth, async (req, res) => {
     }
 })
 
+// Banner routes
+app.get("/api/banners", async (req, res) => {
+    try {
+        const banners = await prisma.banner.findMany({
+            where: { active: true },
+            orderBy: { createdAt: "desc" },
+        });
+
+        res.json(banners);
+    } catch (error) {
+        console.error("Erreur récupération banners :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.get("/api/admin/banners", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const banners = await prisma.banner.findMany({ orderBy: { createdAt: "desc" } });
+        res.json(banners);
+    } catch (error) {
+        console.error("Erreur récupération banners (admin):", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.post("/api/admin/banners", requireAuth, requireAdmin, upload.none(), async (req, res) => {
+    try {
+        const { message, variant, ctaLabel, ctaHref, dismissible, active } = req.body;
+
+        if (!message) return res.status(400).json({ error: "Le champ 'message' est requis." });
+
+        const isActive = active === 'true' || active === true;
+
+        if (isActive) {
+            await prisma.banner.updateMany({ where: { active: true }, data: { active: false } });
+        }
+
+        const banner = await prisma.banner.create({
+            data: {
+                message,
+                variant: variant || undefined,
+                ctaLabel: ctaLabel || null,
+                ctaHref: ctaHref || null,
+                dismissible: dismissible === 'true' || dismissible === true,
+                active: isActive,
+            },
+        });
+
+        res.status(201).json(banner);
+    } catch (error) {
+        console.error("Erreur création banner :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.put("/api/admin/banners/:id", requireAuth, requireAdmin, upload.none(), async (req, res) => {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID invalide" });
+
+    try {
+        const { message, variant, ctaLabel, ctaHref, dismissible, active } = req.body;
+
+        const isActiveProvided = typeof active !== 'undefined';
+        const isActive = isActiveProvided ? (active === 'true' || active === true) : undefined;
+
+        if (isActive) {
+            await prisma.banner.updateMany({ where: { active: true, NOT: { id } }, data: { active: false } });
+        }
+
+        const banner = await prisma.banner.update({
+            where: { id },
+            data: {
+                message,
+                variant: variant || undefined,
+                ctaLabel: ctaLabel || null,
+                ctaHref: ctaHref || null,
+                dismissible: typeof dismissible !== 'undefined' ? (dismissible === 'true' || dismissible === true) : undefined,
+                active: typeof isActive !== 'undefined' ? isActive : undefined,
+            },
+        });
+
+        res.json({ success: true, banner });
+    } catch (error: any) {
+        console.error("Erreur mise à jour banner :", error);
+        if (error.code === "P2025") {
+            return res.status(404).json({ error: "Banner introuvable" });
+        }
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Serveur lancé sur le port ${PORT}`));

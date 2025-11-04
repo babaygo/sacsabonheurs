@@ -9,6 +9,7 @@ import { CookiesBanner } from "@/components/shared/CookiesBanner";
 import LayoutClient from "@/components/features/layout/LayoutClient";
 import Footer from "@/components/features/layout/Footer";
 import { ProductsProvider } from "@/contexts/ProductsContext";
+import DynamicBanner from "@/components/features/layout/DynamicBanner";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -25,14 +26,17 @@ export const metadata: Metadata = {
   description: "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
+
   return (
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
+        <DynamicBanner />
         <SessionProvider>
           <ProductsProvider>
             <LayoutClient>
