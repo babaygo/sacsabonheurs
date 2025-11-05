@@ -9,7 +9,7 @@ import { sendContactConfirmationEmail, sendOrderConfirmationEmail } from './lib/
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
 import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
-import fetch from 'node-fetch';
+import { constructEventStripe, createCheckout, fetchStripeShippingRates, getDeliveryMode, getLineItems } from './lib/stripe';
 
 const app = express();
 
@@ -34,14 +34,11 @@ const upload = multer({
     limits: { fileSize: 7 * 1024 * 1024 }
 });
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
-
 app.post("/webhook", express.raw({ type: "application/json" }), async (req, res) => {
-    const sig = req.headers["stripe-signature"]!;
     let event: Stripe.Event;
 
     try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+        event = constructEventStripe(req.body, req.headers["stripe-signature"]!);
     } catch (err: any) {
         console.error("Webhook signature error:", err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
@@ -49,7 +46,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
 
     if (event.type === "checkout.session.completed") {
         const session: Stripe.Checkout.Session = event.data.object;
-        const lineItems = await stripe.checkout.sessions.listLineItems(session.id);
+        const lineItems = await getLineItems(session.id);
         const slugs: string[] = JSON.parse(session.metadata!.slugs);
         const billingAddress = session.customer_details?.address;
 
@@ -70,9 +67,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             }))
         );
 
-        const shippingRateId = session.shipping_cost?.shipping_rate;
-        const shippingRate = await stripe.shippingRates.retrieve(String(shippingRateId));
-        const deliveryMode = shippingRate.metadata.ColLivMod;
+        const deliveryMode = await getDeliveryMode(session);
 
         try {
             await prisma.order.create({
@@ -181,7 +176,7 @@ app.get("/api/categories", async (req, res) => {
 app.post("/api/checkout", requireAuth, async (req, res) => {
     const { items } = req.body;
     const user: User = (req as any).user;
-    const relay = (req as any)?.relay
+    const relay = (req as any)?.relay;
     const slugs = items.map((item: any) => item.slug);
 
     for (const item of items) {
@@ -191,38 +186,12 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
         }
     }
 
-    const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        billing_address_collection: 'required',
-        mode: "payment",
-        customer_email: user.email,
-        phone_number_collection: { enabled: true },
-        automatic_tax: { enabled: true },
-        shipping_options: [{ shipping_rate: process.env.ID_TARIF_LIVRAISON_POINT_RELAIS },
-        { shipping_rate: process.env.ID_TARIF_LIVRAISON_LOCKER }],
-        metadata: {
-            userId: user.id,
-            deliveryMethod: "mondial_relay",
-            relayId: relay?.id,
-            relayName: relay?.name,
-            relayAddress: relay?.address,
-            slugs: JSON.stringify(slugs)
-        },
-        line_items: items.map((item: any) => ({
-            price_data: {
-                currency: "eur",
-                product_data: {
-                    name: item.name,
-                    images: [item.image]
-                },
-                unit_amount: Math.round(item.price * 100),
-            },
-            quantity: item.quantity,
-        })),
-        success_url: process.env.URL_FRONT + "/choose-relay?session_id={CHECKOUT_SESSION_ID}&refresh=true",
-        cancel_url: process.env.URL_FRONT + "/",
-    });
-
+    const shippings_rates = await fetchStripeShippingRates();
+    const shipping_options = shippings_rates.map(rate => ({
+        shipping_rate: rate.id,
+    }));
+    
+    const session = await createCheckout(user, shipping_options, relay, slugs, items);
     res.json({ url: session.url });
 });
 
