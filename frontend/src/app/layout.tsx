@@ -23,20 +23,21 @@ const playfairDisplay = Playfair_Display({
 
 export const metadata: Metadata = {
   title: "Sacs à Bonheurs",
-  description: "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
+  description:
+    "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable."
 };
+
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
-
   return (
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link rel="canonical" href={process.env.NEXT_PUBLIC_URL_FRONT} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
@@ -46,6 +47,15 @@ export default async function RootLayout({
             "name": "Sacs à Bonheurs"
           })
         }} />
+        {/* Balises Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_FRONT} />
+        <meta property="og:title" content="Sacs à Bonheurs – Élégance artisanale" />
+        <meta property="og:description" content="Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable." />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_URL_FRONT}/og_image.png`} />
+        <meta property="og:site_name" content="Sacs à Bonheurs" />
+        <meta property="og:locale" content="fr_FR" />
+
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <DynamicBanner />
