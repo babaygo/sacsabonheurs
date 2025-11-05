@@ -87,7 +87,8 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                             Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
                             Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
                             <br />
-                            En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations. N'hésitez pas à suivre mon compte.
+                            En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.<br />
+                            N'hésitez pas à suivre mon compte
                             <Link
                                 href="https://www.instagram.com/sacs_a_bonheurs/"
                                 target="_blank"
