@@ -37,6 +37,10 @@ export default async function RootLayout({
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
+        <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
         <link rel="canonical" href={process.env.NEXT_PUBLIC_URL_FRONT} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({

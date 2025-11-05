@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Instagram } from "lucide-react";
+import { Facebook, Instagram } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
 
@@ -25,6 +25,15 @@ export default function Footer() {
 
                         <p>Créations uniques et artisanales, faites en France.</p>
                         <p className="text-xs">© {new Date().getFullYear()} Tous droits réservés.</p>
+                        <div className="flex items-center space-x-2">
+                            <img src="/assets/mastercard-svgrepo-com.svg" alt="Mastercard" className="h-10" />
+                            <img src="/assets/visa-classic-svgrepo-com.svg" alt="Visa" className="h-10" />
+                            <img
+                                src="https://storage.mondialrelay.fr/mrlogoprincipal.png"
+                                alt="Mondial Relay"
+                                className="h-10"
+                            />
+                        </div>
                     </div>
                 </div>
 
@@ -32,6 +41,7 @@ export default function Footer() {
                     <p className="font-semibold">Navigation</p>
                     <ul className="space-y-1">
                         <li><Link href="/" className="hover:underline">Accueil</Link></li>
+                        <li><Link href="/boutique" className="hover:underline">Boutique</Link></li>
                         <li><Link href="/a-propos" className="hover:underline">À propos</Link></li>
                         <li><Link href="/contact" className="hover:underline">Contact</Link></li>
                     </ul>
@@ -48,17 +58,25 @@ export default function Footer() {
 
                 <div className="space-y-2 items-center text-center md:items-start md:text-left">
                     <p className="font-semibold">Suivez-nous</p>
-                    <div className="flex items-center gap-2">
-                        <a
-                            href="https://www.instagram.com/sacs_a_bonheurs/"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="hover:text-pink-500 transition"
-                        >
-                            <Instagram className="w-5 h-5" />
-                        </a>
+                    <a
+                        href="https://www.instagram.com/sacs_a_bonheurs/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:text-pink-500 transition"
+                    >
+                        <Instagram className="w-5 h-5" />
                         <span className="text-sm">Instagram</span>
-                    </div>
+                    </a>
+
+                    <a
+                        href="https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 hover:text-blue-500 transition"
+                    >
+                        <Facebook className="w-5 h-5" />
+                        <span className="text-sm">Facebook</span>
+                    </a>
                 </div>
             </div>
             <div className="md:hidden">
@@ -68,6 +86,7 @@ export default function Footer() {
                         <AccordionContent>
                             <ul className="space-y-1">
                                 <li><Link href="/">Accueil</Link></li>
+                                <li><Link href="/boutique">Boutique</Link></li>
                                 <li><Link href="/a-propos">À propos</Link></li>
                                 <li><Link href="/contact">Contact</Link></li>
                             </ul>
@@ -84,26 +103,38 @@ export default function Footer() {
                             </ul>
                         </AccordionContent>
                     </AccordionItem>
-
-                    <AccordionItem value="social">
-                        <AccordionTrigger>Suivez-nous</AccordionTrigger>
-                        <AccordionContent>
-                            <div className="flex items-center gap-2">
-                                <a
-                                    href="https://www.instagram.com/sacs_a_bonheurs/"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:text-pink-500 transition"
-                                >
-                                    <Instagram className="w-5 h-5" />
-                                </a>
-                                <span className="text-sm">Instagram</span>
-                            </div>
-                        </AccordionContent>
-                    </AccordionItem>
                 </Accordion>
-                <div className="mt-4">
-                    <p className="text-xs">© &nbsp; Sacs à Bonheurs &nbsp; {new Date().getFullYear()}</p>
+                <div className="mt-4 flex flex-col space-y-4">
+                    <div className="flex items-center space-x-2">
+                        <img src="/assets/mastercard-svgrepo-com.svg" alt="Mastercard" className="h-10" />
+                        <img src="/assets/visa-classic-svgrepo-com.svg" alt="Visa" className="h-10" />
+                        <img
+                            src="https://storage.mondialrelay.fr/mrlogoprincipal.png"
+                            alt="Mondial Relay"
+                            className="h-10"
+                        />
+                    </div>
+
+                    <div className="flex items-center space-x-4">
+                        <a
+                            href="https://www.instagram.com/sacs_a_bonheurs/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-pink-500 transition"
+                        >
+                            <Instagram className="w-5 h-5" />
+                        </a>
+
+                        <a
+                            href="https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="hover:text-blue-500 transition"
+                        >
+                            <Facebook className="w-5 h-5" />
+                        </a>
+                    </div>
+                    <p>© &nbsp; Sacs à Bonheurs &nbsp; {new Date().getFullYear()}</p>
                 </div>
             </div>
         </footer>

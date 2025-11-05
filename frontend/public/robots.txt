@@ -8,6 +8,8 @@ Disallow: /choose-relay/
 Disallow: /orders/
 Disallow: /login/
 Disallow: /signup/
+Disallow: /assets/
+Disallow: /api/
 
 # Host
 Host: https://sacsabonheurs.fr
