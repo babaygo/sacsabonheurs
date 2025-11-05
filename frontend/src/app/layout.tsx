@@ -31,10 +31,22 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
+
 
   return (
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "url": `${process.env.NEXT_PUBLIC_URL_FRONT}`,
+            "logo": `${process.env.NEXT_PUBLIC_URL_FRONT}/sacs-a-bonheurs-logo.png`,
+            "name": "Sacs à Bonheurs"
+          })
+        }} />
+      </head>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <DynamicBanner />
         <SessionProvider>
