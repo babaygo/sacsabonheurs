@@ -5,9 +5,9 @@
 
 ## Install
 ```sh
-git clone https://github.com/simonlaurent/sacsabonheur.git
+git clone https://github.com/babaygo/sacsabonheurs.git
 
-cd sacsabonheur
+cd sacsabonheurs
 ```
 ### Backend
 ```sh
