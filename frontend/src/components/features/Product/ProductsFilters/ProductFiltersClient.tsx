@@ -42,7 +42,7 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
     });
 
     return (
-        <>
+        <div className="pt-4">
             <ProductFilters
                 selectedCategory={selectedCategory}
                 sortOption={sortOption}
@@ -56,6 +56,6 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
                     <PreviewProduct key={product.id} product={product} />
                 ))}
             </div>
-        </>
+        </div>
     );
 }

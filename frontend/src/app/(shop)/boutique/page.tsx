@@ -12,13 +12,14 @@ export default async function BoutiquePage() {
     const initialProducts = await getProducts();
 
     return (
-        <div className="min-h-screen pt-4 px-4 md:px-4">
+        <div className="min-h-screen pt-4 px-4 md:px-0">
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
                     { label: "Boutique" },
                 ]}
             />
+            <h1 className="text-2xl font-bold capitalize">Boutique</h1>
             <ProductFiltersClient initialProducts={initialProducts} />
         </div>
     );
