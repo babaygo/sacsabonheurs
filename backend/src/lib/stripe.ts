@@ -21,6 +21,43 @@ export async function fetchStripeShippingRates(): Promise<Stripe.ShippingRate[]>
     }
 }
 
+export async function createStripeShippingRate(data: {
+    display_name: string;
+    amount: number;
+    currency?: string;
+    min_delivery?: number;
+    max_delivery?: number;
+    metadata?: any;
+    tax_behavior?: "exclusive" | "inclusive" | "unspecified";
+    tax_code?: string;
+}): Promise<Stripe.Response<Stripe.ShippingRate>> {
+    try {
+        const shippingRate = await stripe.shippingRates.create({
+            display_name: data.display_name,
+            type: "fixed_amount",
+            fixed_amount: {
+                amount: data.amount,
+                currency: data.currency ?? "eur",
+            },
+            delivery_estimate:
+                data.min_delivery && data.max_delivery
+                    ? {
+                        minimum: { unit: "business_day", value: data.min_delivery },
+                        maximum: { unit: "business_day", value: data.max_delivery },
+                    }
+                    : undefined,
+            metadata: data.metadata,
+            tax_behavior: data.tax_behavior ?? "inclusive",
+            tax_code: data.tax_code ?? undefined,
+        });
+
+        return shippingRate;
+    } catch (error: any) {
+        console.error("Erreur lors de la création du shipping rate :", error);
+        throw new Error("Impossible de créer le shipping rate Stripe");
+    }
+}
+
 export async function getDeliveryMode(session: Stripe.Checkout.Session): Promise<string> {
     const shippingRateId = session.shipping_cost?.shipping_rate;
     const shippingRate = await stripe.shippingRates.retrieve(String(shippingRateId));
@@ -64,4 +101,16 @@ export async function createCheckout(user: User, shipping_options: Stripe.Checko
 
 export async function getLineItems(session_id: string) {
     return stripe.checkout.sessions.listLineItems(session_id);
+}
+
+export async function updateShippingRate(rateId: string, metadata: Stripe.Emptyable<Stripe.MetadataParam> | undefined) {
+    await stripe.shippingRates.update(rateId, {
+        metadata: { ...metadata },
+    });
+}
+
+export async function archiveShippingRate(rateId: string, active: boolean | undefined) {
+    await stripe.shippingRates.update(rateId, {
+        active: active
+    });
 }

@@ -31,7 +31,7 @@ export default function AdminCategoriesClient() {
         }
     }, [user, loadingUser, router]);
 
-    if (loadingUser || loading) return <Spinner />;
+    if (loadingUser || loading) return <Spinner className="min-h-screen" />;
     if (error) { toast.error(error); }
 
     return (

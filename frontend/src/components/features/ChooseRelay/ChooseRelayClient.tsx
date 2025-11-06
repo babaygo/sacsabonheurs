@@ -152,7 +152,7 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
         }
     };
 
-    if (loadingUser) return <Spinner />;
+    if (loadingUser) return <Spinner className="min-h-screen" />;
 
     if (!isValid) {
         return (
