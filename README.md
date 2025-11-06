@@ -1,30 +1,30 @@
 # Sacs à Bonheurs
 
-> Full-stack e-commerce platform for handmade bags crafted in France [1](#0-0) 
+> Full-stack e-commerce platform for handmade bags crafted in France
 
-🖥️ **[Live Demo](https://sacsabonheurs.fr)** [3](#0-2) 
+🖥️ **[Live Demo](https://sacsabonheurs.fr)**
 
 ## Overview
 
-Sacs à Bonheurs is a modern e-commerce web application built with Next.js and Express, featuring a complete shopping experience with Stripe payment integration, admin dashboard, and Mondial Relay delivery options<cite />. The platform follows a JAMstack architecture with clear separation between frontend (Vercel) and backend (Render) services<cite />.
+Sacs à Bonheurs is a modern e-commerce web application built with Next.js and Express, featuring a complete shopping experience with Stripe payment integration, admin dashboard, and Mondial Relay delivery options. The platform follows a JAMstack architecture with clear separation between frontend (Vercel) and backend (Render) services.
 
 ## Features
 
 ### Customer Features
-- **Product Catalog**: Browse handmade bags with category filtering and detailed product pages<cite />
-- **Shopping Cart**: Persistent cart state with Zustand for seamless shopping experience<cite />
-- **Secure Checkout**: Stripe-powered payment processing with webhook-driven order creation<cite />
-- **Mondial Relay Integration**: Choose delivery points using the ParcelShopPicker widget<cite />
-- **Order History**: View past orders and track delivery status<cite />
-- **User Authentication**: Secure login/signup with better-auth (v1.3.23)<cite />
+- **Product Catalog**: Browse handmade bags with category filtering and detailed product pages
+- **Shopping Cart**: Persistent cart state with Zustand for seamless shopping experience
+- **Secure Checkout**: Stripe-powered payment processing with webhook-driven order creation
+- **Mondial Relay Integration**: Choose delivery points using the ParcelShopPicker widget
+- **Order History**: View past orders and track delivery status
+- **User Authentication**: Secure login/signup with better-auth (v1.3.23)
 
 ### Admin Features
-- **Product Management**: CRUD operations with image upload to Cloudflare R2 [4](#0-3) 
-- **Category Management**: Organize products with slug-based categories [5](#0-4) 
-- **Order Management**: Process orders, update statuses, and manage fulfillment<cite />
-- **Legal Content Editor**: Rich text editor with PDF import for legal documents [6](#0-5) 
-- **Banner Management**: Create site-wide announcements with dismissible options<cite />
-- **Shipping Rates**: Configure Stripe shipping rates for different delivery methods<cite />
+- **Product Management**: CRUD operations with image upload to Cloudflare R2
+- **Category Management**: Organize products with slug-based categories 
+- **Order Management**: Process orders, update statuses, and manage fulfillment
+- **Legal Content Editor**: Rich text editor with PDF import for legal documents
+- **Banner Management**: Create site-wide announcements with dismissible options
+- **Shipping Rates**: Configure Stripe shipping rates for different delivery methods
 
 ## Tech Stack
 
@@ -43,7 +43,7 @@ Sacs à Bonheurs is a modern e-commerce web application built with Next.js and E
 | **Styling** | Tailwind CSS | 4.1.13 |
 | **Rich Text** | TipTap | 3.7.2 |
 
-<cite />
+
 
 ## Installation
 
@@ -59,7 +59,7 @@ Sacs à Bonheurs is a modern e-commerce web application built with Next.js and E
 ```sh
 git clone https://github.com/babaygo/sacsabonheurs.git
 cd sacsabonheurs
-``` [7](#0-6) 
+```
 
 ### Backend Setup
 ```sh
@@ -69,7 +69,7 @@ docker-compose up --build -d
 npx prisma generate
 npx prisma migrate dev
 npx prisma db seed
-``` [8](#0-7) 
+``` 
 
 **Environment Variables** (create `.env` file):
 ```env
@@ -84,16 +84,16 @@ R2_BUCKET_NAME="..."
 RESEND_API_KEY="re_..."
 BETTER_AUTH_SECRET="..."
 ```
-<cite />
+
 
 ### Frontend Setup
 ```sh
 cd frontend
 npm install
 npm run dev
-``` [9](#0-8) 
+``` 
 
-Access the application at **http://localhost:3000** [10](#0-9) 
+Access the application at **http://localhost:3000**
 
 **Environment Variables** (create `.env.local` file):
 ```env
@@ -102,7 +102,7 @@ NEXT_PUBLIC_API_URL="http://localhost:3001"
 BETTER_AUTH_SECRET="..."
 BETTER_AUTH_URL="http://localhost:3001"
 ```
-<cite />
+
 
 ## Architecture
 
@@ -124,62 +124,62 @@ BETTER_AUTH_URL="http://localhost:3001"
 │Postgres│ │Stripe│ │   R2   │ │ Resend │
 └────────┘ └──────┘ └────────┘ └────────┘
 ```
-<cite />
+
 
 ### Key Design Patterns
-- **Snapshot Pattern**: Order items store product details at purchase time to preserve history<cite />
-- **Webhook-Driven Orders**: Stripe webhooks trigger order creation after payment confirmation<cite />
-- **Role-Based Access**: Three-tier access control (public, authenticated, admin)<cite />
-- **Server-Side Rendering**: Legal pages and product catalog use Next.js SSR for SEO [11](#0-10) 
+- **Snapshot Pattern**: Order items store product details at purchase time to preserve history
+- **Webhook-Driven Orders**: Stripe webhooks trigger order creation after payment confirmation
+- **Role-Based Access**: Three-tier access control (public, authenticated, admin)
+- **Server-Side Rendering**: Legal pages and product catalog use Next.js SSR for SEO 
 
 ## Database Schema
 
 Core entities:
-- **User**: Customer accounts with role-based permissions<cite />
-- **Product**: Catalog items with images, stock, and category relationships<cite />
-- **Order**: Customer orders with Stripe session tracking and delivery details<cite />
-- **OrderItem**: Line items preserving product snapshots<cite />
-- **Category**: Product categorization with slugs<cite />
-- **Legal**: Site-wide legal content (mentions, CGV, privacy) [12](#0-11) 
-- **Banner**: Dismissible site announcements<cite />
+- **User**: Customer accounts with role-based permissions
+- **Product**: Catalog items with images, stock, and category relationships
+- **Order**: Customer orders with Stripe session tracking and delivery details
+- **OrderItem**: Line items preserving product snapshots
+- **Category**: Product categorization with slugs
+- **Legal**: Site-wide legal content (mentions, CGV, privacy) 
+- **Banner**: Dismissible site announcements
 
 ## Deployment
 
 ### Frontend (Vercel)
-- Build command: `next build --turbopack`<cite />
-- Environment variables: `NEXT_PUBLIC_*`, better-auth credentials<cite />
-- Automatic deployments from main branch<cite />
+- Build command: `next build --turbopack`
+- Environment variables: `NEXT_PUBLIC_*`, better-auth credentials
+- Automatic deployments from main branch
 
 ### Backend (Render)
-- Docker container with Node 22.x<cite />
-- PostgreSQL addon for database<cite />
-- Environment variables: Database URL, API keys, secrets<cite />
-- Auto-deploy on push to backend-preprod<cite />
+- Docker container with Node 22.x
+- PostgreSQL addon for database
+- Environment variables: Database URL, API keys, secrets
+- Auto-deploy on push to backend-preprod
 
 ## API Endpoints
 
 ### Public
-- `GET /api/products` - List all products<cite />
-- `GET /api/products/:slug` - Get product by slug<cite />
-- `GET /api/categories` - List categories<cite />
-- `GET /api/banners` - Get active banners<cite />
-- `GET /api/admin/legal` - Get legal content [13](#0-12) 
+- `GET /api/products` - List all products
+- `GET /api/products/:slug` - Get product by slug
+- `GET /api/categories` - List categories
+- `GET /api/banners` - Get active banners
+- `GET /api/admin/legal` - Get legal content
 
 ### Authenticated
-- `POST /api/checkout` - Create Stripe checkout session<cite />
-- `GET /api/orders` - Get user's orders<cite />
-- `POST /api/order/:sessionId/relay` - Set Mondial Relay point<cite />
-- `POST /api/contact` - Submit contact form [14](#0-13) 
+- `POST /api/checkout` - Create Stripe checkout session
+- `GET /api/orders` - Get user's orders
+- `POST /api/order/:sessionId/relay` - Set Mondial Relay point
+- `POST /api/contact` - Submit contact form
 
 ### Admin
-- `POST/PUT/DELETE /api/admin/products` - Manage products<cite />
-- `POST/PUT/DELETE /api/admin/categories` - Manage categories<cite />
-- `POST /api/admin/legal` - Update legal content [15](#0-14) 
-- `GET/POST/DELETE /api/admin/shipping-rates` - Manage Stripe shipping<cite />
-- `POST/PUT/DELETE /api/admin/banners` - Manage banners<cite />
+- `POST/PUT/DELETE /api/admin/products` - Manage products
+- `POST/PUT/DELETE /api/admin/categories` - Manage categories
+- `POST /api/admin/legal` - Update legal content
+- `GET/POST/DELETE /api/admin/shipping-rates` - Manage Stripe shipping
+- `POST/PUT/DELETE /api/admin/banners` - Manage banners
 
 ### Webhooks
-- `POST /webhook` - Stripe payment events<cite />
+- `POST /webhook` - Stripe payment events
 
 ## License
 
