@@ -39,7 +39,7 @@ export default function StatusBadge({ status, onChange, clickable = true }: Stat
                 {Object.entries(statusMap).map(([key, { label }]) => (
                     <DropdownMenuItem
                         key={key}
-                        onClick={() => onChange?.(key as OrderStatusType)}
+                        onClick={(e) => {onChange?.(key as OrderStatusType); e.stopPropagation()} }
                         className="cursor-pointer"
                     >
                         {label}
