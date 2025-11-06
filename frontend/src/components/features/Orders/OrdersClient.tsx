@@ -41,8 +41,9 @@ export default function OrdersClient() {
 
     if (loading) {
         return (
-            <div className="flex min-h-screen justify-center items-center">
-                <p className="flex space-x-2"><Spinner />Chargement des commandes ...</p>
+            <div className="flex min-h-screen  items-center space-x-6">
+                <Spinner />
+                <p>Chargement des commandes ...</p>
             </div>
         );
     }
