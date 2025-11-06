@@ -1,18 +1,20 @@
 # *
 User-agent: *
-Allow: /
+Allow: /products/
+Allow: /policies/cgv
+Allow: /policies/mentions
+Allow: /policies/privacy-policy
+Allow: /contact
+Allow: /boutique
+Allow: /a-propos
 
 Disallow: /reset-password/
 Disallow: /admin/
 Disallow: /choose-relay/
 Disallow: /orders/
-Disallow: /login/
-Disallow: /signup/
 Disallow: /assets/
 Disallow: /api/
+Disallow: /login
+Disallow: /signup
 
-# Host
-Host: https://sacsabonheurs.fr
-
-# Sitemaps
 Sitemap: https://sacsabonheurs.fr/sitemap.xml
