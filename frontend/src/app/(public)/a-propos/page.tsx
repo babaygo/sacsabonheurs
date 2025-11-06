@@ -15,9 +15,7 @@ export default function AProposPage() {
                 J'ai commencé la couture en 2013 et je me suis vite spécialisée dans la couture de sacs et accessoires.
                 J'apporte beaucoup d'attention et de soins à mes créations, et utilise des matériaux de qualité.
                 Toutes mes créations sont des pièces uniques, dont je créé les patrons. Je vous souhaite une bonne visite !<br />
-
-                <br /><strong>Quel est mon parcours ?</strong><br />
-                J'ai travaillé longtemps dans le tourisme, puis après un licenciement économique, je me suis reconvertie dans le secteur médico-social. Mais j'ai toujours adoré créer de mes mains, et c'est ainsi que ma petite entreprise Sacs à Bonheurs est née !</p>
+            </p>
         </div>
     );
 }
