@@ -5,7 +5,7 @@ import { toNodeHandler } from "better-auth/node";
 import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAdmin, requireAuth } from './middleware/middleware';
-import { sendContactConfirmationEmail, sendOrderConfirmationEmail } from './lib/email';
+import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl } from './lib/utils';
 import { auth } from './lib/auth';
 import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
@@ -70,7 +70,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         const deliveryMode = await getDeliveryMode(session);
 
         try {
-            await prisma.order.create({
+            const order = await prisma.order.create({
                 data: {
                     stripeSessionId: session.id,
                     user: { connect: { id: session.metadata!.userId } },
@@ -93,7 +93,16 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     items: { create: items }
                 }
             });
+
+            await sendEmail({
+                from: process.env.MAIL_BOUTIQUE!,
+                html: `<h1>Une nouvelle commande a été passée.</h1>
+                    <p><a href=${process.env.URL_FRONT}/admin/orders/${order.id}">Accéder à la commande</a></p>`,
+                subject: "Nouvelle commande !",
+                to: process.env.MAIL_OWNER!
+            });
         } catch (error: any) {
+            res.status(500).json({ error: "Erreur serveur" });
             console.error("Erreur sur la création d'une commande :", error);
         }
     }
