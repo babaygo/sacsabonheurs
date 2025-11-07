@@ -83,7 +83,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     <div className="flex flex-col justify-center justify-items-center md:items-start text-center md:text-left space-y-6">
                         <h2 className="text-4xl capitalize font-bold">La boutique</h2>
                         <p className="text-base text-justify md:text-lg leading-relaxed md:text-justify pr-0 md:pr-6">
-                            Chez Sacs à bonheurs toutes les créations artisanales, imaginées et confectionnées avec passion dans mon atelier à Saint-Nazaire, en Loire-Atlantique.<br />
+                            Chez Sacs à bonheurs, toutes les créations artisanales, sont imaginées et confectionnées avec passion dans mon atelier à Saint-Nazaire, en Loire-Atlantique.<br />
                             Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
                             Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
                             <br />
