@@ -58,9 +58,8 @@ export async function createStripeShippingRate(data: {
     }
 }
 
-export async function getDeliveryMode(session: Stripe.Checkout.Session): Promise<string> {
-    const shippingRateId = session.shipping_cost?.shipping_rate;
-    const shippingRate = await stripe.shippingRates.retrieve(String(shippingRateId));
+export async function getDeliveryMode(shippingRateId: string): Promise<string> {
+    const shippingRate = await stripe.shippingRates.retrieve(shippingRateId);
     return shippingRate.metadata.ColLivMod;
 }
 

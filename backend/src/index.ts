@@ -67,8 +67,17 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             }))
         );
 
-        const deliveryMode = await getDeliveryMode(session);
+        const shippingRateId = session.shipping_cost?.shipping_rate;
+        if (!shippingRateId) {
+            console.warn("Aucun shippingRateId trouvé dans la session.");
+            return null;
+        }
 
+        const deliveryMode = await getDeliveryMode(shippingRateId.toString());
+        if (!deliveryMode) {
+            console.warn("Aucun deliveryMode trouvé pour le shippingRateId :", shippingRateId);
+        }
+        
         try {
             const order = await prisma.order.create({
                 data: {
@@ -78,7 +87,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
                     phone: session.customer_details?.phone ?? null,
                     total: session.amount_total! / 100,
                     subtotal: session.amount_subtotal! / 100,
-                    shippingOption: deliveryMode,
+                    shippingOption: deliveryMode ?? "24R",
                     shippingCost: session.total_details?.amount_shipping! / 100,
                     taxes: session.total_details?.amount_tax,
                     deliveryMethod: session.metadata?.deliveryMethod ?? null,
@@ -97,13 +106,13 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
             await sendEmail({
                 from: process.env.MAIL_BOUTIQUE!,
                 html: `<h1>Une nouvelle commande a été passée.</h1>
-                    <p><a href=${process.env.URL_FRONT}/admin/orders/${order.id}">Accéder à la commande</a></p>`,
+                    <p><a href="${process.env.URL_FRONT}/admin/orders/${order.id}">Accéder à la commande</a></p>`,
                 subject: "Nouvelle commande !",
                 to: process.env.MAIL_OWNER!
             });
         } catch (error: any) {
-            res.status(500).json({ error: "Erreur serveur" });
             console.error("Erreur sur la création d'une commande :", error);
+            return res.status(200).json({ received: true, error: "Internal processing error" });
         }
     }
     res.status(200).json({ received: true });
@@ -191,7 +200,7 @@ app.post("/api/checkout", requireAuth, async (req, res) => {
     for (const item of items) {
         const product = await prisma.product.findUnique({ where: { slug: item.slug } });
         if (!product || product.stock < item.quantity || product.hidden || item.quantity < 1) {
-            return res.status(400).json({ error: `Le produit ${item.name} n'est plus disponible.` });
+            return res.status(422).json({ error: `Le produit ${item.name} n'est plus disponible.` });
         }
     }
 
@@ -609,7 +618,7 @@ app.post("/api/contact", requireAuth, async (req, res) => {
 
         await sendContactConfirmationEmail(email, name, order, message);
 
-        res.status(200).json({ success: true });
+        res.status(201).json({ success: true });
     } catch (error: any) {
         console.error("Erreur envoi mail:", error);
         res.status(500).json({ error: "Erreur lors de l'envoi du message." });
