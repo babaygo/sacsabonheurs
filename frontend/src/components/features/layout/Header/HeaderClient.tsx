@@ -50,8 +50,9 @@ export default function HeaderClient() {
     return (
         <header
             className={`w-full px-8 sticky top-0 left-0 z-50 py-4 transition-colors duration-300 
-                ${scrolled ? "bg-primary-foreground shadow-sm" : "bg-transparent"}`}>
-            <nav className="hidden md:flex absolute top-6 left-6 flex">
+        ${scrolled ? "bg-primary-foreground shadow-sm" : "bg-transparent"}`}>
+
+            <nav className="hidden md:block absolute top-6 left-6">
                 <Sheet open={openSheet} onOpenChange={setOpenSheet}>
                     <SheetTitle className="hidden" />
                     <SheetTrigger asChild>
@@ -75,7 +76,7 @@ export default function HeaderClient() {
 
             <div className="flex flex-col items-center space-y-1">
                 <div className="flex items-center space-x-3">
-                    <Link href={"/"}>
+                    <Link href="/">
                         <Image
                             src="/assets/sacs-a-bonheurs-logo.png"
                             alt="Logo Sacs à Bonheurs"
@@ -92,7 +93,7 @@ export default function HeaderClient() {
                 <p className="text-semibold">Fabriqué à la main, en France</p>
             </div>
 
-            <div className="hidden md:flex absolute top-6 right-7 flex items-center space-x-2">
+            <div className="hidden md:flex absolute top-6 right-7 items-center space-x-2">
                 <CartDrawer />
                 {!loadingUser && user ? (
                     <Popover>
@@ -132,6 +133,7 @@ export default function HeaderClient() {
                         Se connecter
                     </Link>
                 )}
+
                 <Button
                     variant="ghost"
                     onClick={() => setOpen(true)}
@@ -158,50 +160,43 @@ export default function HeaderClient() {
                         <SheetDescription />
                         <div className="mt-6 space-y-6">
                             {!loadingUser && user ? (
-                                <div className="space-y-4">
-                                    <div className="flex flex-col space-y-2 px-3">
+                                <>
+                                    <div className="space-y-2 px-3">
                                         <p className="text-sm font-medium">{user.name}</p>
                                         <p className="text-sm text-muted-foreground">{user.email}</p>
                                     </div>
-                                    <div className="mb-5">
+                                    <Separator />
+                                    <div className="flex flex-col space-y-4 px-3">
+                                        <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
+                                            Mes commandes
+                                        </Link>
+                                        <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
+                                            Boutique
+                                        </Link>
+                                        {isAdmin && (
+                                            <Link href="/admin" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
+                                                Admin
+                                            </Link>
+                                        )}
                                         <Button
                                             variant="link"
                                             onClick={() => {
                                                 setOpenSheetMobile(false);
                                                 handleLogout();
                                             }}
-                                            className="text-sm justify-start px-3 hover:underline"
+                                            className="text-sm justify-start p-0 hover:underline"
                                         >
                                             Se déconnecter
                                         </Button>
-                                        <Separator />
                                     </div>
-
-                                    <div className="flex flex-col space-y-6 px-3">
-                                        <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
-                                            Mes commandes
-                                        </Link>
-
-                                        <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
-                                            Boutique
-                                        </Link>
-
-                                        {isAdmin && (
-                                            <Link href="/admin" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
-                                                Admin
-                                            </Link>
-                                        )}
-                                    </div>
-                                </div>
+                                </>
                             ) : (
-
-
-                                <div className="flex flex-col space-y-4 ">
-                                    <Link href="/login" className="text-sm px-3 hover:underline">
+                                <div className="flex flex-col space-y-4 px-3">
+                                    <Link href="/login" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                         Se connecter
                                     </Link>
                                     <Separator />
-                                    <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm px-3 hover:underline">
+                                    <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                         Boutique
                                     </Link>
                                 </div>
@@ -210,7 +205,8 @@ export default function HeaderClient() {
                     </SheetContent>
                 </Sheet>
             </div>
-            <div className="md:hidden absolute top-8 right-2">
+
+            <div className="md:hidden absolute top-6 right-2">
                 <Button
                     variant="ghost"
                     onClick={() => setOpen(true)}
