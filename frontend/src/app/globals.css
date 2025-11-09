@@ -89,6 +89,7 @@
   --chart-4: #CBB7AA;
   --chart-5: #3C3C3C;
   --container-7xl: 96rem;
+  --header-height: 108px;
 }
 
 .dark {
@@ -139,7 +140,7 @@
   h2,
   h3,
   h4 {
-    @apply font-serif text-primary;
+    @apply font-montserrat text-primary;
   }
 
   a {

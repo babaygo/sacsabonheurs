@@ -13,18 +13,29 @@ import { useRouter } from "next/navigation";
 import CartDrawer from "@/components/features/Cart/CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { useSessionContext } from "@/components/shared/SessionProvider";
-import { Menu, ShoppingBag, ShoppingBasket, UserRound } from "lucide-react";
+import { Menu, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../../ui/sheet";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
     const router = useRouter();
     const { setOpen, count } = useCart();
     const [openSheet, setOpenSheet] = useState(false);
+    const [openSheetMobile, setOpenSheetMobile] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
 
     let isAdmin: boolean = false;
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 10);
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     if (user?.role == "admin") {
         isAdmin = true;
@@ -37,18 +48,36 @@ export default function HeaderClient() {
     };
 
     return (
-        <header className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 sticky top-0 left-0 w-full z-50 bg-primary-foreground py-4">
-            <nav className="hidden md:flex absolute top-6 left-2 flex space-x-6 text-l font-medium">
-                <Link href="/contact">Contact</Link>
-                <Link href="/a-propos">À propos</Link>
-                <Link href="/boutique">Boutique</Link>
+        <header
+            className={`w-full px-8 sticky top-0 left-0 z-50 py-4 transition-colors duration-300 
+                ${scrolled ? "bg-primary-foreground shadow-sm" : "bg-transparent"}`}>
+            <nav className="hidden md:flex absolute top-6 left-6 flex">
+                <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+                    <SheetTitle className="hidden" />
+                    <SheetTrigger asChild>
+                        <Button variant="ghost" className="p-0 hover:bg-white">
+                            <Menu className="size-6 text-primary" />
+                        </Button>
+                    </SheetTrigger>
+                    <SheetContent side="left" className="p-0">
+                        <SheetDescription />
+                        <div className="flex flex-col mt-6 space-y-6">
+                            <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-l px-6">Boutique</Link>
+                            <Separator />
+                            <Link href="/a-propos" onClick={() => setOpenSheet(false)} className="text-l px-6">À propos</Link>
+                            <Separator />
+                            <Link href="/contact" onClick={() => setOpenSheet(false)} className="text-l px-6">Contact</Link>
+                            <Separator />
+                        </div>
+                    </SheetContent>
+                </Sheet>
             </nav>
 
             <div className="flex flex-col items-center space-y-1">
                 <div className="flex items-center space-x-3">
                     <Link href={"/"}>
                         <Image
-                            src="/sacs-a-bonheurs-logo.png"
+                            src="/assets/sacs-a-bonheurs-logo.png"
                             alt="Logo Sacs à Bonheurs"
                             loading="lazy"
                             width={48}
@@ -60,10 +89,10 @@ export default function HeaderClient() {
                         Sacs à Bonheurs
                     </Link>
                 </div>
-                <p className="text-sm text-muted-foreground">Fabriqué à la main, en France</p>
+                <p className="text-semibold">Fabriqué à la main, en France</p>
             </div>
 
-            <div className="hidden md:flex absolute top-6 right-2 flex items-center space-x-2">
+            <div className="hidden md:flex absolute top-6 right-7 flex items-center space-x-2">
                 <CartDrawer />
                 {!loadingUser && user ? (
                     <Popover>
@@ -72,7 +101,7 @@ export default function HeaderClient() {
                                 <UserRound className="size-6 text-primary" />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent align="start">
+                        <PopoverContent align="center">
                             <div className="grid gap-4">
                                 <div className="space-y-2">
                                     <p className="text-sm font-medium">{user.name}</p>
@@ -118,7 +147,7 @@ export default function HeaderClient() {
             </div>
 
             <div className="md:hidden absolute top-6 left-2">
-                <Sheet open={openSheet} onOpenChange={setOpenSheet}>
+                <Sheet open={openSheetMobile} onOpenChange={setOpenSheetMobile}>
                     <SheetTitle />
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
@@ -138,7 +167,7 @@ export default function HeaderClient() {
                                         <Button
                                             variant="link"
                                             onClick={() => {
-                                                setOpenSheet(false);
+                                                setOpenSheetMobile(false);
                                                 handleLogout();
                                             }}
                                             className="text-sm justify-start px-3 hover:underline"
@@ -149,16 +178,16 @@ export default function HeaderClient() {
                                     </div>
 
                                     <div className="flex flex-col space-y-6 px-3">
-                                        <Link href="/orders" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                        <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                             Mes commandes
                                         </Link>
 
-                                        <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                        <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                             Boutique
                                         </Link>
 
                                         {isAdmin && (
-                                            <Link href="/admin" onClick={() => setOpenSheet(false)} className="text-sm hover:underline">
+                                            <Link href="/admin" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                                 Admin
                                             </Link>
                                         )}
@@ -172,7 +201,7 @@ export default function HeaderClient() {
                                         Se connecter
                                     </Link>
                                     <Separator />
-                                    <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-sm px-3 hover:underline">
+                                    <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm px-3 hover:underline">
                                         Boutique
                                     </Link>
                                 </div>

@@ -47,7 +47,7 @@ export default async function RootLayout({
             "@context": "https://schema.org",
             "@type": "Organization",
             "url": `${process.env.NEXT_PUBLIC_URL_FRONT}`,
-            "logo": `${process.env.NEXT_PUBLIC_URL_FRONT}/sacs-a-bonheurs-logo.png`,
+            "logo": `${process.env.NEXT_PUBLIC_URL_FRONT}/assets/sacs-a-bonheurs-logo.png`,
             "name": "Sacs à Bonheurs"
           })
         }} />

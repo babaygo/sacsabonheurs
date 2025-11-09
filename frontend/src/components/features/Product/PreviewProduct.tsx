@@ -8,7 +8,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
         <Link
             key={product.id}
             href={`/products/${product.slug}`}
-            className="flex flex-col items-center py-4 group"
+            className="flex flex-col items-start py-4 group"
         >
             <div className="relative w-full aspect-square max-w-[450px] overflow-hidden">
                 <Image
@@ -35,8 +35,10 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 </div>
             </div>
 
-            <h3 className="mt-4 text-center">{product.name}</h3>
-            <p className="text-sm font-semibold">{product.price.toFixed(2)} €</p>
+            <div className="mt-4 text-start">
+                <h3 className="font-medium">{product.name}</h3>
+                <p className="font-semibold text-sm">{product.price.toFixed(2)} €</p>
+            </div>
         </Link>
     );
 }

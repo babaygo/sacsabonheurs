@@ -4,25 +4,109 @@ import TextType from "@/components/shared/TextType";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
-import { MoveRight } from "lucide-react";
+import { Hammer, Lock, Minus, MoveRight, PackageCheck, Spool } from "lucide-react";
 import Link from "next/link";
 import PreviewProduct from "../Product/PreviewProduct";
 import { useEffect, useState } from "react";
 import { useProductsContext } from "@/contexts/ProductsContext";
+import { Separator } from "@/components/ui/separator";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 
 export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
     const { products: liveProducts } = useProductsContext();
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const productsFilters = products.filter((product: Product) => !product.hidden);
+    const [api, setApi] = useState<CarouselApi>()
+    const [current, setCurrent] = useState(0)
+    const [expanded, setExpanded] = useState(false);
+
+    const intro = (
+        <>
+            Chez Sacs à bonheurs, toutes les créations artisanales, sont imaginées et confectionnées avec passion dans mon atelier à Saint-Nazaire, en Loire-Atlantique.<br />
+        </>
+    );
+
+    const extended = (
+        <>
+            <br />
+            Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
+            Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
+            <br />
+            En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.<br />
+            <br />
+            N'hésitez pas à suivre mon compte &nbsp;
+            <Link
+                href="https://www.instagram.com/sacs_a_bonheurs/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-pink-500 transition font-bold"
+            >Instagram&nbsp;</Link>
+            pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.
+        </>
+    );
+
+    const items = [
+        {
+            icon: <Lock />,
+            title: "Paiements sécurisés",
+            text: "Payez par Visa, Mastercard, Apple Pay, Google Pay ou encore Link.",
+        },
+        {
+            icon: <PackageCheck />,
+            title: "Livraison",
+            text: "Livraison disponible partout en France. En point relais ou en Locker avec Mondial Relay.",
+        },
+        {
+            icon: <Spool />,
+            title: "Fabrication artisanale",
+            text: "Tous les produits sont fabriqués en Loire-Atlantique. Les matériaux proviennent de France ou d'Europe.",
+        },
+        {
+            icon: <Hammer />,
+            title: "Savoir-faire",
+            text: "En achetant Sacs à Bonheurs, vous soutenez le savoir-faire local et français.",
+        },
+    ];
 
     useEffect(() => {
         if (liveProducts) setProducts(liveProducts);
     }, [liveProducts]);
 
+    useEffect(() => {
+        if (!api) return
+
+        setCurrent(api.selectedScrollSnap())
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap())
+        });
+    }, [api]);
+
     return (
-        <div className="flex flex-col items-center justify-center">
-            <section className="w-full py-20 text-center">
-                <div className="space-y-2">
+        <div className="min-h-screen flex flex-col space-y-8">
+            <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen sm:h-[400px] md:h-[600px] -mt-[var(--header-height)]">
+                <div className="relative h-[320px] sm:hidden">
+                    <Image
+                        src="/assets/hero_banniere_mobile.webp"
+                        alt="Hero mobile"
+                        fill
+                        priority
+                        className="object-cover"
+                    />
+                </div>
+
+                <div className="hidden sm:block relative w-full h-full">
+                    <Image
+                        src="/assets/hero_banniere.webp"
+                        alt="Hero desktop"
+                        fill
+                        priority
+                        className="object-cover"
+                    />
+                </div>
+            </section>
+
+            <section className="flex flex-col">
+                <div className="text-center space-y-2">
                     <TextType
                         text={["Bienvenue chez Sacs à Bonheurs"]}
                         typingSpeed={75}
@@ -30,80 +114,95 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         showCursor={false}
                         cursorCharacter="|"
                         textColors={["var(--primary)"]}
-                        className="text-4xl font-bold font-serif"
+                        className="text-3xl sm:text-4xl font-bold font-serif"
                     />
-                    <p className="text-lg">
-                        Découvrez mes sacs faits main en France et avec passion !
+                    <p className="text-base sm:text-lg text-center">
+                        Découvrez ma collection de sacs artisanaux, faits en France !
                     </p>
-                    <div className="flex flex-col py-8">
-                        <h2 className="text-2xl text-left font-bold p-4">
-                            Les dernières créations
-                        </h2>
+                </div>
+                <div className="flex flex-col items-center py-8">
+                    <h2 className="text-xl text-center font-semibold capitalize py-1">
+                        Les nouvelles créations
+                    </h2>
+                    <Minus />
 
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-                            {productsFilters
-                                .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                                .slice(0, 4)
-                                .map((product) => (
-                                    <PreviewProduct key={product.id} product={product} />
-                                ))}
-                        </div>
-
-                        <Link href="/boutique">
-                            <Button className="rounded-full">
-                                <span>Explorer la boutique</span>
-                                <MoveRight className="scale-125 transition-transform duration-200 group-hover:translate-x-1 group-hover:scale-150" />
-                            </Button>
-                        </Link>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        {productsFilters
+                            .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                            .slice(0, 4)
+                            .map((product) => (
+                                <PreviewProduct key={product.id} product={product} />
+                            ))}
                     </div>
+
+                    <Link href="/boutique">
+                        <Button className="rounded-full">
+                            Explorer la boutique
+                            <MoveRight className="scale-125" />
+                        </Button>
+                    </Link>
                 </div>
             </section>
 
-            <section className="w-full p-10 md:p-20 bg-secondary rounded-4xl xl:rounded-full">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center">
-                    <div className="hidden md:flex flex justify-center">
-                        <div className="relative w-full aspect-square max-w-[450px] rounded-[15px] overflow-hidden">
-                            <Image
-                                src="/sac-presentation.png"
-                                alt="Image de présentation"
-                                fill
-                                className="object-cover w-full h-auto block"
-                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                priority
-                            />
+            <section className="flex flex-col items-center bg-secondary p-4">
+                <h2 className="font-semibold capitalize text-xl mb-4">la boutique</h2>
 
-                            <div className="absolute inset-0 flex items-start justify-start">
-                                <p className="text-white text-sm bg-black/40 rounded-xl m-5 px-4 py-2 shadow-lg">
-                                    Sac à main pour femme
-                                </p>
-                            </div>
+                <p className="text-base text-center leading-relaxed pr-0 md:pr-6">
+                    {intro}
+                </p>
+
+                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}`} >
+                    <p className="text-base text-center leading-relaxed pr-0 md:pr-6">
+                        {extended}
+                    </p>
+                </div>
+
+                <Button variant="link" onClick={() => setExpanded(!expanded)} className="mt-4 underline">
+                    {expanded ? "Voir moins" : "Voir plus"}
+                </Button>
+            </section>
+
+            <section className="w-full">
+                <Separator />
+
+                <div className="block sm:hidden py-6">
+                    <Carousel opts={{ align: "center", loop: true }} setApi={setApi}>
+                        <CarouselContent className="m-0">
+                            {items.map((item, i) => (
+                                <CarouselItem key={i} className="basis-full flex flex-col items-center text-center space-y-2 px-6">
+                                    {item.icon}
+                                    <h4 className="font-semibold">{item.title}</h4>
+                                    <p className="text-sm text-muted-foreground">{item.text}</p>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
+                    <div className="flex justify-center mt-2">
+                        <div className="flex gap-2 px-3 py-2 bg-gray-200/60 backdrop-blur-md rounded-full">
+                            {items?.map((_, i) => (
+                                <span
+                                    key={i}
+                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"}`}
+                                />
+                            ))}
                         </div>
                     </div>
-
-                    <div className="flex flex-col justify-center justify-items-center md:items-start text-center md:text-left space-y-6">
-                        <h2 className="text-4xl capitalize font-bold">La boutique</h2>
-                        <p className="text-base text-justify md:text-lg leading-relaxed md:text-justify pr-0 md:pr-6">
-                            Chez Sacs à bonheurs, toutes les créations artisanales, sont imaginées et confectionnées avec passion dans mon atelier à Saint-Nazaire, en Loire-Atlantique.<br />
-                            Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
-                            Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
-                            <br />
-                            En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.<br />
-                            N'hésitez pas à suivre mon compte
-                            <Link
-                                href="https://www.instagram.com/sacs_a_bonheurs/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="hover:text-pink-500 transition font-bold"
-                            >&nbsp;Instagram&nbsp;</Link>
-                            pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.
-                        </p>
-                        <Link href="/a-propos">
-                            <Button className="rounded-full">
-                                Pour en savoir plus
-                            </Button>
-                        </Link>
-                    </div>
                 </div>
+
+                <div className="hidden sm:flex space-x-4">
+                    {items.map((item, i) => (
+                        <div key={i} className="flex flex-col items-center text-center py-4 space-y-2 flex-1">
+                            {item.icon}
+                            <h4 className="font-semibold">{item.title}</h4>
+                            <p className="text-sm text-muted-foreground">{item.text}</p>
+                            {i < items.length - 1 && (
+                                <Separator orientation="vertical" className="hidden sm:block data-[orientation=vertical]:h-auto" />
+                            )}
+                        </div>
+                    ))}
+                </div>
+
+                <Separator />
             </section>
         </div>
     );
