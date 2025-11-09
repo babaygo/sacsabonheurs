@@ -66,7 +66,15 @@ export async function getDeliveryMode(shippingRateId: string): Promise<string> {
 export async function createCheckout(user: User, shipping_options: Stripe.Checkout.SessionCreateParams.ShippingOption[] | undefined, relay: any, slugs: any, items: any): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     const checkout = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
+        payment_method_options: {
+            card: {
+                request_three_d_secure: "automatic"
+            }
+        },
         billing_address_collection: 'required',
+        shipping_address_collection: {
+            allowed_countries: ["FR"]
+        },
         mode: "payment",
         customer_email: user.email,
         phone_number_collection: { enabled: true },
