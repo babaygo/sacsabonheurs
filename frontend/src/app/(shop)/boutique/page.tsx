@@ -12,7 +12,7 @@ export default async function BoutiquePage() {
     const initialProducts = await getProducts();
 
     return (
-        <div className="min-h-screen pt-4 px-4 md:px-0">
+        <div className="min-h-screen pt-4">
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
