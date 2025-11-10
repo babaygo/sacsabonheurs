@@ -10,7 +10,7 @@ import PreviewProduct from "../Product/PreviewProduct";
 import { useEffect, useState } from "react";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { Separator } from "@/components/ui/separator";
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
     const { products: liveProducts } = useProductsContext();
@@ -54,7 +54,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
         {
             icon: <PackageCheck />,
             title: "Livraison",
-            text: "Livraison disponible partout en France. En point relais ou en Locker avec Mondial Relay.",
+            text: "Livraison disponible partout en France métropolitaine. En point relais ou en Locker avec Mondial Relay.",
         },
         {
             icon: <Spool />,
@@ -126,13 +126,33 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     </h2>
                     <Minus />
 
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {productsFilters
-                            .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                            .slice(0, 4)
-                            .map((product) => (
-                                <PreviewProduct key={product.id} product={product} />
-                            ))}
+                    <div className="w-full">
+                        <div className="hidden md:grid grid-cols-4 gap-6">
+                            {productsFilters
+                                .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                .slice(0, 4)
+                                .map((product) => (
+                                    <PreviewProduct key={product.id} product={product} />
+                                ))}
+                        </div>
+
+                        <div className="md:hidden">
+                            <Carousel opts={{ align: "center", loop: true }} setApi={setApi}>
+                                <CarouselContent className="m-0">
+                                    {productsFilters
+                                        .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                        .slice(0, 4)
+                                        .map((product) => (
+                                            <CarouselItem key={product.id} className="basis-full px-6">
+                                                <PreviewProduct product={product} />
+                                            </CarouselItem>
+                                        ))}
+                                </CarouselContent>
+
+                                <CarouselPrevious size={"icon-lg"} variant={"link"} className="absolute -left-2 top-1/2" />
+                                <CarouselNext size={"icon-lg"} variant={"link"} className="absolute -right-2 top-1/2" />
+                            </Carousel>
+                        </div>
                     </div>
 
                     <Link href="/boutique">
@@ -144,7 +164,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 </div>
             </section>
 
-            <section className="flex flex-col items-center bg-secondary p-4">
+            <section className="p-4 flex flex-col items-center bg-secondary rounded-lg">
                 <h2 className="font-semibold capitalize text-xl mb-4">la boutique</h2>
 
                 <p className="text-base text-center leading-relaxed pr-0 md:pr-6">
@@ -189,7 +209,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     </div>
                 </div>
 
-                <div className="hidden sm:flex space-x-4">
+                <div className="hidden sm:flex space-x-8">
                     {items.map((item, i) => (
                         <div key={i} className="flex flex-col items-center text-center py-4 space-y-2 flex-1">
                             {item.icon}
