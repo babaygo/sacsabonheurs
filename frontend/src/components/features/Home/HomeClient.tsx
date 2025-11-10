@@ -90,6 +90,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         alt="Hero mobile"
                         fill
                         priority
+                        sizes="100vw"
                         className="object-cover"
                     />
                 </div>
@@ -100,6 +101,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         alt="Hero desktop"
                         fill
                         priority
+                        sizes="100vw"
                         className="object-cover"
                     />
                 </div>
