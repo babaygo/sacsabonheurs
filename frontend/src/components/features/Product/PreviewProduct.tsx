@@ -36,8 +36,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
             </div>
 
             <div className="mt-4 text-start">
-                <h3 className="font-medium">{product.name}</h3>
-                <p className="font-semibold text-sm">{product.price.toFixed(2)} €</p>
+                <h3 className="font-semibold text-">{product.name}</h3>
+                <p className="font-medium text-sm">{product.price.toFixed(2)} €</p>
             </div>
         </Link>
     );
