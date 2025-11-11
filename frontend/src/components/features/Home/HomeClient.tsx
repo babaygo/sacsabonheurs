@@ -139,7 +139,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         </div>
 
                         <div className="md:hidden">
-                            <Carousel opts={{ align: "center", loop: true }} setApi={setApi}>
+                            <Carousel opts={{ align: "center", loop: true, watchDrag: false }} setApi={setApi}>
                                 <CarouselContent className="m-0">
                                     {productsFilters
                                         .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())

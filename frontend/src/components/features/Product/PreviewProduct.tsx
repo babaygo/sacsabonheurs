@@ -2,21 +2,44 @@ import { Product } from "@/types/Product";
 import Link from "next/link";
 import Image from "next/image";
 import AddToCart from "../Cart/AddToCart";
+import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
+import { useState, useEffect } from "react";
+import type { CarouselApi } from "@/components/ui/carousel";
 
 export default function PreviewProduct({ product }: { product: Product }) {
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
+
+    useEffect(() => {
+        if (!api) return;
+
+        setCurrent(api.selectedScrollSnap());
+
+        api.on("select", () => {
+            setCurrent(api.selectedScrollSnap());
+        });
+
+        return () => {
+            api.off("select", () => {
+                setCurrent(api.selectedScrollSnap());
+            });
+        };
+    }, [api]);
+
     return (
         <Link
             key={product.id}
             href={`/products/${product.slug}`}
             className="flex flex-col items-start py-4 group"
         >
-            <div className="relative w-full aspect-square max-w-[450px] overflow-hidden">
+            {/* Desktop : Hover effect */}
+            <div className="hidden md:block relative w-full aspect-square max-w-[450px] overflow-hidden">
                 <Image
                     src={product.images[0]}
                     alt={product.name}
-                    fill
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    priority
+                    fill
+                    fetchPriority="auto"
                     className="object-cover w-full h-auto block transition-opacity duration-300 group-hover:opacity-0"
                 />
 
@@ -24,8 +47,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
                     <Image
                         src={product.images[1]}
                         alt={`${product.name} alt`}
-                        fill
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        fill
                         className="object-cover w-full h-auto block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                     />
                 )}
@@ -35,8 +58,53 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 </div>
             </div>
 
+            {/* Mobile : Carousel */}
+            <div className="md:hidden relative w-full max-w-[450px]">
+                <div className="relative w-full aspect-square">
+                    <Carousel opts={{ loop: true }} setApi={setApi}>
+                        <CarouselContent>
+                            {product.images.map((image, index) => (
+                                <CarouselItem key={index}>
+                                    <div className="relative w-full aspect-square">
+                                        <Image
+                                            src={image}
+                                            alt={`${product.name} ${index + 1}`}
+                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            fill
+                                            priority={index === 0}
+                                            className="object-cover"
+                                        />
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+                    </Carousel>
+                </div>
+
+                {product.images.length > 1 && (
+                    <div className="flex">
+                        {product.images.map((_, index) => (
+                            <button
+                                key={index}
+                                type="button"
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    api?.scrollTo(index);
+                                }}
+                                className={`h-0.5 w-full transition-all ${index === current
+                                        ? 'bg-primary'
+                                        : 'bg-transparent'
+                                    }`}
+                                aria-label={`Voir l'image ${index + 1}`}
+                            />
+                        ))}
+                    </div>
+                )}
+            </div>
+
             <div className="mt-4 text-start">
-                <h3 className="font-semibold text-">{product.name}</h3>
+                <h3 className="font-semibold text-[15px]">{product.name}</h3>
                 <p className="font-medium text-sm">{product.price.toFixed(2)} €</p>
             </div>
         </Link>

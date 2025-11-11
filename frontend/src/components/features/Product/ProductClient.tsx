@@ -40,7 +40,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 ]}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-5 mt-6">
+            <div className="grid grid-cols-1 md:grid-cols-5">
                 <div className="hidden md:grid md:col-span-3 justify-items-center grid-cols-1 gap-4">
                     {product?.images.map((src, i) => (
                         <ZoomableImage
@@ -51,10 +51,11 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                         />
                     ))}
                 </div>
-                <div className="md:hidden col-span-1 my-4">
+                <div className="md:hidden col-span-1">
                     <Carousel
                         className="w-full"
                         setApi={setApi}
+                        opts={{ loop: true }}
                     >
                         <CarouselContent>
                             {product?.images.map((src, indexImages) => (
