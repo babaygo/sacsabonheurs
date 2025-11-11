@@ -6,7 +6,7 @@ import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAdmin, requireAuth } from './middleware/middleware';
 import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email';
-import { getImageUrl } from './lib/utils';
+import { getImageUrl, getUser } from './lib/utils';
 import { auth } from './lib/auth';
 import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
 import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe';
@@ -77,7 +77,7 @@ app.post("/webhook", express.raw({ type: "application/json" }), async (req, res)
         if (!deliveryMode) {
             console.warn("Aucun deliveryMode trouvé pour le shippingRateId :", shippingRateId);
         }
-        
+
         try {
             const order = await prisma.order.create({
                 data: {
@@ -123,12 +123,29 @@ app.use(express.json());
 // Produits
 app.get("/api/products", async (req, res) => {
     try {
+        const page = parseInt(req.query.page as string) || 1;
+        const limit = parseInt(req.query.limit as string) || 24;
+        const user = await getUser(req.headers);
+        const isAdmin = user?.role === "admin";
+
         const products = await prisma.product.findMany({
+            where: isAdmin ? {} : { hidden: false },
             include: { category: true },
             orderBy: { createdAt: "desc" },
+            skip: (page - 1) * limit,
+            take: limit,
         });
 
-        res.json(products);
+        const total = await prisma.product.count({
+            where: isAdmin ? {} : { hidden: false },
+        });
+
+        res.json({
+            products,
+            total,
+            page,
+            totalPages: Math.ceil(total / limit),
+        });
     } catch (error) {
         console.error("Erreur récupération produits :", error);
         res.status(500).json({ error: "Erreur serveur" });
