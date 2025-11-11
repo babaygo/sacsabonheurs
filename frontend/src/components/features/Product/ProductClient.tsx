@@ -1,6 +1,6 @@
 "use client";
 
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
 import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/shared/ZoomableImage";
@@ -10,25 +10,55 @@ import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import AddToCart from "../Cart/AddToCart";
 import { useProductBySlug } from "@/hooks/useProductBySlug";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
-export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string; }) {
+export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string }) {
     const { product: liveProduct } = useProductBySlug(slug);
-    const [product, setProduct] = useState<Product>(initialProduct);
-    const [api, setApi] = useState<CarouselApi>()
-    const [current, setCurrent] = useState(0)
+    const product = !initialProduct?.hidden ? liveProduct ?? initialProduct : initialProduct;
+
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
 
     useEffect(() => {
-        if (liveProduct) setProduct(liveProduct);
-    }, [liveProduct]);
-
-    useEffect(() => {
-        if (!api) return
-
-        setCurrent(api.selectedScrollSnap())
-        api.on("select", () => {
-            setCurrent(api.selectedScrollSnap())
-        });
+        if (!api) return;
+        setCurrent(api.selectedScrollSnap());
+        api.on("select", () => setCurrent(api.selectedScrollSnap()));
     }, [api]);
+
+    if (initialProduct?.hidden) {
+        return (
+            <div className="min-h-screen pt-4 px-4 md:px-8 flex flex-col items-center space-y-6">
+                <p>Ce produit n'est pas disponible !</p>
+                <Button asChild>
+                    <Link href="/">Retour à l'accueil</Link>
+                </Button>
+            </div>
+        );
+    }
+
+    const accordionItems = [
+        {
+            key: "item-1",
+            label: "Description",
+            content: (
+                <div
+                    className="prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: product?.description || "" }}
+                />
+            ),
+        },
+        {
+            key: "item-2",
+            label: "Dimensions",
+            content: `${product?.height} x ${product?.lenght} x ${product?.width} cm`,
+        },
+        {
+            key: "item-3",
+            label: "Poids",
+            content: `${product?.weight} g`,
+        },
+    ];
 
     return (
         <div className="min-h-screen pt-4 px-4 md:px-8">
@@ -40,9 +70,9 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 ]}
             />
 
-            <div className="grid grid-cols-1 md:grid-cols-5">
-                <div className="hidden md:grid md:col-span-3 justify-items-center grid-cols-1 gap-4">
-                    {product?.images.map((src, i) => (
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                <div className="hidden md:grid md:col-span-3 justify-items-center">
+                    {product?.images.map((_, i) => (
                         <ZoomableImage
                             key={i}
                             images={product.images}
@@ -51,23 +81,20 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                         />
                     ))}
                 </div>
+
                 <div className="md:hidden col-span-1">
-                    <Carousel
-                        className="w-full"
-                        setApi={setApi}
-                        opts={{ loop: true }}
-                    >
+                    <Carousel className="w-full" setApi={setApi} opts={{ loop: true }}>
                         <CarouselContent>
-                            {product?.images.map((src, indexImages) => (
-                                <CarouselItem key={indexImages}>
+                            {product?.images.map((src, i) => (
+                                <CarouselItem key={i}>
                                     <div className="relative w-full aspect-square overflow-hidden">
                                         <Image
                                             src={src}
-                                            alt={`${product.name} ${indexImages + 1}`}
+                                            alt={`${product.name} ${i + 1}`}
                                             fill
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             className="object-cover"
-                                            fetchPriority={indexImages === 0 ? "high" : "auto"}
+                                            fetchPriority={i === 0 ? "high" : "auto"}
                                         />
                                     </div>
                                 </CarouselItem>
@@ -87,34 +114,19 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 </div>
 
                 <div className="col-span-1 md:col-span-2 flex flex-col space-y-4">
-                    <p className="text-2xl mt-2 md:mt-4 text-left">{product?.name}</p>
-                    <p className="text-lg font-semibold text-left">{product?.price} €</p>
+                    <p className="text-2xl mt-2 md:mt-4">{product?.name}</p>
+                    <p className="text-lg font-semibold">{product?.price} €</p>
 
-                    <div className="flex">
-                        <AddToCart product={product} className="w-full" />
-                    </div>
+                    <AddToCart product={product} className="w-full" />
 
                     <Accordion type="multiple" defaultValue={["item-1"]}>
                         <Separator />
-                        <AccordionItem value="item-1">
-                            <AccordionTrigger className="font-semibold">Description</AccordionTrigger>
-                            <AccordionContent>
-                                <div
-                                    className="prose prose-sm max-w-none"
-                                    dangerouslySetInnerHTML={{ __html: product?.description || "" }}
-                                />
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-2">
-                            <AccordionTrigger className="font-semibold">Dimensions</AccordionTrigger>
-                            <AccordionContent>
-                                {product?.height} x {product?.lenght} x {product?.width} cm
-                            </AccordionContent>
-                        </AccordionItem>
-                        <AccordionItem value="item-3">
-                            <AccordionTrigger className="font-semibold">Poids</AccordionTrigger>
-                            <AccordionContent>{product?.weight} g</AccordionContent>
-                        </AccordionItem>
+                        {accordionItems.map(({ key, label, content }) => (
+                            <AccordionItem key={key} value={key}>
+                                <AccordionTrigger className="font-semibold">{label}</AccordionTrigger>
+                                <AccordionContent>{content}</AccordionContent>
+                            </AccordionItem>
+                        ))}
                     </Accordion>
                 </div>
             </div>
