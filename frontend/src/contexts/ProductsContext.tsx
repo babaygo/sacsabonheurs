@@ -22,7 +22,7 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
         setLoading(true);
         setError(null);
         try {
-            const res = await fetch(`${getBaseUrl()}/api/products`, { cache: "no-store" });
+            const res = await fetch(`${getBaseUrl()}/api/products`, { cache: "no-store", credentials: "include" });
             if (!res.ok) throw new Error(`Erreur ${res.status}`);
             const data = await res.json();
             setProducts(data);

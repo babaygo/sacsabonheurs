@@ -14,8 +14,7 @@ import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, Car
 
 export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
     const { products: liveProducts } = useProductsContext();
-    const [products, setProducts] = useState<Product[]>(initialProducts);
-    const productsFilters = products.filter((product: Product) => !product.hidden);
+    const [products, setProducts] = useState<Product[]>(initialProducts.filter((product: Product) => !product.hidden));
     const [api, setApi] = useState<CarouselApi>()
     const [current, setCurrent] = useState(0)
     const [expanded, setExpanded] = useState(false);
@@ -130,7 +129,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
                     <div className="w-full">
                         <div className="hidden md:grid grid-cols-4 gap-6">
-                            {productsFilters
+                            {products
                                 .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                                 .slice(0, 4)
                                 .map((product) => (
@@ -141,7 +140,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         <div className="md:hidden">
                             <Carousel opts={{ align: "center", loop: true, watchDrag: false }} setApi={setApi}>
                                 <CarouselContent className="m-0">
-                                    {productsFilters
+                                    {products
                                         .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
                                         .slice(0, 4)
                                         .map((product) => (

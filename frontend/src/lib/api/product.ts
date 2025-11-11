@@ -4,6 +4,7 @@ import { getBaseUrl } from "../utils/getBaseUrl";
 export async function getProducts(): Promise<Product[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products`, {
+            credentials: "include",
             next: { revalidate: 3600 }
         });
 

@@ -11,10 +11,10 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
     const { products: liveProducts } = useProductsContext();
-    const [products, setProducts] = useState<Product[]>(initialProducts);
+    const [products, setProducts] = useState<Product[]>(initialProducts.filter((product: Product) => !product.hidden));
 
     useEffect(() => {
-        if (liveProducts) setProducts(liveProducts);
+        if (liveProducts) setProducts(liveProducts.filter((product: Product) => !product.hidden));
     }, [liveProducts]);
 
     const filtered = !selectedCategory || selectedCategory === "all"

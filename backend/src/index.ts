@@ -123,8 +123,6 @@ app.use(express.json());
 // Produits
 app.get("/api/products", async (req, res) => {
     try {
-        const page = parseInt(req.query.page as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 24;
         const user = await getUser(req.headers);
         const isAdmin = user?.role === "admin";
 
@@ -132,20 +130,9 @@ app.get("/api/products", async (req, res) => {
             where: isAdmin ? {} : { hidden: false },
             include: { category: true },
             orderBy: { createdAt: "desc" },
-            skip: (page - 1) * limit,
-            take: limit,
         });
 
-        const total = await prisma.product.count({
-            where: isAdmin ? {} : { hidden: false },
-        });
-
-        res.json({
-            products,
-            total,
-            page,
-            totalPages: Math.ceil(total / limit),
-        });
+        res.json(products);
     } catch (error) {
         console.error("Erreur récupération produits :", error);
         res.status(500).json({ error: "Erreur serveur" });
