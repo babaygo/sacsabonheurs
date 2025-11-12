@@ -13,10 +13,11 @@ import { Separator } from "@/components/ui/separator";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 
 export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
-    const { products: liveProducts } = useProductsContext();
-    const [products, setProducts] = useState<Product[]>(initialProducts.filter((product: Product) => !product.hidden));
-    const [api, setApi] = useState<CarouselApi>()
-    const [current, setCurrent] = useState(0)
+    const { products: liveProducts, fetchProducts } = useProductsContext();
+    const [products, setProducts] = useState<Product[]>(initialProducts);
+
+    const [api, setApi] = useState<CarouselApi>();
+    const [current, setCurrent] = useState(0);
     const [expanded, setExpanded] = useState(false);
 
     const intro = (
@@ -68,15 +69,21 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     ];
 
     useEffect(() => {
-        if (liveProducts) setProducts(liveProducts.filter((product: Product) => !product.hidden));
+        fetchProducts(4, true);
+    }, [fetchProducts]);
+
+    useEffect(() => {
+        if (liveProducts && liveProducts.length > 0) {
+            setProducts(liveProducts);
+        }
     }, [liveProducts]);
 
     useEffect(() => {
-        if (!api) return
+        if (!api) return;
 
-        setCurrent(api.selectedScrollSnap())
+        setCurrent(api.selectedScrollSnap());
         api.on("select", () => {
-            setCurrent(api.selectedScrollSnap())
+            setCurrent(api.selectedScrollSnap());
         });
     }, [api]);
 

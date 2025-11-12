@@ -16,7 +16,7 @@ import { Info } from "lucide-react";
 
 export default function CartDrawer() {
     const { user } = useSessionContext();
-    const { refetch } = useProductsContext();
+    const { fetchProducts } = useProductsContext();
     const { open, setOpen } = useCartDrawerStore();
     const items = useCartStore((s) => s.items);
     const removeFromCart = useCartStore((s) => s.removeFromCart);
@@ -31,14 +31,14 @@ export default function CartDrawer() {
         try {
             if (!user) {
                 router.push("/signup");
-                toast.success("Un compte est requis pour commander.", { icon: <Info /> })
+                toast.success("Un compte est requis pour commander.", { icon: <Info /> });
                 return;
             }
 
             const res = await fetch(`${getBaseUrl()}/api/checkout`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ items: items }),
+                body: JSON.stringify({ items }),
                 credentials: "include",
             });
 
@@ -55,68 +55,66 @@ export default function CartDrawer() {
         } finally {
             clearCart();
             setOpen(false);
-            refetch();
+            fetchProducts();
         }
     }
 
     return (
-        <>
-            <Drawer open={open} onOpenChange={setOpen}>
-                <DrawerContent className="max-w-md ml-auto h-full flex flex-col">
-                    <DrawerDescription />
-                    <DrawerHeader className="flex items-center justify-between px-4 py-4 border-b">
-                        <DrawerTitle>Ton panier</DrawerTitle>
-                        <DrawerClose asChild>
-                            <button>
-                                <XMarkIcon className="size-6 text-gray-500 hover:text-black" />
-                            </button>
-                        </DrawerClose>
-                    </DrawerHeader>
+        <Drawer open={open} onOpenChange={setOpen}>
+            <DrawerContent className="max-w-md ml-auto h-full flex flex-col">
+                <DrawerDescription />
+                <DrawerHeader className="flex items-center justify-between px-4 py-4 border-b">
+                    <DrawerTitle>Ton panier</DrawerTitle>
+                    <DrawerClose asChild>
+                        <button>
+                            <XMarkIcon className="size-6 text-gray-500 hover:text-black" />
+                        </button>
+                    </DrawerClose>
+                </DrawerHeader>
 
-                    <div className="p-4 space-y-4 overflow-y-auto flex-1">
-                        {items.length === 0 ? (
-                            <p className="text-sm text-gray-500">Ton panier est vide.</p>
-                        ) : (
-                            items.map((item, i) => (
-                                <div key={item.id} className="flex items-center gap-4">
-                                    <Image
-                                        src={item.image}
-                                        alt={item.name}
-                                        width={64}
-                                        height={64}
-                                        className="w-16 h-16 object-cover rounded"
-                                        fetchPriority={i === 0 ? "high" : "auto"}
-                                    />
-                                    <div className="flex-1">
-                                        <p className="font-medium">{item.name}</p>
-                                        <p className="text-sm text-gray-600">
-                                            {item.price} € × {item.quantity}
-                                        </p>
-                                    </div>
-                                    <button
-                                        onClick={() => removeFromCart(item.id)}
-                                        className="text-red-500 text-sm hover:underline"
-                                    >
-                                        Supprimer
-                                    </button>
+                <div className="p-4 space-y-4 overflow-y-auto flex-1">
+                    {items.length === 0 ? (
+                        <p className="text-sm text-gray-500">Ton panier est vide.</p>
+                    ) : (
+                        items.map((item, i) => (
+                            <div key={item.id} className="flex items-center gap-4">
+                                <Image
+                                    src={item.image}
+                                    alt={item.name}
+                                    width={64}
+                                    height={64}
+                                    className="w-16 h-16 object-cover rounded"
+                                    fetchPriority={i === 0 ? "high" : "auto"}
+                                />
+                                <div className="flex-1">
+                                    <p className="font-medium">{item.name}</p>
+                                    <p className="text-sm text-gray-600">
+                                        {item.price} € × {item.quantity}
+                                    </p>
                                 </div>
-                            ))
-                        )}
-                    </div>
-
-                    {items.length > 0 && (
-                        <DrawerFooter className="border-t p-4">
-                            <div className="flex items-center justify-between mb-4">
-                                <span className="text-sm text-gray-600">Total :</span>
-                                <span className="text-lg font-semibold">{total.toFixed(2)} €</span>
+                                <button
+                                    onClick={() => removeFromCart(item.id)}
+                                    className="text-red-500 text-sm hover:underline"
+                                >
+                                    Supprimer
+                                </button>
                             </div>
-                            <Button className="w-full" onClick={handleCheckout}>
-                                Commander
-                            </Button>
-                        </DrawerFooter>
+                        ))
                     )}
-                </DrawerContent>
-            </Drawer>
-        </>
+                </div>
+
+                {items.length > 0 && (
+                    <DrawerFooter className="border-t p-4">
+                        <div className="flex items-center justify-between mb-4">
+                            <span className="text-sm text-gray-600">Total :</span>
+                            <span className="text-lg font-semibold">{total.toFixed(2)} €</span>
+                        </div>
+                        <Button className="w-full" onClick={handleCheckout}>
+                            Commander
+                        </Button>
+                    </DrawerFooter>
+                )}
+            </DrawerContent>
+        </Drawer>
     );
 }

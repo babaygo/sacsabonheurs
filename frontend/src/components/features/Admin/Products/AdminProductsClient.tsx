@@ -9,19 +9,46 @@ import { DeleteDialog } from "@/components/shared/Dialogs/ProductDeleteDialog";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useCategories } from "@/hooks/useCategories";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
     const router = useRouter();
-    const { products, refetch } = useProductsContext();
+    const { products: liveProducts, hasMore, fetchProducts } = useProductsContext();
     const { categories } = useCategories();
+
     const [filter, setFilter] = useState("all");
+    const [products, setProducts] = useState<any[]>([]);
+    const [page, setPage] = useState(0);
 
     useEffect(() => {
         if (!loadingUser && user?.role !== "admin") {
             router.push("/");
         }
     }, [user, loadingUser, router]);
+
+    useEffect(() => {
+        fetchProducts(24, false, 0);
+    }, [fetchProducts]);
+
+    useEffect(() => {
+        if (page === 0) return;
+        const skip = page * 24;
+        fetchProducts(24, false, skip);
+    }, [page, fetchProducts]);
+
+    useEffect(() => {
+        if (!liveProducts) return;
+        if (page === 0) {
+            setProducts(liveProducts);
+        } else {
+            setProducts((prev) => {
+                const seen = new Set(prev.map((p) => p.id));
+                const uniqueNew = liveProducts.filter((p) => !seen.has(p.id));
+                return [...prev, ...uniqueNew];
+            });
+        }
+    }, [liveProducts, page]);
 
     if (loadingUser) return null;
 
@@ -39,7 +66,13 @@ export default function AdminProducts() {
         <div className="min-h-screen pt-4 px-4 md:px-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <h1 className="text-2xl font-bold">Produits</h1>
-                <AddDialog categories={categories} onSuccess={refetch} />
+                <AddDialog
+                    categories={categories}
+                    onSuccess={() => {
+                        setPage(0);
+                        fetchProducts(24, false, 0);
+                    }}
+                />
             </div>
 
             <div className="mb-8">
@@ -69,12 +102,34 @@ export default function AdminProducts() {
                         <h2 className="text-lg font-semibold">{product.name}</h2>
 
                         <div className="flex flex-wrap gap-2 mt-2">
-                            <EditDialog product={product} categories={categories} onSuccess={refetch} />
-                            <DeleteDialog productId={product.id} onSuccess={refetch} />
+                            <EditDialog
+                                product={product}
+                                categories={categories}
+                                onSuccess={() => {
+                                    setPage(0);
+                                    fetchProducts(24, false, 0);
+                                }}
+                            />
+
+                            <DeleteDialog
+                                productId={product.id}
+                                onSuccess={() => {
+                                    setPage(0);
+                                    fetchProducts(24, false, 0);
+                                }}
+                            />
                         </div>
                     </div>
                 ))}
             </div>
+
+            {hasMore && (
+                <div className="flex justify-center mt-6">
+                    <Button variant="outline" onClick={() => setPage((prev) => prev + 1)}>
+                        Voir plus
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

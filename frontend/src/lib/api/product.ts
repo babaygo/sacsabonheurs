@@ -1,21 +1,31 @@
 import { Product } from "@/types/Product";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(
+    limit?: number,
+    visibleOnly?: boolean
+): Promise<Product[]> {
     try {
-        const res = await fetch(`${getBaseUrl()}/api/products`, {
+        const params = new URLSearchParams();
+        if (limit) params.append("limit", String(limit));
+        if (visibleOnly) params.append("visibleOnly", "true");
+
+        const res = await fetch(`${getBaseUrl()}/api/products?${params.toString()}`, {
             credentials: "include",
-            next: { revalidate: 3600 }
+            next: { revalidate: 3600 },
         });
 
         if (!res.ok) {
             return [];
         }
-        return await res.json();
+
+        const data = await res.json();
+        return data.products || [];
     } catch (error: any) {
         return [];
     }
 }
+
 
 export async function getProductBySlug(slug: string): Promise<Product | null> {
     try {

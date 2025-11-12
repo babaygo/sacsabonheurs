@@ -9,7 +9,7 @@ export const metadata = {
 };
 
 export default async function BoutiquePage() {
-    const initialProducts = await getProducts();
+    const initialProducts = await getProducts(24, true);
 
     return (
         <div className="min-h-screen pt-4">

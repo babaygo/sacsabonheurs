@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const products = await getProducts();
+  const products = await getProducts(4, true);
 
   return <HomeClient initialProducts={products} />;
 }
