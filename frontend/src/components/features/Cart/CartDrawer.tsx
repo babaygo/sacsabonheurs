@@ -13,6 +13,7 @@ import { useProductsContext } from "@/contexts/ProductsContext";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Info } from "lucide-react";
+import Link from "next/link";
 
 export default function CartDrawer() {
     const { user } = useSessionContext();
@@ -74,7 +75,14 @@ export default function CartDrawer() {
 
                 <div className="p-4 space-y-4 overflow-y-auto flex-1">
                     {items.length === 0 ? (
-                        <p className="text-sm text-gray-500">Ton panier est vide.</p>
+                        <div className="flex flex-col justify-center items-center h-1/2">
+                            <p className="text-mute-foreground">Votre panier est vide</p>
+                            <Button variant="link" asChild onClick={() => setOpen(false)}>
+                                <Link href="/boutique" className="!text-base font-semibold">
+                                    La Boutique →
+                                </Link>
+                            </Button>
+                        </div>
                     ) : (
                         items.map((item, i) => (
                             <div key={item.id} className="flex items-center gap-4">
@@ -89,7 +97,7 @@ export default function CartDrawer() {
                                 <div className="flex-1">
                                     <p className="font-medium">{item.name}</p>
                                     <p className="text-sm text-gray-600">
-                                        {item.price} € × {item.quantity}
+                                        {item.price} €
                                     </p>
                                 </div>
                                 <button
