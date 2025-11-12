@@ -32,7 +32,6 @@ export default function PreviewProduct({ product }: { product: Product }) {
             href={`/products/${product.slug}`}
             className="flex flex-col items-start py-4 group"
         >
-            {/* Desktop : Hover effect */}
             <div className="hidden md:block relative w-full aspect-square max-w-[450px] overflow-hidden">
                 <Image
                     src={product.images[0]}
@@ -58,7 +57,6 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 </div>
             </div>
 
-            {/* Mobile : Carousel */}
             <div className="md:hidden relative w-full max-w-[450px]">
                 <div className="relative w-full aspect-square">
                     <Carousel opts={{ loop: true }} setApi={setApi}>
