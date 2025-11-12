@@ -126,10 +126,13 @@ app.get("/api/products", async (req, res) => {
         const user = await getUser(req.headers);
         const isAdmin = user?.role === "admin";
 
+        const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+
         const products = await prisma.product.findMany({
             where: isAdmin ? {} : { hidden: false },
             include: { category: true },
             orderBy: { createdAt: "desc" },
+            take: limit
         });
 
         res.json(products);
