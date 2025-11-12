@@ -7,7 +7,7 @@ import Image from "next/image";
 
 export default function Footer() {
     return (
-        <footer className="w-full mt-8 bg-secondary p-6 text-base">
+        <footer className="w-full mt-8 bg-secondary p-6 text-base border-t">
             <div className="max-w-7xl mx-auto space-y-8">
                 <div className="md:hidden">
                     <Accordion type="multiple" className="space-y-2">
@@ -43,23 +43,6 @@ export default function Footer() {
                             </AccordionContent>
                         </AccordionItem>
 
-                        {/* <AccordionItem value="social" className="border-b-muted">
-                            <AccordionTrigger className="font-semibold">Suivez-nous</AccordionTrigger>
-                            <AccordionContent>
-                                <div className="space-y-2">
-                                    <a href="https://www.instagram.com/sacs_a_bonheurs/" target="_blank" rel="noopener noreferrer"
-                                        className="flex items-center gap-2 text-sm hover:text-pink-500 transition">
-                                        <Instagram className="w-5 h-5" />
-                                        Instagram
-                                    </a>
-                                    <a href="https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/" target="_blank" rel="noopener noreferrer"
-                                        className="flex items-center gap-2 text-sm hover:text-blue-500 transition">
-                                        <Facebook className="w-5 h-5" />
-                                        Facebook
-                                    </a>
-                                </div>
-                            </AccordionContent>
-                        </AccordionItem> */}
                         <div className="flex items-center space-x-4 pt-5">
                                 <a href="https://www.instagram.com/sacs_a_bonheurs/" target="_blank" rel="noopener noreferrer"
                                     className="flex items-center gap-2 text-sm hover:text-pink-500 transition">
