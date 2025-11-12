@@ -180,6 +180,21 @@ app.get("/api/products/:slug", async (req, res) => {
     }
 });
 
+app.get("/api/products/category/:categoryId", async (req, res) => {
+    const categoryId = Number(req.params.categoryId);
+    try {
+        const products = await prisma.product.findMany({
+            where: { categoryId: categoryId },
+            include: { category: true },
+        });
+        if (!products) return res.status(404).json({ error: "Produits non trouvés" });
+        res.json(products);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err instanceof multer.MulterError) {
         if (err.code === 'LIMIT_FILE_SIZE') {

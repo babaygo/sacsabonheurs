@@ -42,3 +42,19 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
         return null;
     }
 }
+
+export async function getProductsByCategory(categoryId: number): Promise<Product[]> {
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/products/category/${categoryId}`, {
+            next: { revalidate: 3600 }
+        });
+
+        if (!res.ok) {
+            return [];
+        }
+
+        return await res.json();
+    } catch (err: any) {
+        return [];
+    }
+}
