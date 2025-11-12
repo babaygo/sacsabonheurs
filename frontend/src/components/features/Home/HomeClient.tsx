@@ -68,7 +68,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     ];
 
     useEffect(() => {
-        if (liveProducts) setProducts(liveProducts);
+        if (liveProducts) setProducts(liveProducts.filter((product: Product) => !product.hidden));
     }, [liveProducts]);
 
     useEffect(() => {
