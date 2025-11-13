@@ -10,6 +10,7 @@ import LayoutClient from "@/components/features/layout/LayoutClient";
 import Footer from "@/components/features/layout/Footer";
 import { ProductsProvider } from "@/contexts/ProductsContext";
 import DynamicBanner from "@/components/features/layout/DynamicBanner";
+import { AppProvider } from "@/components/shared/AppProvider";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -63,20 +64,21 @@ export default async function RootLayout({
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <DynamicBanner />
-        <SessionProvider>
-          <ProductsProvider>
-            <LayoutClient>
-              <Toaster position="top-right" />
-              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                {children}
-              </main>
-              <CookiesBanner />
-              <Analytics />
-              <SpeedInsights />
-            </LayoutClient>
-          </ProductsProvider>
-        </SessionProvider>
-
+        <AppProvider>
+          <SessionProvider>
+            <ProductsProvider>
+              <LayoutClient>
+                <Toaster position="top-right" />
+                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                  {children}
+                </main>
+                <CookiesBanner />
+                <Analytics />
+                <SpeedInsights />
+              </LayoutClient>
+            </ProductsProvider>
+          </SessionProvider>
+        </AppProvider>
         <Footer />
       </body>
     </html>
