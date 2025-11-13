@@ -18,7 +18,9 @@ import { Spinner } from "@/components/ui/spinner";
 export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string }) {
     const { product: liveProduct, loadingProduct, errorProduct } = useProductBySlug(slug);
     const product = !initialProduct?.hidden ? liveProduct ?? initialProduct : initialProduct;
-    const { products: similarProducts, loadingProducts, errorProducts } = useProductsByCategory(product.categoryId);
+    const { products: similarProductsRaw, loadingProducts, errorProducts } = useProductsByCategory(product.categoryId);
+
+    const similarProducts = similarProductsRaw.filter((p) => p.id !== product.id);
 
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
