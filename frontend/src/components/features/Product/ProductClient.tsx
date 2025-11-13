@@ -1,7 +1,7 @@
 "use client";
 
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { Carousel, CarouselApi, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
 import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/shared/ZoomableImage";
 import BreadCrumb from "@/components/shared/BreadCrumb";
@@ -12,10 +12,13 @@ import AddToCart from "../Cart/AddToCart";
 import { useProductBySlug } from "@/hooks/useProductBySlug";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useProductsByCategory } from "@/hooks/useProductsByCategory";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string }) {
-    const { product: liveProduct } = useProductBySlug(slug);
+    const { product: liveProduct, loadingProduct, errorProduct } = useProductBySlug(slug);
     const product = !initialProduct?.hidden ? liveProduct ?? initialProduct : initialProduct;
+    const { products: similarProducts, loadingProducts, errorProducts } = useProductsByCategory(product.categoryId);
 
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
@@ -33,6 +36,25 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 <Button asChild>
                     <Link href="/">Retour à l'accueil</Link>
                 </Button>
+            </div>
+        );
+    }
+
+    if (errorProduct) {
+        return (
+            <div className="min-h-screen pt-4 px-4 md:px-8 flex flex-col items-center space-y-6">
+                <p className="text-red-500">Erreur lors du chargement du produit.</p>
+                <Button asChild>
+                    <Link href="/">Retour à l'accueil</Link>
+                </Button>
+            </div>
+        );
+    }
+
+    if (loadingProduct && !product) {
+        return (
+            <div className="min-h-screen pt-4 px-4 md:px-8 flex flex-col items-center space-y-6">
+                <Spinner />
             </div>
         );
     }
@@ -61,7 +83,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
     ];
 
     return (
-        <div className="min-h-screen pt-4 px-4 md:px-8">
+        <div className="min-h-screen pt-4">
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },
@@ -130,6 +152,55 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                     </Accordion>
                 </div>
             </div>
+
+            {!loadingProducts && !errorProducts && similarProducts.length > 0 && (
+                <div className="pt-10">
+                    <h2 className="font-bold py-4">Vous aimerez aussi</h2>
+                    
+                    <Carousel className="w-full" setApi={setApi} opts={{ align: "center", loop: true }}>
+                        <CarouselContent className="m-0">
+                            {similarProducts.map((p, i) => (
+                                <CarouselItem
+                                    key={i}
+                                    className="basis-1/2 md:basis-1/3 lg:basis-1/5 px-1"
+                                >
+                                    <Link key={p.id} href={`/products/${p.slug}`}>
+                                        <div className="relative w-full aspect-square max-w-[450px] overflow-hidden group">
+                                            <Image
+                                                src={p.images[0]}
+                                                alt={p.name}
+                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                fill
+                                                fetchPriority="auto"
+                                                className="object-cover w-full h-auto block transition-opacity duration-300"
+                                            />
+                                            <div className="w-full flex justify-center py-2 px-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-600">
+                                                <AddToCart product={p} className="rounded-full" />
+                                            </div>
+                                        </div>
+
+                                        <div className="w-full flex justify-between items-center mt-1 space-x-2 px-2">
+                                            <p className="flex-1 text-sm font-medium text-[15px] truncate">{p.name}</p>
+                                            <p className="w-auto text-sm text-end">{p.price.toFixed(2)} €</p>
+                                        </div>
+                                    </Link>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+
+                        {(
+                            (window.innerWidth < 768 && similarProducts.length > 2) ||
+                            (window.innerWidth >= 768 && window.innerWidth < 1024 && similarProducts.length > 3) ||
+                            (window.innerWidth >= 1024 && similarProducts.length > 5)
+                        ) && (
+                                <>
+                                    <CarouselPrevious />
+                                    <CarouselNext />
+                                </>
+                            )}
+                    </Carousel>
+                </div>
+            )}
         </div>
     );
 }
