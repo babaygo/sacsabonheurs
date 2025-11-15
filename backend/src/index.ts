@@ -10,6 +10,7 @@ import { getImageUrl, getUser } from './lib/utils';
 import { auth } from './lib/auth';
 import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
 import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe';
+import { generateProductFeed } from './lib/google-merchant';
 
 const app = express();
 
@@ -653,7 +654,7 @@ app.post("/api/contact", requireAuth, async (req, res) => {
     }
 })
 
-// Banner routes
+// Banner routes 
 app.get("/api/banners", async (req, res) => {
     try {
         const banners = await prisma.banner.findMany({
@@ -783,6 +784,30 @@ app.put("/api/admin/shipping-rate/:id", requireAuth, requireAdmin, upload.none()
     } catch (error: any) {
         console.error("Erreur modification shipping rate :", error);
         res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+// Merchant google routes
+app.get('/api/google-merchant-feed.xml', async (req: Request, res: Response) => {
+    try {
+        const products = await prisma.product.findMany({
+            where: {
+                hidden: false,
+            }
+        });
+
+        const xml = generateProductFeed(products, {
+            baseUrl: process.env.URL_FRONT!,
+            brandName: "Sacs à Bonheurs",
+        });
+
+        res.set('Content-Type', 'application/xml; charset=utf-8');
+        res.set('Cache-Control', 'public, max-age=3600');
+
+        res.send(xml);
+    } catch (error) {
+        console.error('Erreur génération flux Google Merchant:', error);
+        res.status(500).send('<?xml version="1.0" encoding="UTF-8"?><error>Erreur serveur</error>');
     }
 });
 
