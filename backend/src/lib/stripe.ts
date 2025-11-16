@@ -63,7 +63,20 @@ export async function getDeliveryMode(shippingRateId: string): Promise<string> {
     return shippingRate.metadata.ColLivMod;
 }
 
-export async function createCheckout(user: User, shipping_options: Stripe.Checkout.SessionCreateParams.ShippingOption[] | undefined, relay: any, slugs: any, items: any): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+export async function createCheckout(
+    user: User,
+    shipping_options: Stripe.Checkout.SessionCreateParams.ShippingOption[] | undefined,
+    relay: any,
+    slugs: any,
+    items: any
+): Promise<Stripe.Response<Stripe.Checkout.Session>> {
+    const subtotal = items.reduce((sum: number, item: any) => {
+        return sum + (item.price * item.quantity);
+    }, 0);
+
+    const isFreeShipping = subtotal >= 85;
+    const finalShippingOptions = isFreeShipping ? undefined : shipping_options;
+
     const checkout = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
         payment_method_options: {
@@ -79,14 +92,15 @@ export async function createCheckout(user: User, shipping_options: Stripe.Checko
         customer_email: user.email,
         phone_number_collection: { enabled: true },
         automatic_tax: { enabled: true },
-        shipping_options: shipping_options,
+        shipping_options: finalShippingOptions,
         metadata: {
             userId: user.id,
             deliveryMethod: "mondial_relay",
             relayId: relay?.id,
             relayName: relay?.name,
             relayAddress: relay?.address,
-            slugs: JSON.stringify(slugs)
+            slugs: JSON.stringify(slugs),
+            freeShipping: isFreeShipping ? "true" : "false"
         },
         line_items: items.map((item: any) => ({
             price_data: {
