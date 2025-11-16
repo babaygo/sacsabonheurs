@@ -40,6 +40,8 @@ model Product {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   hidden      Boolean     @default(false)
+  color       String?
+  material    String?
 }
 
 model User {

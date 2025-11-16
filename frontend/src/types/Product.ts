@@ -19,4 +19,6 @@ export interface Product {
     createdAt: Date;
     updatedAt: Date;
     hidden: boolean;
+    color: string;
+    material: string;
 }

@@ -30,6 +30,8 @@ export function AddDialog({ categories, onSuccess }: { categories: Category[], o
         lenght: "",
         width: "",
         categoryId: 0,
+        color: "",
+        material: ""
     });
     const [files, setFiles] = useState<File[]>([]);
 
@@ -94,6 +96,8 @@ export function AddDialog({ categories, onSuccess }: { categories: Category[], o
                     lenght: "",
                     width: "",
                     categoryId: 0,
+                    color: "",
+                    material: ""
                 });
                 setFiles([]);
                 setOpen(false);
@@ -250,6 +254,25 @@ export function AddDialog({ categories, onSuccess }: { categories: Category[], o
                                         const value = e.target.value;
                                         handleChange("width", value === "" ? 0 : parseFloat(value));
                                     }}
+                                />
+                            </Field>
+                        </div>
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <FieldLabel>Couleur (ex: Noir)</FieldLabel>
+                                <Input
+                                    value={form.color}
+                                    required
+                                    onChange={(e) => handleChange("color", e.target.value)}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel>Matière</FieldLabel>
+                                <Input
+                                    value={form.material}
+                                    required
+                                    onChange={(e) => handleChange("material", e.target.value)}
                                 />
                             </Field>
                         </div>

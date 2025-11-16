@@ -236,6 +236,25 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                             </Field>
                         </div>
 
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <FieldLabel>Couleur (ex: Noir)</FieldLabel>
+                                <Input
+                                    value={form.color}
+                                    required
+                                    onChange={(e) => handleChange("color", e.target.value)}
+                                />
+                            </Field>
+                            <Field>
+                                <FieldLabel>Matière</FieldLabel>
+                                <Input
+                                    value={form.material}
+                                    required
+                                    onChange={(e) => handleChange("material", e.target.value)}
+                                />
+                            </Field>
+                        </div>
+
                         <Field>
                             <FieldLabel>Catégorie</FieldLabel>
                             <Select
