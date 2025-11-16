@@ -75,7 +75,36 @@ export async function createCheckout(
     }, 0);
 
     const isFreeShipping = subtotal >= 85;
-    const finalShippingOptions = isFreeShipping ? undefined : shipping_options;
+    let finalShippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[];
+
+    if (isFreeShipping) {
+        finalShippingOptions = [{
+            shipping_rate_data: {
+                type: 'fixed_amount',
+                fixed_amount: {
+                    amount: 0,
+                    currency: 'eur',
+                },
+                display_name: 'Livraison gratuite - Mondial Relay',
+                delivery_estimate: {
+                    minimum: {
+                        unit: 'business_day',
+                        value: 3,
+                    },
+                    maximum: {
+                        unit: 'business_day',
+                        value: 5,
+                    },
+                },
+                metadata: {
+                    type: 'mondial_relay',
+                    free_shipping: 'true'
+                }
+            },
+        }];
+    } else {
+        finalShippingOptions = shipping_options || [];
+    }
 
     const checkout = await stripe.checkout.sessions.create({
         payment_method_types: ["card"],
