@@ -62,6 +62,8 @@ function generateProductItem(
     const availability = product.stock > 0 ? 'in stock' : 'out of stock';
     const condition = 'new';
     const brand = brandName;
+    const color = product.color;
+    const material = product.material;
 
     return `
     <item>
@@ -74,6 +76,10 @@ function generateProductItem(
       <g:availability>${escapeXml(availability)}</g:availability>
       <g:condition>${escapeXml(condition)}</g:condition>
       <g:brand>${escapeXml(brand)}</g:brand>
+      <g:age_group>${escapeXml("adult")}</g:age_group>
+      <g:gender>${escapeXml("female")}</g:gender>
+      <g:color>${escapeXml(color)}</g:color>
+      <g:material>${escapeXml(material)}</g:material>
     </item>`;
 }
 
