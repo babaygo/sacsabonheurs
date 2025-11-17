@@ -8,7 +8,7 @@ import { requireAdmin, requireAuth } from './middleware/middleware';
 import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email';
 import { getImageUrl, getUser } from './lib/utils';
 import { auth } from './lib/auth';
-import { deleteImagesFromR2, uploadToR2 } from './lib/bucket';
+import { cfImageUrl, deleteImagesFromR2, uploadToR2 } from './lib/bucket';
 import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe';
 import { generateProductFeed } from './lib/google-merchant';
 
@@ -434,6 +434,7 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
         }
 
         const urls = await Promise.all(files.map(file => uploadToR2(file)));
+        const cfUrls = urls.map(url => cfImageUrl(url));
 
         const product = await prisma.product.create({
             data: {
@@ -447,8 +448,8 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
                 lenght: parseFloat(lenght),
                 width: parseFloat(width),
                 categoryId: parseInt(categoryId),
-                images: urls,
-                hidden: hidden === 'true' ? true : false,
+                images: cfUrls,
+                hidden: hidden === 'true',
                 color,
                 material
             },
@@ -491,7 +492,10 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
             ? await Promise.all((req.files as Express.Multer.File[]).map(file => uploadToR2(file)))
             : [];
 
-        const finalImages = [...keptImages, ...uploaded].slice(0, 7);
+        const cfUploaded = uploaded.map(url => cfImageUrl(url));
+        const cfKept = keptImages.map(url => cfImageUrl(url));
+
+        const finalImages = [...cfKept, ...cfUploaded].slice(0, 7);
 
         const product = await prisma.product.update({
             where: { id: parseInt(id) },
