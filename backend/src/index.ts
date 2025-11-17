@@ -493,7 +493,7 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
             : [];
 
         const cfUploaded = uploaded.map(url => cfImageUrl(url));
-        const cfKept = keptImages.map(url => cfImageUrl(url));
+        const cfKept = keptImages.map((url: string) => cfImageUrl(url));
 
         const finalImages = [...cfKept, ...cfUploaded].slice(0, 7);
 

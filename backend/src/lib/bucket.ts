@@ -49,8 +49,16 @@ export function cfImageUrl(
     url: string,
     params = "width=auto,quality=auto,format=auto"
 ) {
-    return url.replace(
-        "https://media.sacsabonheurs.fr/",
-        `https://media.sacsabonheurs.fr/cdn-cgi/image/${params}/`
-    );
+    try {
+        const u = new URL(url);
+
+        if (u.pathname.startsWith("/cdn-cgi/image/")) {
+            const path = u.pathname.replace(/^\/cdn-cgi\/image\/[^/]+/, "");
+            return `${u.origin}/cdn-cgi/image/${params}${path}`;
+        }
+
+        return `${u.origin}/cdn-cgi/image/${params}${u.pathname}`;
+    } catch {
+        return url;
+    }
 }
