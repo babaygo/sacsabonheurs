@@ -95,7 +95,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         src="/assets/hero_banniere_mobile.webp"
                         alt="Hero mobile"
                         fill
-                        priority
+                        fetchPriority="high"
                         sizes="100vw"
                         className="object-cover"
                     />
@@ -106,7 +106,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         src="/assets/hero_banniere.webp"
                         alt="Hero desktop"
                         fill
-                        priority
+                        fetchPriority="high"
                         sizes="100vw"
                         className="object-cover"
                     />
