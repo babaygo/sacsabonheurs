@@ -45,7 +45,10 @@ export async function deleteImagesFromR2(urls: string[]): Promise<void> {
     }
 }
 
-export function cfImageUrl(url: string, params = "width=1200,quality=85,format=webp") {
+export function cfImageUrl(
+    url: string,
+    params = "width=auto,quality=auto,format=auto"
+) {
     return url.replace(
         "https://media.sacsabonheurs.fr/",
         `https://media.sacsabonheurs.fr/cdn-cgi/image/${params}/`
