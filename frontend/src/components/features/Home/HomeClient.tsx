@@ -117,12 +117,10 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
                     <div className="hidden md:flex absolute top-1/4 right-1/4 flex flex-col items-center space-y-4 text-foreground font-semibold">
                         <p className="text-4xl">Le Tweed</p>
-                        <div className="flex flex-col items-center space-y-2">
-                            <p className="text-xl ">Un incontournable de l'hiver</p>
-                            <Button variant="outline" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-xl hover:text-foreground">
-                                Découvrir
-                            </Button>
-                        </div>
+                        <p className="text-xl ">Un incontournable de l'hiver</p>
+                        <Link href="/boutique" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-xl text-foreground hover:text-foreground hover:bg-accent">
+                            Découvrir
+                        </Link>
                     </div>
                 </div>
             </section>
