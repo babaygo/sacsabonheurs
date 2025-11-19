@@ -90,38 +90,42 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     return (
         <div className="min-h-screen flex flex-col space-y-8">
             <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] -mt-[var(--header-height)]">
-                <div className="sm:hidden">
-                    <Image
-                        src="/assets/hero_banniere_mobile.webp"
-                        alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
-                        width={425}
-                        height={560}
-                        sizes="100vw"
-                        className="object-contain object-top w-full h-auto"
-                        fetchPriority="high"
-                        loading="lazy"
-                    />
+                <Image
+                    src="/assets/hero_banniere_mobile.webp"
+                    alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
+                    width={425}
+                    height={560}
+                    sizes="100vw"
+                    className="sm:hidden object-contain object-top w-full h-auto"
+                    fetchPriority="high"
+                    loading="lazy"
+                />
+
+                <div className="sm:hidden absolute top-1/4 left-1/10 flex flex-col items-start space-y-2 text-foreground font-semibold">
+                    <p className="text-xl">Le Tweed</p>
+                    <p className="text-base">Un incontournable de l'hiver</p>
+                    <Link href="/boutique" className="px-2 py-1 bg-transparent rounded-none border-2 border-foreground text-foreground text-base hover:bg-muted-foreground">
+                        Découvrir
+                    </Link>
                 </div>
 
-                <div className="hidden sm:block">
-                    <Image
-                        src="/assets/hero_banniere.webp"
-                        alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
-                        width={1920}
-                        height={1080}
-                        sizes="100vw"
-                        className="object-cover object-center w-full h-auto"
-                        fetchPriority="high"
-                        loading="lazy"
-                    />
+                <Image
+                    src="/assets/hero_banniere.webp"
+                    alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
+                    width={1920}
+                    height={1080}
+                    sizes="100vw"
+                    className="hidden sm:block object-contain object-center w-full h-auto"
+                    fetchPriority="high"
+                    loading="lazy"
+                />
 
-                    <div className="hidden md:flex absolute top-1/4 right-1/4 flex flex-col items-center space-y-4 text-foreground font-semibold">
-                        <p className="text-4xl">Le Tweed</p>
-                        <p className="text-xl ">Un incontournable de l'hiver</p>
-                        <Link href="/boutique" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-xl text-foreground hover:text-foreground hover:bg-accent">
-                            Découvrir
-                        </Link>
-                    </div>
+                <div className="hidden md:flex absolute top-1/4 right-1/4 flex-col items-center space-y-4 text-foreground font-semibold">
+                    <p className="text-4xl">Le Tweed</p>
+                    <p className="text-xl">Un incontournable de l'hiver</p>
+                    <Link href="/boutique" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-foreground text-xl hover:bg-accent">
+                        Découvrir
+                    </Link>
                 </div>
             </section>
 
@@ -200,6 +204,11 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 <Button variant="link" onClick={() => setExpanded(!expanded)} className="mt-4 underline">
                     {expanded ? "Voir moins" : "Voir plus"}
                 </Button>
+            </section>
+
+            {/* Présentation matières et produits travaillés */}
+            <section>
+
             </section>
 
             <section className="w-full">
