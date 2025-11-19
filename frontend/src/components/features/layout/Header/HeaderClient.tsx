@@ -86,7 +86,7 @@ export default function HeaderClient() {
                             className="h-12 w-auto"
                         />
                     </Link>
-                    <Link href="/" className="hidden md:flex text-4xl font-playfair-display font-semibold">
+                    <Link href="/" className="hidden md:flex text-4xl font-playfair-display font-bold">
                         Sacs à Bonheurs
                     </Link>
                 </div>
@@ -98,7 +98,7 @@ export default function HeaderClient() {
                 {!loadingUser && user ? (
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button variant="ghost" className="hover:bg-white">
+                            <Button variant="ghost" className="hover:bg-white ">
                                 <UserRound className="size-6 text-primary" />
                             </Button>
                         </PopoverTrigger>
@@ -153,7 +153,7 @@ export default function HeaderClient() {
                     <SheetTitle />
                     <SheetTrigger asChild>
                         <Button variant="ghost" className="p-2">
-                            <Menu className="size-6" />
+                            <Menu className="size-6 text-primary" />
                         </Button>
                     </SheetTrigger>
                     <SheetContent side="left" className="w-64 p-0">

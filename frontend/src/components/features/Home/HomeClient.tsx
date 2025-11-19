@@ -89,27 +89,41 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
     return (
         <div className="min-h-screen flex flex-col space-y-8">
-            <section className="relative left-1/2 right-1/2 -mx-[50vw] w-screen sm:h-[400px] md:h-[600px] -mt-[var(--header-height)]">
-                <div className="relative h-[320px] sm:hidden">
+            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] -mt-[var(--header-height)]">
+                <div className="sm:hidden">
                     <Image
                         src="/assets/hero_banniere_mobile.webp"
-                        alt="Hero mobile"
-                        fill
+                        alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
+                        width={425}
+                        height={560}
+                        sizes="100vw"
+                        className="object-contain object-top w-full h-auto"
                         fetchPriority="high"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover"
+                        loading="lazy"
                     />
                 </div>
 
-                <div className="hidden sm:block relative w-full h-full">
+                <div className="hidden sm:block">
                     <Image
                         src="/assets/hero_banniere.webp"
-                        alt="Hero desktop"
-                        fill
+                        alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
+                        width={1920}
+                        height={1080}
+                        sizes="100vw"
+                        className="object-cover object-center w-full h-auto"
                         fetchPriority="high"
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="object-cover"
+                        loading="lazy"
                     />
+
+                    <div className="hidden md:flex absolute top-1/4 right-1/4 flex flex-col items-center space-y-4 text-foreground font-semibold">
+                        <p className="text-4xl">Le Tweed</p>
+                        <div className="flex flex-col items-center space-y-2">
+                            <p className="text-xl ">Un incontournable de l'hiver</p>
+                            <Button variant="outline" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-xl hover:text-foreground">
+                                Découvrir
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </section>
 
