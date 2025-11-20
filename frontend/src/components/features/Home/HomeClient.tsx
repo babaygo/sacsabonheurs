@@ -179,11 +179,17 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         </div>
                     </div>
 
-                    <Link href="/boutique">
-                        <Button className="rounded-full">
-                            Explorer la boutique
-                            <MoveRight className="scale-125" />
-                        </Button>
+                    <Link
+                        href="/boutique"
+                        className="relative group flex items-center mt-4 p-2 font-medium overflow-hidden"
+                    >
+                        <span className="relative z-10 transition-colors duration-500 text-primary-foreground group-hover:text-primary">
+                            Voir tous les produits
+                        </span>
+
+                        <span className="absolute inset-0 block bg-primary transition-transform duration-500 group-hover:translate-x-full"></span>
+                        <span className="absolute inset-0 block bg-primary-foreground transition-transform duration-500 -translate-x-full group-hover:translate-x-0"></span>
+                        <span className="absolute inset-0 block border border-primary transition-colors duration-500 group-hover:border-primary"></span>
                     </Link>
                 </div>
             </section>
@@ -204,11 +210,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 <Button variant="link" onClick={() => setExpanded(!expanded)} className="mt-4 underline">
                     {expanded ? "Voir moins" : "Voir plus"}
                 </Button>
-            </section>
-
-            {/* Présentation matières et produits travaillés */}
-            <section>
-
             </section>
 
             <section className="w-full">
