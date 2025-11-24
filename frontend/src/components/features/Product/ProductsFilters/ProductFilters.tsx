@@ -8,13 +8,17 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { useCategories } from "@/hooks/useCategories";
 import { Category } from "@/types/Category";
 import { SortOption } from "@/lib/constants/SortOptions";
+import { useProductsContext } from "@/contexts/ProductsContext";
 
 interface ProductFiltersProps {
     selectedCategory: string | null;
+    selectedMaterial: string | null;
     sortOption: SortOption | null;
     onCategoryChange: (value: string) => void;
+    onMaterialChange: (value: string) => void;
     onSortChange: (value: SortOption | null) => void;
     showCategoryFilter?: boolean;
+    showMaterialFilter?: boolean;
 }
 
 const sortLabels: Record<SortOption, string> = {
@@ -28,12 +32,19 @@ const sortLabels: Record<SortOption, string> = {
 
 export default function ProductFilters({
     selectedCategory,
+    selectedMaterial,
     sortOption,
     onCategoryChange,
+    onMaterialChange,
     onSortChange,
     showCategoryFilter = true,
+    showMaterialFilter = true
 }: ProductFiltersProps) {
     const { categories, loading, error } = useCategories();
+    const productsContext = useProductsContext()
+    const materials = ["all", ...Array.from(
+        new Set(productsContext.products.map(p => p.material.toLowerCase()))
+    ).sort()];
 
     if (error) return error;
     if (loading) return null;
@@ -58,11 +69,30 @@ export default function ProductFilters({
         </Select>
     );
 
+    const MaterialFilter = ({ className = "" }: { className?: string }) => (
+        <Select value={selectedMaterial ?? undefined} onValueChange={onMaterialChange}>
+            <SelectTrigger className={className} aria-label="Filtrer par matière">
+                <SelectValue placeholder="Matières" />
+            </SelectTrigger>
+            <SelectContent>
+                {materials.length > 1 ? (
+                    materials.map((material: string, i) => (
+                        <SelectItem className={material === "all" ? "normal-case" : "capitalize"} key={i} value={material}>
+                            {material === "all" ? "Toutes les matières" : material}
+                        </SelectItem>
+                    ))
+                ) : (
+                    <SelectItem value="all" disabled>Aucune matière</SelectItem>
+                )}
+            </SelectContent>
+        </Select>
+    );
+
     const SortFilter = ({ className = "", showReset = false }: { className?: string; showReset?: boolean }) => (
         <div className="relative">
             <Select value={sortOption ?? undefined} onValueChange={(v) => onSortChange(v as SortOption)}>
                 <SelectTrigger className={className} aria-label="Trier les produits">
-                    <SelectValue placeholder="Trier par" />
+                    <SelectValue placeholder="Trier les produits" />
                 </SelectTrigger>
                 <SelectContent>
                     {Object.entries(sortLabels).map(([value, label]) => (
@@ -90,6 +120,7 @@ export default function ProductFilters({
         <div className="mb-2">
             <div className="hidden md:flex gap-4">
                 {showCategoryFilter && <CategoryFilter className="w-[200px]" />}
+                {showMaterialFilter && <MaterialFilter className="w-[200px] capitalize" />}
                 <SortFilter className="w-[200px]" showReset />
             </div>
 
@@ -112,6 +143,12 @@ export default function ProductFilters({
                                 <div className="space-y-2">
                                     <label className="text-sm font-medium">Filtrer par catégorie</label>
                                     <CategoryFilter className="w-full" />
+                                </div>
+                            )}
+                            {showMaterialFilter && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Filtrer par matière</label>
+                                    <MaterialFilter className="w-full capitalize" />
                                 </div>
                             )}
                             <div className="space-y-2">

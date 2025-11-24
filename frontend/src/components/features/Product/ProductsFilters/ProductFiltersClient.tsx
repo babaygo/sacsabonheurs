@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 
 export default function ProductFiltersClient({ initialProducts }: { initialProducts: Product[] }) {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
     const { products: liveProducts, hasMore, fetchProducts } = useProductsContext();
 
@@ -40,10 +41,17 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
         }
     }, [liveProducts, page]);
 
-    const filtered =
+    const filteredByCategory =
         !selectedCategory || selectedCategory === "all"
             ? products
             : products.filter((p) => p.category?.name === selectedCategory);
+
+    const filtered =
+        !selectedMaterial || selectedMaterial === "all"
+            ? filteredByCategory
+            : filteredByCategory.filter(
+                (p) => p.material.toLowerCase() === selectedMaterial.toLowerCase()
+            );
 
     const sorted = useMemo(() => {
         return [...filtered].sort((a, b) => {
@@ -64,10 +72,13 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
         <div className="pt-4">
             <ProductFilters
                 selectedCategory={selectedCategory}
+                selectedMaterial={selectedMaterial}
                 sortOption={sortOption}
                 onCategoryChange={setSelectedCategory}
+                onMaterialChange={setSelectedMaterial}
                 onSortChange={setSortOption}
                 showCategoryFilter={true}
+                showMaterialFilter={false}
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
