@@ -13,8 +13,8 @@ import { useRouter } from "next/navigation";
 import CartDrawer from "@/components/features/Cart/CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { useSessionContext } from "@/components/shared/SessionProvider";
-import { Menu, ShoppingBasket, UserRound } from "lucide-react";
-import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../../ui/sheet";
+import { LogOut, Menu, ShoppingBasket, UserRound } from "lucide-react";
+import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "../../../ui/sheet";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -62,7 +62,10 @@ export default function HeaderClient() {
                     </SheetTrigger>
                     <SheetContent side="left" className="p-0">
                         <SheetDescription />
-                        <div className="flex flex-col mt-6 space-y-6">
+                        <div className="flex flex-col mt-12 space-y-5">
+                            <Separator />
+                            <Link href="/" onClick={() => setOpenSheet(false)} className="text-l px-6">Accueil</Link>
+                            <Separator />
                             <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-l px-6">Boutique</Link>
                             <Separator />
                             <Link href="/a-propos" onClick={() => setOpenSheet(false)} className="text-l px-6">À propos</Link>
@@ -161,12 +164,26 @@ export default function HeaderClient() {
                         <div className="mt-6 space-y-6">
                             {!loadingUser && user ? (
                                 <>
-                                    <div className="space-y-2 px-3">
+                                    <div className="space-y-2 px-3 m-0">
                                         <p className="text-sm font-medium">{user.name}</p>
                                         <p className="text-sm text-muted-foreground">{user.email}</p>
+                                        <Button
+                                            variant="link"
+                                            onClick={() => {
+                                                setOpenSheetMobile(false);
+                                                handleLogout();
+                                            }}
+                                            className="text-xs p-0! m-0 hover:underline"
+                                        >
+                                            Se déconnecter
+                                            <LogOut />
+                                        </Button>
                                     </div>
                                     <Separator />
                                     <div className="flex flex-col space-y-4 px-3">
+                                        <Link href="/" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
+                                            Accueil
+                                        </Link>
                                         <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">
                                             Mes commandes
                                         </Link>
@@ -178,16 +195,7 @@ export default function HeaderClient() {
                                                 Admin
                                             </Link>
                                         )}
-                                        <Button
-                                            variant="link"
-                                            onClick={() => {
-                                                setOpenSheetMobile(false);
-                                                handleLogout();
-                                            }}
-                                            className="text-sm justify-start p-0 hover:underline"
-                                        >
-                                            Se déconnecter
-                                        </Button>
+
                                     </div>
                                 </>
                             ) : (
