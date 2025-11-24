@@ -41,7 +41,18 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 rel="noopener noreferrer"
                 className="hover:text-pink-500 transition font-bold"
             >Instagram&nbsp;</Link>
-            pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.
+            pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.<br />
+            <br />
+            <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer" className="hidden sm:flex justify-center">
+                <iframe
+                    id="border"
+                    title="rejoindre crealOuest"
+                    width="315"
+                    height="315"
+                    src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
+                    className="pointer-events-none"
+                />
+            </Link>
         </>
     );
 
@@ -219,35 +230,45 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     <Carousel opts={{ align: "center", loop: true }} setApi={setApi}>
                         <CarouselContent className="m-0">
                             {items.map((item, i) => (
-                                <CarouselItem key={i} className="basis-full flex flex-col items-center text-center space-y-2 px-6">
+                                <CarouselItem key={i} className="basis-full flex flex-col justify-center items-center text-center space-y-2 px-6">
                                     {item.icon}
                                     <h4 className="font-semibold">{item.title}</h4>
                                     <p className="text-sm text-muted-foreground">{item.text}</p>
                                 </CarouselItem>
                             ))}
+                            <CarouselItem className="basis-full flex justify-center items-center">
+                                <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer">
+                                    <iframe
+                                        id="border"
+                                        title="rejoindre crealOuest"
+                                        width="315"
+                                        height="315"
+                                        src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
+                                        className="pointer-events-none"
+                                    />
+                                </Link>
+                            </CarouselItem>
                         </CarouselContent>
                     </Carousel>
                     <div className="flex justify-center mt-2">
                         <div className="flex gap-2 px-3 py-2 bg-gray-200/60 backdrop-blur-md rounded-full">
-                            {items?.map((_, i) => (
+                            {Array.from({ length: items.length + 1 }).map((_, i) => (
                                 <span
                                     key={i}
-                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"}`}
+                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"
+                                        }`}
                                 />
                             ))}
                         </div>
                     </div>
                 </div>
 
-                <div className="hidden sm:flex space-x-8">
+                <div className="hidden sm:flex space-x-8 items-center">
                     {items.map((item, i) => (
                         <div key={i} className="flex flex-col items-center text-center py-4 space-y-2 flex-1">
                             {item.icon}
                             <h4 className="font-semibold">{item.title}</h4>
                             <p className="text-sm text-muted-foreground">{item.text}</p>
-                            {i < items.length - 1 && (
-                                <Separator orientation="vertical" className="hidden sm:block data-[orientation=vertical]:h-auto" />
-                            )}
                         </div>
                     ))}
                 </div>
