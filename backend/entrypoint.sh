@@ -3,7 +3,7 @@ set -e
 
 if [ ! -d "node_modules" ]; then
     echo "Installing dependencies..."
-    npm install --silent
+    npm ci --silent
 fi
 
 if [ ! -d "src/generated/prisma" ]; then
@@ -11,5 +11,5 @@ if [ ! -d "src/generated/prisma" ]; then
     npx prisma generate
 fi
 
-echo "Starting dev server with tsx..."
-exec npm run dev
+echo "Starting dev server with nodemon (hot reload)..."
+exec npm run dev:watch
