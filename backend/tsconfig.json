@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "ES2023",
+    "module": "ESNext",
+    "moduleResolution": "Node",
     "rootDir": "src",
     "outDir": "dist",
     "esModuleInterop": true,
@@ -10,8 +11,7 @@
     "sourceMap": true,
     "declaration": true,
     "declarationMap": true,
-    "skipLibCheck": true,
-    "moduleResolution": "node"
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"

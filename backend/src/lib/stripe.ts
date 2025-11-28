@@ -1,7 +1,7 @@
-import { User } from "@prisma/client";
 import Stripe from "stripe";
+import { User } from "../generated/prisma";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const stripe =  new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 export function constructEventStripe(payload: string | Buffer<ArrayBufferLike>, header: string | Buffer | Array<string>): Stripe.Event {
     return stripe.webhooks.constructEvent(payload, header, process.env.STRIPE_WEBHOOK_SECRET!);

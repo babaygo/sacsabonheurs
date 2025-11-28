@@ -2,7 +2,6 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "./auth";
 import { prisma } from "./prisma";
 import { IncomingHttpHeaders } from "http";
-import { User } from "@prisma/client";
 
 export async function getImageUrl(slug: string): Promise<string> {
     const product = await prisma.product.findUnique({

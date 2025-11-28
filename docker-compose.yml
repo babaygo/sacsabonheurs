@@ -20,11 +20,13 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - ./backend:/app
+      - /app/node_modules
     ports:
       - "3001:3001"
       - "5555:5555"
+    env_file:
+      - .env
     environment:
-      NODE_ENV: development
       DATABASE_URL: ${POSTGRES_DATABASE_URL}
     depends_on:
       - postgres
