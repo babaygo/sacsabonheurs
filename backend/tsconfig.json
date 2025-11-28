@@ -16,7 +16,8 @@
     "noEmit": false,
     "types": [
       "node",
-      "express"
+      "express",
+      "multer"
     ]
   },
   "include": [
