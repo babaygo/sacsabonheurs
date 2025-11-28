@@ -1,16 +1,20 @@
 import fs from "fs";
 import path from "path";
-import { Prisma } from "@prisma/client";
 import { Resend } from "resend";
+import { Prisma } from "../generated/prisma";
 
 type OrderWithDetails = Prisma.OrderGetPayload<{
   include: { user: true; items: true };
 }>;
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend =  new Resend(process.env.RESEND_API_KEY!);
 
 export async function sendEmail({ to, subject, html, from, replyTo, bcc }: { to: string; subject: string; html: string; from: string; replyTo?: string; bcc?: string; }) {
   try {
+    if (!resend) {
+      console.warn("Resend API key not set. Email not sent to:", to);
+      return;
+    }
     await resend.emails.send({ from, to, subject, html, replyTo, bcc });
   } catch (error: any) {
     console.error("Erreur sur l'envoi du mail :", error);

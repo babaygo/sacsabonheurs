@@ -6,10 +6,10 @@ if [ ! -d "node_modules" ]; then
     npm install --silent
 fi
 
-if [ ! -d "node_modules/.prisma/client" ]; then
+if [ ! -d "src/generated/prisma" ]; then
     echo "Generating Prisma client..."
     npx prisma generate
 fi
 
-echo "Starting dev server with ts-node-dev..."
+echo "Starting dev server with tsx..."
 exec npm run dev

@@ -1,8 +1,8 @@
+import 'dotenv/config';
 import express, { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
-import { PrismaClient, User } from '@prisma/client';
 import Stripe from "stripe";
 import { requireAdmin, requireAuth } from './middleware/middleware';
 import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email';
@@ -11,6 +11,8 @@ import { auth } from './lib/auth';
 import { cfImageUrl, deleteImagesFromR2, uploadToR2 } from './lib/bucket';
 import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe';
 import { generateProductFeed } from './lib/google-merchant';
+import { User } from '../src/generated/prisma';
+import { prisma } from './lib/prisma';
 
 const app = express();
 
@@ -20,8 +22,6 @@ app.use(cors({
 }));
 
 app.all("/api/auth/*", toNodeHandler(auth.handler));
-
-const prisma = new PrismaClient();
 
 const upload = multer({
     fileFilter: (req, file, cb) => {
