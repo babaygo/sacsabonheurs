@@ -10,6 +10,7 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "build": "npx prisma generate && tsc -p tsconfig.json && node copy-generated.js",
+    "postbuild": "npx prisma migrate deploy",
     "start": "node dist/index.js",
     "prisma:migrate": "prisma migrate deploy"
   },
