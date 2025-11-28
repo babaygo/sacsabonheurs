@@ -12,7 +12,8 @@
     "declaration": true,
     "declarationMap": true,
     "skipLibCheck": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "noEmit": false
   },
   "include": [
     "src/**/*"
