@@ -13,7 +13,11 @@
     "declarationMap": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "noEmit": false
+    "noEmit": false,
+    "types": [
+      "node",
+      "express"
+    ]
   },
   "include": [
     "src/**/*"
