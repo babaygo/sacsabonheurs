@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
-import { prisma } from '../lib/prisma.js'
+import { prisma } from '../lib/prisma'
 import { admin } from "better-auth/plugins"
 import { sendEmail, sendPasswordChangedEmail, sendResetPasswordEmail } from './email.js';
 

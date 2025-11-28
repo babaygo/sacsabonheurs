@@ -1,4 +1,4 @@
-import type { Product } from "@prisma/client";
+import { Product } from "../generated/prisma";
 
 interface GoogleMerchantConfig {
     baseUrl: string;
