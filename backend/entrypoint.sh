@@ -1,15 +1,19 @@
 #!/bin/bash
 set -e
 
+echo "Reinstalling esbuild for Linux..."
+npm rebuild esbuild
+
 if [ ! -d "node_modules" ]; then
     echo "Installing dependencies..."
-    npm ci --silent
+    npm install --silent
 fi
 
-if [ ! -d "src/generated/prisma" ]; then
-    echo "Generating Prisma client..."
-    npx prisma generate
-fi
+echo "Generating Prisma client..."
+npx prisma generate
+
+echo "Applying migrations..."
+npx prisma migrate deploy
 
 echo "Starting dev server with nodemon (hot reload)..."
 exec npm run dev:watch
