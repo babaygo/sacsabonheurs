@@ -1,5 +1,5 @@
+import { User } from "@prisma/client";
 import Stripe from "stripe";
-import { User } from "../../src/generated/prisma/index.js";
 
 const stripe =  new Stripe(process.env.STRIPE_SECRET_KEY!);
 
