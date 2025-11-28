@@ -6,6 +6,7 @@ services:
     region: frankfurt
     buildCommand: |
       npm install
+      npm run generate
       npm run build
     startCommand: npm run start
     envVars:
