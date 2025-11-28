@@ -1,4 +1,4 @@
-import { Product } from "../generated/prisma";
+import { Product } from "../generated/prisma/index.js";
 
 interface GoogleMerchantConfig {
     baseUrl: string;

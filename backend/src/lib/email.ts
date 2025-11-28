@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { Resend } from "resend";
-import { Prisma } from "../generated/prisma";
+import { Prisma } from "../generated/prisma/index.js";
 
 type OrderWithDetails = Prisma.OrderGetPayload<{
   include: { user: true; items: true };

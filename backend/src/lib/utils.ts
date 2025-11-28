@@ -1,6 +1,6 @@
 import { fromNodeHeaders } from "better-auth/node";
-import { auth } from "./auth";
-import { prisma } from "./prisma";
+import { auth } from "./auth.js";
+import { prisma } from "./prisma.js";
 import { IncomingHttpHeaders } from "http";
 
 export async function getImageUrl(slug: string): Promise<string> {

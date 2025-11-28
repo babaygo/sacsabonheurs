@@ -9,7 +9,7 @@
     "dev:watch": "nodemon --watch src --ext ts,tsx --exec \"tsx src/index.ts\"",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && node copy-generated.js",
     "start": "node dist/index.js",
     "prisma:migrate": "prisma migrate deploy"
   },

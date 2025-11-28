@@ -4,15 +4,15 @@ import multer from 'multer';
 import cors from "cors";
 import { toNodeHandler } from "better-auth/node";
 import Stripe from "stripe";
-import { requireAdmin, requireAuth } from './middleware/middleware';
-import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email';
-import { getImageUrl, getUser } from './lib/utils';
-import { auth } from './lib/auth';
-import { cfImageUrl, deleteImagesFromR2, uploadToR2 } from './lib/bucket';
-import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe';
-import { generateProductFeed } from './lib/google-merchant';
-import { User } from '../src/generated/prisma';
-import { prisma } from './lib/prisma';
+import { requireAdmin, requireAuth } from './middleware/middleware.js';
+import { sendContactConfirmationEmail, sendEmail, sendOrderConfirmationEmail } from './lib/email.js';
+import { getImageUrl, getUser } from './lib/utils.js';
+import { auth } from './lib/auth.js';
+import { cfImageUrl, deleteImagesFromR2, uploadToR2 } from './lib/bucket.js';
+import { archiveShippingRate, constructEventStripe, createCheckout, createStripeShippingRate, fetchStripeShippingRates, getDeliveryMode, getLineItems, updateShippingRate } from './lib/stripe.js';
+import { generateProductFeed } from './lib/google-merchant.js';
+import { User } from './generated/prisma/index.js';
+import { prisma } from './lib/prisma.js';
 
 const app = express();
 
