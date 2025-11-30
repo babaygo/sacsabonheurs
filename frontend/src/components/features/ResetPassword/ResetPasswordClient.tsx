@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { notFound, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth/authClient";
 import { Input } from "@/components/ui/input";
@@ -50,9 +50,15 @@ export default function ResetPasswordClient() {
         }
     };
 
+    if (!token) {
+        return (
+            notFound()
+        )
+    }
+
     return (
-        <div className="flex justify-center items-center min-h-screen">
-            <Card className="w-full max-w-sm">
+        <div className="flex justify-center items-start min-h-screen">
+            <Card className="max-w-sm">
                 <CardHeader>
                     <CardTitle>
                         Réinitialiser votre mot de passe
