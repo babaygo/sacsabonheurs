@@ -57,7 +57,7 @@ export default function ResetPasswordClient() {
     }
 
     return (
-        <div className="flex justify-center items-start min-h-screen">
+        <div className="flex justify-center items-start min-h-screen pt-10">
             <Card className="max-w-sm">
                 <CardHeader>
                     <CardTitle>

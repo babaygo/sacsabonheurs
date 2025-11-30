@@ -73,8 +73,8 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="flex justify-center items-center min-h-screen">
-            <Card className="w-full max-w-sm">
+        <div className="flex justify-center items-start min-h-screen pt-10">
+            <Card className="max-w-sm">
                 <CardHeader>
                     <CardTitle>Se connecter</CardTitle>
                     <CardDescription>
