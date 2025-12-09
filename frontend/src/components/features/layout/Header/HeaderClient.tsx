@@ -24,18 +24,7 @@ export default function HeaderClient() {
     const { setOpen, count } = useCart();
     const [openSheet, setOpenSheet] = useState(false);
     const [openSheetMobile, setOpenSheetMobile] = useState(false);
-    const [scrolled, setScrolled] = useState(false);
-
     let isAdmin: boolean = false;
-
-    useEffect(() => {
-        const handleScroll = () => {
-            setScrolled(window.scrollY > 10);
-        };
-
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
 
     if (user?.role === "admin") {
         isAdmin = true;
@@ -48,10 +37,7 @@ export default function HeaderClient() {
     };
 
     return (
-        <header
-            className={`w-full sticky top-0 left-0 z-50 transition-all duration-300 border-b border-transparent
-            ${scrolled ? "bg-primary-foreground shadow-sm border-border/10 py-2" : "bg-transparent py-4"}`}
-        >
+        <header className="w-full sticky top-0 left-0 z-50 transition-all duration-300 border-b border-transparent bg-primary-foreground shadow-sm border-border/10 py-2">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-full">
 

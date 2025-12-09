@@ -150,4 +150,20 @@
   button {
     @apply cursor-pointer;
   }
+
+  @keyframes fade-in-right {
+    from {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .animate-fade-in-right {
+    animation: fade-in-right 1s ease-out 0.2s both;
+  }
 }

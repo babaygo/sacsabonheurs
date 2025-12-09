@@ -7,8 +7,8 @@ import Image from "next/image";
 
 export default function Footer() {
     return (
-        <footer className="w-full mt-8 bg-secondary p-6 text-base border-t">
-            <div className="max-w-7xl mx-auto space-y-8">
+        <footer className="w-full mt-8 bg-secondary px-4 sm:px-6 lg:px-8 py-8 text-base border-t">
+            <div className="max-w-7xl mx-auto space-y-2">
                 <div className="md:hidden">
                     <Accordion type="multiple" className="space-y-2">
                         <AccordionItem value="navigation" className="border-b-muted">

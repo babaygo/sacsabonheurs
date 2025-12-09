@@ -4,7 +4,7 @@ import TextType from "@/components/shared/TextType";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
-import { Hammer, Lock, Minus, MoveRight, PackageCheck, Spool } from "lucide-react";
+import { ArrowRight, Hammer, Heart, Lock, MapPin, PackageCheck, Spool } from "lucide-react";
 import Link from "next/link";
 import PreviewProduct from "../Product/PreviewProduct";
 import { useEffect, useState } from "react";
@@ -28,7 +28,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
     const extended = (
         <>
-            <br />
             Chaque sac que je réalise est une pièce unique, née d'un savoir-faire artisanal et d'une attention particulière portée à chaque détail.<br />
             Je sélectionne soigneusement mes matériaux auprès de petits fournisseurs français et européens, privilégiant la qualité, la durabilité et la beauté des textures.<br />
             <br />
@@ -42,17 +41,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 className="hover:text-pink-500 transition font-bold"
             >Instagram&nbsp;</Link>
             pour suivre mon actualité et découvrir les coulisses de la fabrication de mes sacs.<br />
-            <br />
-            <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer" className="hidden sm:flex justify-center">
-                <iframe
-                    id="border"
-                    title="rejoindre crealOuest"
-                    width="315"
-                    height="315"
-                    src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
-                    className="pointer-events-none"
-                />
-            </Link>
         </>
     );
 
@@ -79,6 +67,24 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
         },
     ];
 
+    const collections = [
+        {
+            title: "Le Liège",
+            subtitle: "Naturel & Vegan",
+            image: "/assets/liege.webp"
+        },
+        {
+            title: "Le Jacquard",
+            subtitle: "Élégance Tissée",
+            image: "/assets/jacquard.webp"
+        },
+        {
+            title: "La Suédine",
+            subtitle: "Douceur & Caractère",
+            image: "/assets/suedine.webp"
+        }
+    ];
+
     useEffect(() => {
         fetchProducts(4, true);
     }, [fetchProducts]);
@@ -99,128 +105,236 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     }, [api]);
 
     return (
-        <div className="min-h-screen flex flex-col space-y-8">
-            <section className="w-screen relative left-1/2 right-1/2 -mx-[50vw] -mt-[var(--header-height)]">
-                <Image
-                    src="/assets/hero_banniere_mobile.webp"
-                    alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
-                    width={425}
-                    height={560}
-                    sizes="100vw"
-                    className="sm:hidden object-contain object-top w-full h-auto"
-                    fetchPriority="high"
-                    loading="lazy"
-                />
+        <div className="min-h-screen flex flex-col">
+            <section className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center py-10 sm:py-14 lg:py-18">
+                <div className="flex flex-col space-y-6 lg:space-y-8 w-full lg:w-1/2 order-1">
+                    <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary">
+                        <Separator className="w-8!" /> MADE IN FRANCE
+                    </span>
 
-                <div className="sm:hidden absolute top-1/4 left-1/10 flex flex-col items-start space-y-2 text-foreground font-semibold">
-                    <p className="text-xl">Le Tweed</p>
-                    <p className="text-base">Un incontournable de l'hiver</p>
-                    <Link href="/boutique" className="px-2 py-1 bg-transparent rounded-none border-2 border-foreground text-foreground text-base hover:bg-muted-foreground">
-                        Découvrir
-                    </Link>
-                </div>
-
-                <Image
-                    src="/assets/hero_banniere.webp"
-                    alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
-                    width={1920}
-                    height={1080}
-                    sizes="100vw"
-                    className="hidden sm:block object-contain object-center w-full h-auto"
-                    fetchPriority="high"
-                    loading="lazy"
-                />
-
-                <div className="hidden md:flex absolute top-1/4 right-1/4 flex-col items-center space-y-4 text-foreground font-semibold">
-                    <p className="text-4xl">Le Tweed</p>
-                    <p className="text-xl">Un incontournable de l'hiver</p>
-                    <Link href="/boutique" className="px-4 py-2 bg-transparent rounded-none border-2 border-foreground text-foreground text-xl hover:bg-accent">
-                        Découvrir
-                    </Link>
-                </div>
-            </section>
-
-            <section className="flex flex-col">
-                <div className="text-center space-y-2">
-                    <TextType
-                        text={["Bienvenue chez Sacs à Bonheurs"]}
-                        typingSpeed={75}
-                        pauseDuration={1500}
-                        showCursor={false}
-                        cursorCharacter="|"
-                        textColors={["var(--primary)"]}
-                        className="text-3xl sm:text-4xl font-bold font-serif"
-                    />
-                    <p className="text-base sm:text-lg text-center">
-                        Découvrez ma collection de sacs artisanaux, faits en France !
-                    </p>
-                </div>
-                <div className="flex flex-col items-center py-8">
-                    <h2 className="text-xl text-center font-semibold capitalize py-1">
-                        Les nouvelles créations
-                    </h2>
-                    <Minus />
-
-                    <div className="w-full">
-                        <div className="hidden md:grid grid-cols-4 gap-6">
-                            {products
-                                .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                                .slice(0, 4)
-                                .map((product) => (
-                                    <PreviewProduct key={product.id} product={product} />
-                                ))}
-                        </div>
-
-                        <div className="md:hidden">
-                            <Carousel opts={{ align: "center", loop: true, watchDrag: false }} setApi={setApi}>
-                                <CarouselContent className="m-0">
-                                    {products
-                                        .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-                                        .slice(0, 4)
-                                        .map((product) => (
-                                            <CarouselItem key={product.id} className="basis-full px-6">
-                                                <PreviewProduct product={product} />
-                                            </CarouselItem>
-                                        ))}
-                                </CarouselContent>
-
-                                <CarouselPrevious size={"icon-lg"} variant={"link"} className="absolute -left-2 top-1/2" />
-                                <CarouselNext size={"icon-lg"} variant={"link"} className="absolute -right-2 top-1/2" />
-                            </Carousel>
-                        </div>
+                    <div className="space-y-4 text-center lg:text-left ">
+                        <TextType
+                            text={["Bienvenue chez\nSacs à Bonheurs"]}
+                            typingSpeed={75}
+                            pauseDuration={3000}
+                            showCursor={false}
+                            cursorCharacter="|"
+                            textColors={["var(--primary)"]}
+                            className="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif"
+                        />
+                        <p className="text-base sm:text-lg lg:text-xl text-muted-foreground">
+                            Découvrez ma collection de sacs artisanaux, <br />imaginés et confectionnés, avec passion dans mon atelier.
+                        </p>
                     </div>
 
-                    <Link
-                        href="/boutique"
-                        className="relative group flex items-center mt-4 p-2 font-medium overflow-hidden"
-                    >
-                        <span className="relative z-10 transition-colors duration-500 text-primary-foreground group-hover:text-primary">
-                            Voir tous les produits
-                        </span>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                        <Link href="/boutique">
+                            <Button size="lg" className="w-full sm:w-auto">Découvrir la boutique</Button>
+                        </Link>
+                        <Link href="/a-propos">
+                            <Button size="lg" variant="outline" className="w-full sm:w-auto">L'Atelier</Button>
+                        </Link>
+                    </div>
 
-                        <span className="absolute inset-0 block bg-primary transition-transform duration-500 group-hover:translate-x-full"></span>
-                        <span className="absolute inset-0 block bg-primary-foreground transition-transform duration-500 -translate-x-full group-hover:translate-x-0"></span>
-                        <span className="absolute inset-0 block border border-primary transition-colors duration-500 group-hover:border-primary"></span>
-                    </Link>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-6 justify-center lg:justify-start text-sm">
+                        <span className="flex items-center gap-2 justify-center lg:justify-start">
+                            <MapPin className="w-4 h-4 text-primary" /> Saint-Nazaire
+                        </span>
+                        <span className="flex items-center gap-2 justify-center lg:justify-start">
+                            <Heart className="w-4 h-4 text-primary" /> Fait main
+                        </span>
+                    </div>
+                </div>
+
+                <div className="relative aspect-[4/5] sm:aspect-[3/4] lg:aspect-[4/5] w-full sm:max-w-md lg:max-w-none lg:w-1/2 lg:h-[70vh] animate-fade-in-right order-2">
+                    <div className="absolute inset-0 rounded-t-[10rem] rounded-b-2xl overflow-hidden shadow-2xl">
+                        <Image
+                            src="/assets/hero_image.webp"
+                            alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
+                            width={1797}
+                            height={2061}
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw"
+                            className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 ease-out"
+                            fetchPriority="high"
+                            loading="lazy"
+                        />
+                    </div>
+
+                    <div className="absolute bottom-4 left-4 sm:bottom-8 sm:-left-8 bg-background p-4 sm:p-6 shadow-xl max-w-[180px] sm:max-w-[200px] border-l-4 border-primary">
+                        <p className="font-playfair-display font-bold text-lg sm:text-xl text-primary mb-1">100%</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-tight"> Des matériaux français et européens</p>
+                    </div>
                 </div>
             </section>
 
-            <section className="p-4 flex flex-col items-center bg-secondary rounded-lg">
-                <h2 className="font-semibold capitalize text-xl mb-4">la boutique</h2>
-
-                <p className="text-base text-center leading-relaxed pr-0 md:pr-6">
-                    {intro}
-                </p>
-
-                <div className={`overflow-hidden transition-all duration-500 ease-in-out ${expanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}`} >
-                    <p className="text-base text-center leading-relaxed pr-0 md:pr-6">
-                        {extended}
-                    </p>
+            <section className="py-10 sm:py-14 lg:py-18">
+                <div className="flex flex-col items-center space-y-2 mb-10 sm:mb-14">
+                    <span className="text-primary font-medium tracking-widest text-xs uppercase">
+                        COLLECTIONS
+                    </span>
+                    <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl text-center">
+                        Mes Univers
+                    </h2>
                 </div>
 
-                <Button variant="link" onClick={() => setExpanded(!expanded)} className="mt-4 underline">
-                    {expanded ? "Voir moins" : "Voir plus"}
-                </Button>
+                <div className="hidden md:grid grid-cols-3 gap-6 md:gap-8">
+                    {collections.map((collection, idx) => (
+                        <div
+                            key={idx}
+                            className="group"
+                        >
+                            <div className="relative aspect-[3/4] overflow-hidden mb-4 sm:mb-6 rounded-lg">
+                                <Image
+                                    src={collection.image}
+                                    alt={collection.title}
+                                    width={832}
+                                    height={1248}
+                                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    fetchPriority="auto"
+                                    loading="lazy"
+                                />
+                            </div>
+
+                            <div className="text-center transition-transform duration-500 group-hover:-translate-y-3">
+                                <h3 className="text-xl sm:text-2xl font-playfair-display font-bold mb-1 text-black group-hover:text-primary transition-colors duration-500">
+                                    {collection.title}
+                                </h3>
+                                <p className="text-sm sm:text-base text-muted-foreground font-light italic">
+                                    {collection.subtitle}
+                                </p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
+                <div className="md:hidden">
+                    <Carousel opts={{
+                        align: "center",
+                        loop: true
+                    }}
+                    >
+                        <CarouselContent className="m-0">
+                            {collections.map((collection, idx) => (
+                                <CarouselItem key={idx} className="basis-full px-6">
+                                    <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-lg">
+                                        <Image
+                                            src={collection.image}
+                                            alt={collection.title}
+                                            width={832}
+                                            height={1248}
+                                            sizes="100vw"
+                                            className="w-full h-full object-cover"
+                                            fetchPriority="auto"
+                                            loading="lazy"
+                                        />
+                                    </div>
+
+                                    <div className="text-center">
+                                        <h3 className="text-xl font-playfair-display font-bold mb-1 text-primary">
+                                            {collection.title}
+                                        </h3>
+                                        <p className="text-sm text-muted-foreground font-light italic">
+                                            {collection.subtitle}
+                                        </p>
+                                    </div>
+                                </CarouselItem>
+                            ))}
+                        </CarouselContent>
+
+                        <CarouselPrevious
+                            size="icon-lg"
+                            variant="link"
+                            className="absolute -left-2 top-1/3"
+                        />
+                        <CarouselNext
+                            size="icon-lg"
+                            variant="link"
+                            className="absolute -right-2 top-1/3"
+                        />
+                    </Carousel>
+                </div>
+            </section>
+
+            <section className="flex flex-col items-center py-10 sm:py-14 lg:py-18">
+                <div className="w-full flex flex-col items-start sm:flex-row sm:justify-between sm:items-end mb-8 sm:mb-10">
+                    <div className="flex flex-col items-start space-y-2">
+                        <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl">
+                            Nouveautés
+                        </h2>
+                        <span className="text-sm sm:text-base font-light text-mute-foreground">
+                            Pièces uniques fraîchements sorties de l'atelier.
+                        </span>
+                    </div>
+                    <div className="pt-4 sm:pt-0">
+                        <Link href="/boutique" className="flex items-center">
+                            Voir toute la collection
+                            <ArrowRight className="w-4 h-4" />
+                        </Link>
+                    </div>
+                </div>
+
+
+                <div className="w-full">
+                    <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        {products
+                            .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                            .slice(0, 4)
+                            .map((product) => (
+                                <PreviewProduct key={product.id} product={product} />
+                            ))}
+                    </div>
+
+                    <div className="md:hidden">
+                        <Carousel opts={{ align: "center", loop: true, watchDrag: false }} setApi={setApi}>
+                            <CarouselContent className="m-0">
+                                {products
+                                    .sort((a: Product, b: Product) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+                                    .slice(0, 4)
+                                    .map((product) => (
+                                        <CarouselItem key={product.id} className="basis-full px-6">
+                                            <PreviewProduct product={product} />
+                                        </CarouselItem>
+                                    ))}
+                            </CarouselContent>
+
+                            <CarouselPrevious size={"icon-lg"} variant={"link"} className="absolute -left-2 top-1/2" />
+                            <CarouselNext size={"icon-lg"} variant={"link"} className="absolute -right-2 top-1/2" />
+                        </Carousel>
+                    </div>
+                </div>
+            </section>
+
+            <section className="flex text-center sm:text-start sm:justify-between py-10 sm:py-14 lg:py-18">
+                <div className="w-full hidden sm:block">
+                    <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer" className="hidden sm:flex justify-center">
+                        <iframe
+                            id="border"
+                            title="rejoindre crealOuest"
+                            width="315"
+                            height="315"
+                            src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
+                            className="pointer-events-none"
+                        />
+                    </Link>
+                </div>
+                <div className="w-full space-y-6">
+                    <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl">La Boutique</h2>
+
+                    <p className="text-base text-justify leading-relaxed pr-0 md:pr-6">
+                        {intro}
+                    </p>
+
+                    <div className={`overflow-hidden transition-all duration-500 ease-in-out m-0 ${expanded ? "max-h-[1000px] opacity-100" : "max-h-0 opacity-0"}`} >
+                        <p className="text-base text-justify leading-relaxed pr-0 md:pr-6">
+                            {extended}
+                        </p>
+                    </div>
+
+                    <Button variant="link" onClick={() => setExpanded(!expanded)} className="mt-1 p-0 underline">
+                        {expanded ? "Voir moins" : "Voir plus"}
+                    </Button>
+                </div>
             </section>
 
             <section className="w-full">
@@ -272,8 +386,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         </div>
                     ))}
                 </div>
-
-                <Separator />
             </section>
         </div>
     );
