@@ -7,6 +7,7 @@ import PreviewProduct from "../PreviewProduct";
 import { Product } from "@/types/Product";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { Button } from "@/components/ui/button";
+import { useSearchParams } from "next/navigation";
 
 export default function ProductFiltersClient({ initialProducts }: { initialProducts: Product[] }) {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -16,6 +17,15 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
 
     const [products, setProducts] = useState<Product[]>(initialProducts);
     const [page, setPage] = useState(0);
+
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const categoryParam = searchParams.get("category");
+        if (categoryParam) {
+            setSelectedCategory(categoryParam);
+        }
+    }, [searchParams]);
 
     useEffect(() => {
         fetchProducts(24, true, 0);
@@ -44,7 +54,7 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
     const filteredByCategory =
         !selectedCategory || selectedCategory === "all"
             ? products
-            : products.filter((p) => p.category?.name === selectedCategory);
+            : products.filter((p) => p.category?.slug === selectedCategory);
 
     const filtered =
         !selectedMaterial || selectedMaterial === "all"

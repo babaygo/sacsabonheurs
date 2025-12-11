@@ -33,7 +33,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
             <br />
             En dehors de la boutique, je vous propose de me retrouver sur des marchés artisanaux et des événements locaux où je présente mes créations.<br />
             <br />
-            N'hésitez pas à suivre mon compte &nbsp;
+            N'hésitez pas à suivre mon compte&nbsp;
             <Link
                 href="https://www.instagram.com/sacs_a_bonheurs/"
                 target="_blank"
@@ -216,7 +216,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                     >
                         <CarouselContent className="m-0">
                             {collections.map((collection, idx) => (
-                                <CarouselItem key={idx} className="basis-full px-6">
+                                <CarouselItem key={idx} className="basis-8/9 px-2">
                                     <div className="relative aspect-[3/4] overflow-hidden mb-4 rounded-lg">
                                         <Image
                                             src={collection.image}
@@ -241,17 +241,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                                 </CarouselItem>
                             ))}
                         </CarouselContent>
-
-                        <CarouselPrevious
-                            size="icon-lg"
-                            variant="link"
-                            className="absolute -left-2 top-1/3"
-                        />
-                        <CarouselNext
-                            size="icon-lg"
-                            variant="link"
-                            className="absolute -right-2 top-1/3"
-                        />
                     </Carousel>
                 </div>
             </section>

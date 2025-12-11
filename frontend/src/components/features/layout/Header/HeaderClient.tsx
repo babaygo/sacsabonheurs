@@ -13,13 +13,16 @@ import { useRouter } from "next/navigation";
 import CartDrawer from "@/components/features/Cart/CartDrawer";
 import { useCart } from "@/hooks/useCart";
 import { useSessionContext } from "@/components/shared/SessionProvider";
-import { LogOut, Menu, ShoppingBasket, UserRound } from "lucide-react";
+import { LogOut, Menu, Minus, Plus, ShoppingBasket, UserRound } from "lucide-react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useCategories } from "@/hooks/useCategories";
 
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
+    const { categories, loading, error } = useCategories();
+    const [showCategoryList, setShowCategoryList] = useState(false);
     const router = useRouter();
     const { setOpen, count } = useCart();
     const [openSheet, setOpenSheet] = useState(false);
@@ -35,6 +38,13 @@ export default function HeaderClient() {
         await refreshSession();
         router.push("/");
     };
+
+    const toggleCategories = () => {
+        setShowCategoryList(prev => !prev);
+    };
+
+    if (error) return error;
+    if (loading) return null;
 
     return (
         <header className="w-full sticky top-0 left-0 z-50 transition-all duration-300 border-b border-transparent bg-primary-foreground shadow-sm border-border/10 py-2">
@@ -106,7 +116,45 @@ export default function HeaderClient() {
                                         <Separator />
                                         <Link href="/" onClick={() => setOpenSheet(false)} className="text-l px-6">Accueil</Link>
                                         <Separator />
-                                        <Link href="/boutique" onClick={() => setOpenSheet(false)} className="text-l px-6">Boutique</Link>
+                                        <div className="">
+                                            <div className="flex items-center">
+                                                <Link
+                                                    href="/boutique"
+                                                    onClick={() => setOpenSheet(false)}
+                                                    className="text-l pl-6"
+                                                >
+                                                    Boutique
+                                                </Link>
+                                                <Button
+                                                    variant="link"
+                                                    onClick={toggleCategories}
+                                                    className="py-0 h-auto"
+                                                >
+                                                    {showCategoryList ? (
+                                                        <Minus />
+                                                    ) : (
+                                                        <Plus />
+                                                    )}
+                                                </Button>
+                                            </div>
+
+                                            <div
+                                                className={`pl-12 pt-2 space-y-2 overflow-hidden transition-all duration-300 ease-in-out 
+                                                    ${showCategoryList ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+                                                    `}
+                                            >
+                                                {categories.map((category) => (
+                                                    <Link
+                                                        key={category.id}
+                                                        href={"/boutique?category=" + category.slug}
+                                                        onClick={() => setOpenSheet(false)}
+                                                        className="block text-sm hover:text-primary"
+                                                    >
+                                                        {category.name}
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        </div>
                                         <Separator />
                                         <Link href="/a-propos" onClick={() => setOpenSheet(false)} className="text-l px-6">À propos</Link>
                                         <Separator />

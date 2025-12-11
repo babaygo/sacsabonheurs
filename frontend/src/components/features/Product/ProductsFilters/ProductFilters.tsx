@@ -58,7 +58,7 @@ export default function ProductFilters({
                 <SelectItem value="all">Toutes les catégories</SelectItem>
                 {categories.length > 0 ? (
                     categories.map((category: Category) => (
-                        <SelectItem key={category.id} value={category.name}>
+                        <SelectItem key={category.id} value={category.slug}>
                             {category.name}
                         </SelectItem>
                     ))
