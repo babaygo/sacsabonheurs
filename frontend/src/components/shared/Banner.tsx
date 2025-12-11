@@ -51,10 +51,7 @@ export default function Banner({
     const styles = VARIANT_STYLES[variant];
 
     return (
-        <div
-            role="status"
-            aria-live="polite"
-            className={`${styles.bg} ${className} w-full flex items-center justify-center py-2 space-x-8`}
+        <div className={`${styles.bg} ${className} w-full flex items-center justify-center p-2 space-x-4`}
         >
             <div className={`${styles.text}`}>{styles.icon}</div>
 
