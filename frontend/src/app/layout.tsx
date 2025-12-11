@@ -53,7 +53,7 @@ export default async function RootLayout({
         <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_FRONT} />
         <meta property="og:title" content="Sacs à Bonheurs – Élégance artisanale" />
         <meta property="og:description" content="Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable." />
-        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_URL_FRONT}/og_image.png`} />
+        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_URL_FRONT}/assets/og_image.png`} />
         <meta property="og:site_name" content="Sacs à Bonheurs" />
         <meta property="og:locale" content="fr_FR" />
 
