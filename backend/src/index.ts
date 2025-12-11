@@ -753,6 +753,28 @@ app.put("/api/admin/banners/:id", requireAuth, requireAdmin, upload.none(), asyn
     }
 });
 
+app.delete("/api/admin/banners/:id", requireAuth, requireAdmin, upload.none(), async (req, res) => {
+    const id = parseInt(req.params.id);
+    if (isNaN(id)) {
+        return res.status(400).json({ error: "ID invalide" });
+    }
+
+    try {
+        const banner = await prisma.banner.findUnique({ where: { id } });
+
+        if (!banner) {
+            return res.status(404).json({ error: "Bannière introuvable" });
+        }
+
+        await prisma.banner.delete({ where: { id } });
+
+        res.json({ message: "Bannière supprimé avec succès" });
+    } catch (error) {
+        console.error("Erreur suppression bannière :", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 // Shipping rate routes
 app.get("/api/admin/shippings-rates", requireAuth, requireAdmin, upload.none(), async (req, res) => {
     try {

@@ -9,6 +9,7 @@ import { EditBannerDialog } from "@/components/shared/Dialogs/BannerEditDialog";
 import { Banner } from "@/types/Banner";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import toast from "react-hot-toast";
+import { DeleteBannerDialog } from "@/components/shared/Dialogs/BannerDeleteDialog";
 
 
 export default function AdminBannersClient() {
@@ -69,6 +70,7 @@ export default function AdminBannersClient() {
                                     <TableCell>{banner.active ? "Oui" : "Non"}</TableCell>
                                     <TableCell className="text-right space-x-2">
                                         <EditBannerDialog banner={banner} onSuccess={fetchBanners} />
+                                        <DeleteBannerDialog banner={banner} onSuccess={fetchBanners} />
                                     </TableCell>
                                 </TableRow>
                             ))}
