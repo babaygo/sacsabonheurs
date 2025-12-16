@@ -74,7 +74,7 @@ export async function createCheckout(
         return sum + (item.price * item.quantity);
     }, 0);
 
-    const isFreeShipping = subtotal >= 85;
+    const isFreeShipping = subtotal >= 65;
     let finalShippingOptions: Stripe.Checkout.SessionCreateParams.ShippingOption[];
 
     if (isFreeShipping) {
