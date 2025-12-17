@@ -98,7 +98,7 @@ export default function OrderPage() {
                                 {order.items.map((item) => (
                                     <TableRow key={item.id}>
                                         <TableCell>{item.name}</TableCell>
-                                        <TableCell><img src={item.imageUrl} alt={item.name} className="size-20 object-cover"/></TableCell>
+                                        <TableCell><img src={item.imageUrl} alt={item.name} className="size-20 object-cover" /></TableCell>
                                         <TableCell>{item.product?.weight}</TableCell>
                                         <TableCell>{item.price.toFixed(2)} €</TableCell>
                                         <TableCell>{(item.price * item.quantity).toFixed(2)} €</TableCell>
@@ -127,22 +127,35 @@ export default function OrderPage() {
                 </div>
 
                 <div className="md:col-span-1 space-y-4 text-sm">
-                    <div>
-                        <p className="font-semibold">Mode de livraison :</p>
-                        <p>{order.shippingOption === "REL" ? "Point relais" : "Locker"}</p>
-                    </div>
-                    <div>
-                        <p className="font-semibold">Adresse de livraison :</p>
-                        <p>{order.relayName}</p>
-                        <p>{order.relayAddress}</p>
-                        <p>Numéro du relais/locker : {order.relayId}</p>
-                    </div>
+                    {order.shippingOption === "NDEL" ? (
+                        <>
+                            <div>
+                                <p className="font-semibold">Mode de livraison :</p>
+                                <p>Remise en main propre</p>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div>
+                                <p className="font-semibold">Mode de livraison :</p>
+                                <p>{order.shippingOption === "REL" ? "Point relais" : "Locker"}</p>
+                            </div>
+                            <div>
+                                <p className="font-semibold">Adresse de livraison :</p>
+                                <p>{order.relayName}</p>
+                                <p>{order.relayAddress}</p>
+                                <p>Numéro du relais/locker : {order.relayId}</p>
+                            </div>
+                        </>
+                    )}
+
                     <div>
                         <p className="font-semibold">Client :</p>
                         <p>{order.user?.name}</p>
                         <p>{order.user?.email}</p>
                         <p>{order.phone}</p>
                     </div>
+
                     <div>
                         <p className="font-semibold">Adresse de facturation :</p>
                         <p>{order.billingAddress}</p>

@@ -145,6 +145,7 @@ export function AddTarifLivraisonDialog({ onSuccess }: { onSuccess: () => void }
                                         <SelectGroup>
                                             <SelectItem className="cursor-pointer" value="APM">Locker (APM)</SelectItem>
                                             <SelectItem className="cursor-pointer" value="REL">Point relais (REL)</SelectItem>
+                                            <SelectItem className="cursor-pointer" value="NDEL">Pas de livraison</SelectItem>
                                         </SelectGroup>
                                     </SelectContent>
                                 </Select>

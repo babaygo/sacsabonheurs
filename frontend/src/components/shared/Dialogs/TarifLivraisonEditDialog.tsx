@@ -74,6 +74,7 @@ export function EditTarifLivraisonDialog({ tarif, onSuccess, }: { tarif: Shippin
                                     <SelectGroup>
                                         <SelectItem value="APM">Locker (APM)</SelectItem>
                                         <SelectItem value="REL">Point relais (REL)</SelectItem>
+                                        <SelectItem value="NDEL">Pas de livraison</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>

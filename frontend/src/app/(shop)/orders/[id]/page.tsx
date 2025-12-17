@@ -125,15 +125,24 @@ export default function OrderPage() {
                 </div>
 
                 <div className="md:col-span-1 space-y-4 text-sm">
-                    <div>
-                        <p className="font-semibold">Mode de livraison :</p>
-                        <p>{order.shippingOption === "REL" ? "Point relais" : "Locker"}</p>
-                    </div>
-                    <div>
-                        <p className="font-semibold">Adresse de livraison :</p>
-                        <p>{order.relayName}</p>
-                        <p>{order.relayAddress}</p>
-                    </div>
+                    {order.shippingOption === "NDEL" ? (
+                        <>
+                            <p className="font-semibold">Mode de livraison :</p>
+                            <p>Remise en main propre</p>
+                        </>
+                    ) : (
+                        <div>
+                            <div>
+                                <p className="font-semibold">Mode de livraison :</p>
+                                <p>{order.shippingOption === "REL" ? "Point relais" : "Locker"}</p>
+                            </div>
+                            <div>
+                                <p className="font-semibold">Adresse de livraison :</p>
+                                <p>{order.relayName}</p>
+                                <p>{order.relayAddress}</p>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

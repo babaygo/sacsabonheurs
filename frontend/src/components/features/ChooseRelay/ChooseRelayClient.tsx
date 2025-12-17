@@ -12,6 +12,7 @@ import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import { Order } from "@/types/Order";
+import Link from "next/link";
 
 declare global {
     interface Window {
@@ -53,7 +54,7 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
     }, [sessionId, isValid]);
 
     useEffect(() => {
-        if (!order || widgetInitialized.current) return;
+        if (!order || order.shippingOption === "NDEL" || widgetInitialized.current) return;
 
         widgetInitialized.current = true;
 
@@ -121,7 +122,6 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
                 setIsLoading(false);
             }
         };
-
         initWidget();
     }, [order]);
 
@@ -163,9 +163,25 @@ export default function ChooseRelayClient({ brandId }: { brandId: string }) {
         );
     }
 
+    if (order?.shippingOption === "NDEL") {
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center space-y-4 p-4">
+                <p className="text-center">
+                    Vous avez choisi la remise en main propre, vous allez être contacté par mail ou par téléphone, afin de conclure sur les détails de la remise de votre commande.
+                </p>
+
+                <Link href="/" >
+                    <Button >
+                        Retour à l'accueil
+                    </Button>
+                </Link>
+            </div>
+        );
+    }
+
     if (order?.relayId) {
         return (
-            <div className="min-h-screen flex items-center justify-center p-4">
+            <div className="min-h-screen flex items-center justify-center">
                 <p className="text-center">
                     Point relais déjà sélectionné, pour cette commande. Pour tout changement veuillez{" "}
                     <a href="/contact" className="font-semibold">contacter le support</a>.
