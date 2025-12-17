@@ -6,11 +6,11 @@ import { Toaster } from "react-hot-toast";
 import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { CookiesBanner } from "@/components/shared/CookiesBanner";
-import LayoutClient from "@/components/features/layout/LayoutClient";
 import Footer from "@/components/features/layout/Footer";
 import { ProductsProvider } from "@/contexts/ProductsContext";
 import DynamicBanner from "@/components/features/layout/DynamicBanner";
 import { AppProvider } from "@/components/shared/AppProvider";
+import Header from "@/components/features/layout/Header";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -63,15 +63,14 @@ export default async function RootLayout({
         <AppProvider>
           <SessionProvider>
             <ProductsProvider>
-              <LayoutClient>
-                <Toaster position="top-right" />
-                <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                  {children}
-                </main>
-                <CookiesBanner />
-                <Analytics />
-                <SpeedInsights />
-              </LayoutClient>
+              <Header />
+              <Toaster position="top-right" />
+              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                {children}
+              </main>
+              <CookiesBanner />
+              <Analytics />
+              <SpeedInsights />
             </ProductsProvider>
           </SessionProvider>
         </AppProvider>
