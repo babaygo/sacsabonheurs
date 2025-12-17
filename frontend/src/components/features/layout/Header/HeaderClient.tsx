@@ -43,7 +43,6 @@ export default function HeaderClient() {
         setShowCategoryList(prev => !prev);
     };
 
-    if (error) return error;
     if (loading) return null;
 
     return (
@@ -116,7 +115,7 @@ export default function HeaderClient() {
                                         <Separator />
                                         <Link href="/" onClick={() => setOpenSheet(false)} className="text-l px-6">Accueil</Link>
                                         <Separator />
-                                        <div className="">
+                                        <div>
                                             <div className="flex items-center">
                                                 <Link
                                                     href="/boutique"
@@ -130,7 +129,7 @@ export default function HeaderClient() {
                                                     onClick={toggleCategories}
                                                     className="py-0 h-auto"
                                                 >
-                                                    {showCategoryList ? (
+                                                    {showCategoryList && !error ? (
                                                         <Minus />
                                                     ) : (
                                                         <Plus />
@@ -140,7 +139,7 @@ export default function HeaderClient() {
 
                                             <div
                                                 className={`pl-12 pt-2 space-y-2 overflow-hidden transition-all duration-300 ease-in-out 
-                                                    ${showCategoryList ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
+                                                    ${showCategoryList && !error ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}
                                                     `}
                                             >
                                                 {categories.map((category) => (
