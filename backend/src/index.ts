@@ -459,8 +459,8 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
     } catch (error: any) {
         console.error("Erreur création produit :", error);
 
-        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
-            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
+        if (error.code === "P2002") {
+            return res.status(400).json({ error: "Le nom du produit est déjà utilisé." });
         }
 
         res.status(500).json({ error: "Erreur serveur" });
@@ -593,8 +593,8 @@ app.post("/api/admin/categories", requireAuth, requireAdmin, upload.none(), asyn
     } catch (error: any) {
         console.error("Erreur création catégorie :", error);
 
-        if (error.code === "P2002" && error.meta?.target?.includes("slug")) {
-            return res.status(400).json({ error: "Ce slug est déjà utilisé." });
+        if (error.code === "P2002") {
+            return res.status(400).json({ error: "Le nom de cette catégorie est déjà utilisée." });
         }
 
         res.status(500).json({ error: "Erreur serveur" });
