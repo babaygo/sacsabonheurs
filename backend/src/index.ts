@@ -451,7 +451,10 @@ app.post("/api/admin/products", requireAuth, requireAdmin, upload.array("images"
                 images: cfUrls,
                 hidden: hidden === 'true',
                 color,
-                material
+                material,
+                isOnSale: false,
+                salePrice: null,
+                salePercentage: null
             },
         });
 
@@ -472,7 +475,8 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
     const { id } = req.params;
     const {
         name, slug, description, price, stock,
-        weight, height, lenght, width, categoryId, hidden, color, material
+        weight, height, lenght, width, categoryId, hidden, color, material,
+        isOnSale, salePrice, salePercentage
     } = req.body;
 
     try {
@@ -513,7 +517,10 @@ app.put("/api/admin/products/:id", requireAuth, requireAdmin, upload.array("imag
                 images: finalImages,
                 hidden: hidden === 'true' ? true : false,
                 color,
-                material
+                material,
+                isOnSale: isOnSale === 'true',
+                salePrice: salePrice ? parseFloat(salePrice) : null,
+                salePercentage: salePercentage ? parseFloat(salePercentage) : null
             },
         });
 
