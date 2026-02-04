@@ -94,7 +94,7 @@ export default function AdminLegalClient() {
     return (
         <div className="min-h-screen pt-4">
             <div className="space-y-8">
-                <h1 className="text-2xl font-bold">Contenu légal</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold">Contenu légal</h1>
 
                 <p>
                     Dernière mise à jour le{" "}

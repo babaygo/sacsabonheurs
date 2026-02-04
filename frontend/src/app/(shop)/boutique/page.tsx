@@ -19,7 +19,7 @@ export default async function BoutiquePage() {
                     { label: "Boutique" },
                 ]}
             />
-            <h1 className="text-2xl font-bold capitalize">Boutique</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold capitalize">Boutique</h1>
             <ProductFiltersClient initialProducts={initialProducts} />
         </div>
     );

@@ -34,7 +34,7 @@ export default async function PrivacyPolicyPage() {
                     { label: "Politique de confidentialité" },
                 ]}
             />
-            <h1 className="text-2xl font-bold">Politique de confidentialité</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">Politique de confidentialité</h1>
             <div
                 className="prose prose-sm max-w-none py-4"
                 dangerouslySetInnerHTML={{ __html: privacy }}

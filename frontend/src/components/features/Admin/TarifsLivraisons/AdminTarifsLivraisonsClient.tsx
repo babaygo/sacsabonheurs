@@ -38,7 +38,7 @@ export default function AdminTarifsLivraisonsClient() {
         <div className="min-h-screen pt-4">
             <div className="space-y-8">
                 <div className="flex justify-between">
-                    <h1 className="text-2xl font-bold">Tarifs de livraisons</h1>
+                    <h1 className="text-3xl sm:text-4xl font-bold">Tarifs de livraisons</h1>
                     <AddTarifLivraisonDialog onSuccess={refreshTarifsLivraisons} />
                 </div>
 

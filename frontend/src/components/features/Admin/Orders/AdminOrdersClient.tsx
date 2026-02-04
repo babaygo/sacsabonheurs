@@ -65,7 +65,7 @@ export default function AdminOrdersClient() {
 
     return (
         <div className="min-h-screen pt-4">
-            <h1 className="text-2xl font-bold mb-4">Commandes</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">Commandes</h1>
             <Table>
                 <TableHeader>
                     <TableRow>

@@ -16,7 +16,7 @@ export default function FAQPage() {
                     { label: "FAQ" },
                 ]}
             />
-            <h1 className="text-2xl font-bold mb-6">FAQ</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">FAQ</h1>
             <div className="space-y-8">
                 <section>
                     <h2 className="text-lg font-semibold mb-2">Disponibilité</h2>
