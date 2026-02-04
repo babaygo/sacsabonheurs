@@ -33,6 +33,16 @@ export default function SignupPage() {
     const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
 
+    const errorTranslations: Record<string, string> = {
+        "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Cet email est déjà utilisé, par un autre compte.",
+        "INVALID_EMAIL": "Email invalide.",
+        "WEAK_PASSWORD": "Le mot de passe doit contenir au moins une majuscule et un chiffre.",
+    };
+
+    const getLocalizedError = (code: string, message: string): string => {
+        return errorTranslations[code] || message;
+    };
+
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -43,10 +53,19 @@ export default function SignupPage() {
             return;
         }
         setLoading(true);
+        setErrorMessage("");
         const name = `${firstname} ${lastname}`.trim();
 
         try {
-            await authClient.signUp.email({ name, email, password, callbackURL: `${process.env.NEXT_PUBLIC_URL_FRONT}/` });
+            const response = await authClient.signUp.email({ name, email, password, callbackURL: `${process.env.NEXT_PUBLIC_URL_FRONT}/` });
+
+            if (response.error) {
+                const errorCode = (response.error as any).code || "";
+                const localizedMessage = getLocalizedError(errorCode, response.error.message || "Email déjà utilisé");
+                setErrorMessage(localizedMessage);
+                return;
+            }
+
             await refreshSession();
             router.push("/");
             toast.success("Compte créé. Vous avez reçu un email, pour vérifier votre email.");
@@ -101,6 +120,9 @@ export default function SignupPage() {
                                 onChange={(e) => setEmail(e.target.value)}
                                 required
                             />
+                            {errorMessage && (errorMessage.toLowerCase().includes("email") || errorMessage.includes("utilisé")) && (
+                                <p className="text-sm text-red-500">{errorMessage}</p>
+                            )}
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="password">Mot de passe *</Label>
@@ -123,7 +145,7 @@ export default function SignupPage() {
                                 </button>
                             </div>
                         </div>
-                        {errorMessage && (
+                        {errorMessage && !(errorMessage.toLowerCase().includes("email") || errorMessage.includes("utilisé")) && (
                             <p className="text-sm text-red-500">{errorMessage}</p>
                         )}
                         <Button type="submit" className="w-full" disabled={loading}>
