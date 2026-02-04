@@ -129,10 +129,10 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
                         <Link href="/boutique">
-                            <Button size="lg" className="w-full sm:w-auto">Découvrir la boutique</Button>
+                            <Button size="lg" className="w-full px-4 sm:px-6 py-3 text-sm sm:text-base font-medium">Découvrir la boutique</Button>
                         </Link>
                         <Link href="/a-propos">
-                            <Button size="lg" variant="outline" className="w-full sm:w-auto">L'Atelier</Button>
+                            <Button size="lg" variant="outline" className="w-full px-4 sm:px-6 py-3 text-sm sm:text-base font-medium">L'Atelier</Button>
                         </Link>
                     </div>
 
