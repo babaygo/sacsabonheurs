@@ -5,6 +5,7 @@ import AddToCart from "../Cart/AddToCart";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { useState, useEffect } from "react";
 import type { CarouselApi } from "@/components/ui/carousel";
+import { calculateSalePrice, formatPrice } from "@/lib/utils/priceCalculator";
 
 export default function PreviewProduct({ product }: { product: Product }) {
     const [api, setApi] = useState<CarouselApi>();
@@ -103,7 +104,27 @@ export default function PreviewProduct({ product }: { product: Product }) {
 
             <div className="mt-4 text-start">
                 <h3 className="font-semibold text-[15px]">{product.name}</h3>
-                <p className="font-medium text-sm">{product.price.toFixed(2)} €</p>
+                {(() => {
+                    const priceInfo = calculateSalePrice(product.price, product.isOnSale, product.salePrice, product.salePercentage);
+                    if (priceInfo.isOnSale) {
+                        return (
+                            <div className="space-y-1">
+                                <p className="font-medium text-sm line-through text-gray-500">
+                                    {formatPrice(priceInfo.originalPrice)} €
+                                </p>
+                                <div className="flex items-center gap-2">
+                                    <p className="font-bold text-sm text-red-600">
+                                        {formatPrice(priceInfo.displayPrice)} €
+                                    </p>
+                                    <span className="text-xs font-semibold bg-red-100 text-red-700 px-1.5 py-0.5 rounded">
+                                        -{product.salePercentage ? Math.round(product.salePercentage) + '%' : ''}
+                                    </span>
+                                </div>
+                            </div>
+                        );
+                    }
+                    return <p className="font-medium text-sm">{formatPrice(priceInfo.displayPrice)} €</p>;
+                })()}
             </div>
         </Link>
     );

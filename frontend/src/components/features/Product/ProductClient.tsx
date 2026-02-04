@@ -14,6 +14,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { Spinner } from "@/components/ui/spinner";
+import { calculateSalePrice, formatPrice } from "@/lib/utils/priceCalculator";
 
 export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string }) {
     const { product: liveProduct, loadingProduct, errorProduct } = useProductBySlug(slug);
@@ -139,7 +140,35 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
 
                 <div className="col-span-1 md:col-span-2 flex flex-col space-y-4">
                     <p className="text-2xl mt-2 md:mt-4">{product?.name}</p>
-                    <p className="text-lg font-semibold">{product?.price} €</p>
+                    
+                    {(() => {
+                        const priceInfo = calculateSalePrice(
+                            product?.price || 0,
+                            product?.isOnSale || false,
+                            product?.salePrice,
+                            product?.salePercentage
+                        );
+                        
+                        return (
+                            <div className="space-y-1">
+                                {priceInfo.isOnSale ? (
+                                    <div className="flex items-center gap-3">
+                                        <span className="text-lg line-through text-gray-500">
+                                            {formatPrice(priceInfo.originalPrice)} €
+                                        </span>
+                                        <span className="text-2xl font-bold text-red-600">
+                                            {formatPrice(priceInfo.displayPrice)} €
+                                        </span>
+                                        <span className="text-sm font-semibold bg-red-100 text-red-700 px-2 py-1 rounded">
+                                            -{product?.salePercentage ? Math.round(product.salePercentage) + '%' : 'Solde'}
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <p className="text-lg font-semibold">{formatPrice(priceInfo.displayPrice)} €</p>
+                                )}
+                            </div>
+                        );
+                    })()}
 
                     <AddToCart product={product} className="w-full" />
 
@@ -183,7 +212,20 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
 
                                         <div className="w-full flex justify-between items-center mt-1 space-x-2 px-2">
                                             <p className="flex-1 text-sm font-medium text-[15px] truncate">{p.name}</p>
-                                            <p className="w-auto text-sm text-end">{p.price.toFixed(2)} €</p>
+                                            <div className="w-auto text-sm text-end">
+                                                {(() => {
+                                                    const priceInfo = calculateSalePrice(p.price, p.isOnSale, p.salePrice, p.salePercentage);
+                                                    if (priceInfo.isOnSale) {
+                                                        return (
+                                                            <div className="flex flex-col items-end gap-0.5">
+                                                                <span className="line-through text-gray-400 text-xs">{formatPrice(priceInfo.originalPrice)} €</span>
+                                                                <span className="font-bold text-red-600">{formatPrice(priceInfo.displayPrice)} €</span>
+                                                            </div>
+                                                        );
+                                                    }
+                                                    return <span>{formatPrice(priceInfo.displayPrice)} €</span>;
+                                                })()}
+                                            </div>
                                         </div>
                                     </Link>
                                 </CarouselItem>
