@@ -21,25 +21,28 @@ model Category {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  slug        String      @unique
-  description String
-  price       Float
-  stock       Int         @default(1)
-  weight      Float       @default(0)
-  height      Float       @default(0)
-  lenght      Float       @default(0)
-  width       Float       @default(0)
-  images      String[]
-  categoryId  Int
-  category    Category    @relation(fields: [categoryId], references: [id])
-  orderItems  OrderItem[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  hidden      Boolean     @default(false)
-  color       String?
-  material    String?
+  id             Int         @id @default(autoincrement())
+  name           String
+  slug           String      @unique
+  description    String
+  price          Float
+  isOnSale       Boolean     @default(false)
+  salePrice      Float?
+  salePercentage Float?
+  stock          Int         @default(1)
+  weight         Float       @default(0)
+  height         Float       @default(0)
+  lenght         Float       @default(0)
+  width          Float       @default(0)
+  images         String[]
+  categoryId     Int
+  category       Category    @relation(fields: [categoryId], references: [id])
+  orderItems     OrderItem[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+  hidden         Boolean     @default(false)
+  color          String?
+  material       String?
 }
 
 model User {
