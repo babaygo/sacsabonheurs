@@ -111,11 +111,11 @@ export default function Footer() {
                     </div>
 
                     <div className="flex flex-wrap justify-center items-center gap-3">
-                        <img src="/assets/mastercard-svgrepo-com.svg" alt="Mastercard" className="h-8 md:h-10" />
-                        <img src="/assets/visa-classic-svgrepo-com.svg" alt="Visa" className="h-8 md:h-10" />
-                        <img src="/assets/apple-pay-svgrepo-com.svg" alt="Apple Pay" className="h-8 md:h-10" />
-                        <img src="/assets/google-pay-svgrepo-com.svg" alt="Google Pay" className="h-8 md:h-10" />
-                        <img src="https://storage.mondialrelay.fr/mrlogoprincipal.png" alt="Mondial Relay" className="h-8 md:h-10" />
+                        <Image src="/assets/mastercard-svgrepo-com.svg" alt="Mastercard" width={40} height={40} className="h-8 md:h-10 w-auto" />
+                        <Image src="/assets/visa-classic-svgrepo-com.svg" alt="Visa" width={40} height={40} className="h-8 md:h-10 w-auto" />
+                        <Image src="/assets/apple-pay-svgrepo-com.svg" alt="Apple Pay" width={40} height={40} className="h-8 md:h-10 w-auto" />
+                        <Image src="/assets/google-pay-svgrepo-com.svg" alt="Google Pay" width={40} height={40} className="h-8 md:h-10 w-auto" />
+                        <Image src="https://storage.mondialrelay.fr/mrlogoprincipal.png" alt="Mondial Relay" width={40} height={40} className="h-8 md:h-10 w-auto" />
                     </div>
                 </div>
             </div>
