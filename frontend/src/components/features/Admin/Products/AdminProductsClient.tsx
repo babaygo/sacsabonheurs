@@ -52,10 +52,6 @@ export default function AdminProducts() {
 
     if (loadingUser) return null;
 
-    if (!products || products.length === 0) {
-        return <div className="text-center py-10">Aucun produit disponible.</div>;
-    }
-
     const filteredProducts = products.filter((product) => {
         if (filter === "rupture-stock") return product.stock < 1;
         if (filter === "hidden") return product.hidden === true;
@@ -89,38 +85,42 @@ export default function AdminProducts() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-                {filteredProducts.map((product) => (
-                    <div
-                        key={product.id}
-                        className="p-4 bg-white rounded shadow-sm space-y-2 flex flex-col justify-between"
-                    >
-                        <img
-                            src={product.images[0]}
-                            alt={product.name}
-                            className="w-full h-48 object-cover rounded"
-                        />
-                        <h2 className="text-lg font-semibold">{product.name}</h2>
-
-                        <div className="flex flex-wrap gap-2 mt-2">
-                            <EditDialog
-                                product={product}
-                                categories={categories}
-                                onSuccess={() => {
-                                    setPage(0);
-                                    fetchProducts(24, false, 0);
-                                }}
+                {filteredProducts.length > 0 ? (
+                    filteredProducts.map((product) => (
+                        <div
+                            key={product.id}
+                            className="p-4 bg-white rounded shadow-sm space-y-2 flex flex-col justify-between"
+                        >
+                            <img
+                                src={product.images[0]}
+                                alt={product.name}
+                                className="w-full h-48 object-cover rounded"
                             />
+                            <h2 className="text-lg font-semibold">{product.name}</h2>
 
-                            <DeleteDialog
-                                productId={product.id}
-                                onSuccess={() => {
-                                    setPage(0);
-                                    fetchProducts(24, false, 0);
-                                }}
-                            />
+                            <div className="flex flex-wrap gap-2 mt-2">
+                                <EditDialog
+                                    product={product}
+                                    categories={categories}
+                                    onSuccess={() => {
+                                        setPage(0);
+                                        fetchProducts(24, false, 0);
+                                    }}
+                                />
+
+                                <DeleteDialog
+                                    productId={product.id}
+                                    onSuccess={() => {
+                                        setPage(0);
+                                        fetchProducts(24, false, 0);
+                                    }}
+                                />
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                ) : (
+                    <div className="text-center py-10 col-span-full">Aucun produit disponible.</div>
+                )}
             </div>
 
             {hasMore && (
