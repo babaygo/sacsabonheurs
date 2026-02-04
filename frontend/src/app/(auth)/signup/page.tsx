@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signupSchema } from "@/lib/validation/signupSchema";
+import { getLocalizedError } from "@/lib/errorTranslations";
 import {
     Card,
     CardContent,
@@ -32,16 +33,6 @@ export default function SignupPage() {
     const { refreshSession } = useSessionContext();
     const [errorMessage, setErrorMessage] = useState("");
     const router = useRouter();
-
-    const errorTranslations: Record<string, string> = {
-        "USER_ALREADY_EXISTS_USE_ANOTHER_EMAIL": "Cet email est déjà utilisé, par un autre compte.",
-        "INVALID_EMAIL": "Email invalide.",
-        "WEAK_PASSWORD": "Le mot de passe doit contenir au moins une majuscule et un chiffre.",
-    };
-
-    const getLocalizedError = (code: string, message: string): string => {
-        return errorTranslations[code] || message;
-    };
 
     const handleSignup = async (e: React.FormEvent) => {
         e.preventDefault();

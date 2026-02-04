@@ -4,6 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { getLocalizedError } from "@/lib/errorTranslations";
 import {
     Card,
     CardContent,
@@ -15,7 +16,6 @@ import {
 import Link from "next/link";
 import { useState } from "react";
 import { loginSchema } from "@/lib/validation/loginSchema";
-import { useLogin } from "@/hooks/useLogin";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import toast from "react-hot-toast";
 import { authClient } from "@/lib/auth/authClient";
@@ -43,12 +43,23 @@ export default function LoginPage() {
         }
 
         setLoading(true);
+        setErrorMessage("");
         try {
-            await useLogin({ email, password });
+            const response = await authClient.signIn.email({ email, password });
+            
+            if (response.error) {
+                const errorCode = (response.error as any).code || "";
+                const localizedMessage = getLocalizedError(errorCode, response.error.message || "Erreur lors de la connexion");
+                setErrorMessage(localizedMessage);
+                return;
+            }
+
             await refreshSession();
             router.push("/");
         } catch (err: any) {
-            setErrorMessage(err.message || "Erreur lors de la connexion");
+            const errorCode = err.code || "";
+            const localizedMessage = getLocalizedError(errorCode, err.message || "Erreur lors de la connexion");
+            setErrorMessage(localizedMessage);
         } finally {
             setLoading(false);
         }
@@ -66,9 +77,12 @@ export default function LoginPage() {
                 redirectTo: `${process.env.NEXT_PUBLIC_URL_FRONT}/reset-password`
             });
 
+            setErrorMessage("");
             toast.success("Un lien de réinitialisation a été envoyé à votre adresse email");
         } catch (err: any) {
-            setErrorMessage(err.message);
+            const errorCode = err.code || "";
+            const localizedMessage = getLocalizedError(errorCode, err.message || "Erreur lors de la réinitialisation");
+            setErrorMessage(localizedMessage);
         }
     };
 
