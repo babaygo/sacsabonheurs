@@ -46,7 +46,7 @@ export default function LoginPage() {
         setErrorMessage("");
         try {
             const response = await authClient.signIn.email({ email, password });
-            
+
             if (response.error) {
                 const errorCode = (response.error as any).code || "";
                 const localizedMessage = getLocalizedError(errorCode, response.error.message || "Erreur lors de la connexion");
@@ -62,27 +62,6 @@ export default function LoginPage() {
             setErrorMessage(localizedMessage);
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleResetPassword = async () => {
-        try {
-            if (!email) {
-                setErrorMessage("Veuillez entrer votre email avant de réinitialiser le mot de passe");
-                return;
-            }
-
-            await authClient.requestPasswordReset({
-                email,
-                redirectTo: `${process.env.NEXT_PUBLIC_URL_FRONT}/reset-password`
-            });
-
-            setErrorMessage("");
-            toast.success("Un lien de réinitialisation a été envoyé à votre adresse email");
-        } catch (err: any) {
-            const errorCode = err.code || "";
-            const localizedMessage = getLocalizedError(errorCode, err.message || "Erreur lors de la réinitialisation");
-            setErrorMessage(localizedMessage);
         }
     };
 
@@ -110,15 +89,17 @@ export default function LoginPage() {
                             />
                         </div>
                         <div className="grid gap-2">
-                            <div className="flex items-center">
+                            <div className="flex justify-between items-center">
                                 <Label htmlFor="password">Mot de passe *</Label>
-                                <Button
-                                    onClick={handleResetPassword}
-                                    variant={"link"}
-                                    className="ml-auto"
-                                >
-                                    Mot de passe oublié ?
-                                </Button>
+                                <Link href="/forgot-password">
+                                    <Button
+                                        type="button"
+                                        variant={"link"}
+                                        className="ml-auto"
+                                    >
+                                        Mot de passe oublié ?
+                                    </Button>
+                                </Link>
                             </div>
                             <div className="relative">
                                 <Input
