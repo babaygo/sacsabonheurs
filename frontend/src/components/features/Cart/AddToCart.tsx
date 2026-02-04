@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/hooks/useCart";
 import { Product } from "@/types/Product";
+import { calculateSalePrice } from "@/lib/utils/priceCalculator";
 
 type AddToCartProps = {
     product: Product;
@@ -15,12 +16,21 @@ export default function AddToCart({ product, className, variant }: AddToCartProp
         e.preventDefault();
         e.stopPropagation();
         
+        const priceInfo = calculateSalePrice(
+            product.price,
+            product.isOnSale || false,
+            product.salePrice,
+            product.salePercentage
+        );
+        
         addToCart({
             id: product.id,
             name: product.name,
             slug: product.slug,
-            price: product.price,
+            price: priceInfo.displayPrice,
             image: product.images[0],
+            originalPrice: priceInfo.originalPrice,
+            isOnSale: priceInfo.isOnSale,
         });
         setOpen(true);
     };

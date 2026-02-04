@@ -14,6 +14,7 @@ import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Info } from "lucide-react";
 import Link from "next/link";
+import { formatPrice } from "@/lib/utils/priceCalculator";
 
 export default function CartDrawer() {
     const { user } = useSessionContext();
@@ -96,9 +97,23 @@ export default function CartDrawer() {
                                 />
                                 <div className="flex-1">
                                     <p className="font-medium">{item.name}</p>
-                                    <p className="text-sm text-gray-600">
-                                        {item.price} €
-                                    </p>
+                                    <div className="text-sm text-gray-600 space-y-1">
+                                        {item.isOnSale && item.originalPrice ? (
+                                            <>
+                                                <p className="line-through text-gray-400">
+                                                    {formatPrice(item.originalPrice)} €
+                                                </p>
+                                                <p className="font-semibold text-red-600">
+                                                    {formatPrice(item.price)} €
+                                                </p>
+                                            </>
+                                        ) : (
+                                            <p>{formatPrice(item.price)} €</p>
+                                        )}
+                                    </div>
+                                    {item.quantity > 1 && (
+                                        <p className="text-xs text-gray-500 mt-1">x{item.quantity}</p>
+                                    )}
                                 </div>
                                 <button
                                     onClick={() => removeFromCart(item.id)}
@@ -115,7 +130,7 @@ export default function CartDrawer() {
                     <DrawerFooter className="border-t p-4">
                         <div className="flex items-center justify-between mb-4">
                             <span className="text-sm text-gray-600">Total :</span>
-                            <span className="text-lg font-semibold">{total.toFixed(2)} €</span>
+                            <span className="text-lg font-semibold">{formatPrice(total)} €</span>
                         </div>
                         <Button className="w-full" onClick={handleCheckout}>
                             Commander

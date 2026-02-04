@@ -8,6 +8,8 @@ type CartItem = {
     price: number;
     quantity: number;
     image: string;
+    originalPrice?: number;
+    isOnSale?: boolean;
 };
 
 type CartState = {
