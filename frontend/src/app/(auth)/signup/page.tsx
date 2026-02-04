@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { signupSchema } from "@/lib/validation/signupSchema";
-import { getLocalizedError } from "@/lib/errorTranslations";
+import { getLocalizedError } from "@/lib/constants/errorTranslations";
 import {
     Card,
     CardContent,

@@ -4,7 +4,7 @@ import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { getLocalizedError } from "@/lib/errorTranslations";
+import { getLocalizedError } from "@/lib/constants/errorTranslations";
 import {
     Card,
     CardContent,
