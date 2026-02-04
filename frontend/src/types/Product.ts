@@ -7,6 +7,9 @@ export interface Product {
     slug: string;
     description: string;
     price: number;
+    isOnSale: boolean;
+    salePrice: number | null;
+    salePercentage: number | null;
     stock: number;
     weight: number;
     height: number;
