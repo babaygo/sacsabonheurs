@@ -156,31 +156,6 @@ Core entities:
 - Environment variables: Database URL, API keys, secrets
 - Auto-deploy on push to backend-preprod
 
-## API Endpoints
-
-### Public
-- `GET /api/products` - List all products
-- `GET /api/products/:slug` - Get product by slug
-- `GET /api/categories` - List categories
-- `GET /api/banners` - Get active banners
-- `GET /api/admin/legal` - Get legal content
-
-### Authenticated
-- `POST /api/checkout` - Create Stripe checkout session
-- `GET /api/orders` - Get user's orders
-- `POST /api/order/:sessionId/relay` - Set Mondial Relay point
-- `POST /api/contact` - Submit contact form
-
-### Admin
-- `POST/PUT/DELETE /api/admin/products` - Manage products
-- `POST/PUT/DELETE /api/admin/categories` - Manage categories
-- `POST /api/admin/legal` - Update legal content
-- `GET/POST/DELETE /api/admin/shipping-rates` - Manage Stripe shipping
-- `POST/PUT/DELETE /api/admin/banners` - Manage banners
-
-### Webhooks
-- `POST /webhook` - Stripe payment events
-
 ## License
 
 This project is proprietary software for Sacs à Bonheurs.
