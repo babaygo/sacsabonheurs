@@ -154,6 +154,23 @@ model OrderItem {
   product   Product? @relation(fields: [productId], references: [id])
 }
 
+model Article {
+  id              Int      @id @default(autoincrement())
+  title           String
+  slug            String   @unique
+  excerpt         String   @db.Text
+  content         String   @db.Text
+  image           String?
+  author          String   @default("Sacs à Bonheurs")
+  category        String   @default("Blog")
+  keywords        String
+  metaDescription String
+  readingTime     Int      @default(5)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  published       Boolean  @default(false)
+}
+
 enum OrderStatusType {
   pending
   shipped
