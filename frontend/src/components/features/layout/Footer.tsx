@@ -17,6 +17,7 @@ export default function Footer() {
                                 <ul className="space-y-2 text-sm">
                                     <li><Link href="/" className="hover:underline">Accueil</Link></li>
                                     <li><Link href="/boutique" className="hover:underline">Boutique</Link></li>
+                                    <li><Link href="/blog" className="hover:underline">Blog</Link></li>
                                     <li><Link href="/a-propos" className="hover:underline">À propos</Link></li>
                                 </ul>
                             </AccordionContent>
@@ -62,6 +63,7 @@ export default function Footer() {
                         <ul className="space-y-1 text-sm">
                             <li><Link href="/" className="hover:underline">Accueil</Link></li>
                             <li><Link href="/boutique" className="hover:underline">Boutique</Link></li>
+                            <li><Link href="/blog" className="hover:underline">Blog</Link></li>
                             <li><Link href="/a-propos" className="hover:underline">À propos</Link></li>
                         </ul>
                     </div>

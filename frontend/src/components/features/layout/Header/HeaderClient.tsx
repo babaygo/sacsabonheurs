@@ -84,6 +84,7 @@ export default function HeaderClient() {
                                                     <Link href="/" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Accueil</Link>
                                                     <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Mes commandes</Link>
                                                     <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
+                                                    <Link href="/blog" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Blog</Link>
                                                     {isAdmin && (
                                                         <Link href="/admin" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Admin</Link>
                                                     )}
@@ -94,6 +95,7 @@ export default function HeaderClient() {
                                                 <Link href="/login" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Se connecter</Link>
                                                 <Separator />
                                                 <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
+                                                <Link href="/blog" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Blog</Link>
                                             </div>
                                         )}
                                     </div>
@@ -156,6 +158,8 @@ export default function HeaderClient() {
                                         </div>
                                         <Separator />
                                         <Link href="/a-propos" onClick={() => setOpenSheet(false)} className="text-l px-6">À propos</Link>
+                                        <Separator />
+                                        <Link href="/blog" onClick={() => setOpenSheet(false)} className="text-l px-6">Blog</Link>
                                         <Separator />
                                         <Link href="/contact" onClick={() => setOpenSheet(false)} className="text-l px-6">Contact</Link>
                                         <Separator />
