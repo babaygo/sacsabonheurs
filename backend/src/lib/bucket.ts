@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { S3Client, PutObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
 
 export const s3 = new S3Client({
     region: "auto",
@@ -20,28 +20,42 @@ export async function uploadToR2(file: Express.Multer.File, folder?: string): Pr
         }));
     } catch (error: any) {
         console.error("Upload échoué :", error);
-
+        throw error;
     }
 
     return `${process.env.DOMAIN_MEDIAS}/${key}`;
 }
 
 export async function deleteImagesFromR2(urls: string[]): Promise<void> {
-    if (!Array.isArray(urls)) return;
+    if (!Array.isArray(urls) || urls.length === 0) return;
 
-    for (const url of urls) {
-        const key = url.replace(`${process.env.DOMAIN_MEDIAS}/`, "");
-
+    const keysToDelete = urls.map(url => {
         try {
-            await s3.send(
-                new DeleteObjectCommand({
-                    Bucket: process.env.R2_BUCKET!,
-                    Key: key,
-                })
-            );
-        } catch (err) {
-            console.warn(`Échec suppression image : ${key}`, err);
+            const u = new URL(url);
+            let key = u.pathname;
+
+            if (key.startsWith("/cdn-cgi/image/")) {
+                key = key.replace(/^\/cdn-cgi\/image\/[^/]+\//, "/");
+            }
+
+            return { Key: key.startsWith("/") ? key.substring(1) : key };
+        } catch {
+            return { Key: url.replace(`${process.env.DOMAIN_MEDIAS}/`, "") };
         }
+    });
+
+    try {
+        await s3.send(
+            new DeleteObjectsCommand({
+                Bucket: process.env.R2_BUCKET!,
+                Delete: {
+                    Objects: keysToDelete,
+                    Quiet: true,
+                },
+            })
+        );
+    } catch (err) {
+        console.error(`Échec suppression groupée R2 :`, err);
     }
 }
 
@@ -51,13 +65,13 @@ export function cfImageUrl(
 ) {
     try {
         const u = new URL(url);
+        let path = u.pathname;
 
-        if (u.pathname.startsWith("/cdn-cgi/image/")) {
-            const path = u.pathname.replace(/^\/cdn-cgi\/image\/[^/]+/, "");
-            return `${u.origin}/cdn-cgi/image/${params}${path}`;
+        if (path.startsWith("/cdn-cgi/image/")) {
+            path = path.replace(/^\/cdn-cgi\/image\/[^/]+/, "");
         }
 
-        return `${u.origin}/cdn-cgi/image/${params}${u.pathname}`;
+        return `${u.origin}/cdn-cgi/image/${params}${path}`;
     } catch {
         return url;
     }
