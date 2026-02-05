@@ -824,6 +824,157 @@ app.put("/api/admin/shipping-rate/:id", requireAuth, requireAdmin, upload.none()
     }
 });
 
+// Article routes
+app.get("/api/articles", async (req, res) => {
+    try {
+        const articles = await prisma.article.findMany({
+            where: { published: true },
+            orderBy: { createdAt: "desc" },
+        });
+        res.json(articles);
+    } catch (error: any) {
+        console.error("Erreur récupération articles:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.get("/api/articles/:slug", async (req, res) => {
+    try {
+        const article = await prisma.article.findUnique({
+            where: { slug: req.params.slug },
+        });
+        if (!article) {
+            return res.status(404).json({ error: "Article non trouvé" });
+        }
+        res.json(article);
+    } catch (error: any) {
+        console.error("Erreur récupération article:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.get("/api/admin/articles", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const articles = await prisma.article.findMany({
+            orderBy: { createdAt: "desc" },
+        });
+        res.json(articles);
+    } catch (error: any) {
+        console.error("Erreur récupération articles admin:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.post("/api/admin/articles", requireAuth, requireAdmin, upload.single("image"), async (req, res) => {
+    try {
+        const { title, slug, excerpt, content, author, category, keywords, metaDescription, readingTime, published } = req.body;
+
+        const existingArticle = await prisma.article.findUnique({
+            where: { slug },
+        });
+
+        if (existingArticle) {
+            return res.status(400).json({ error: "Ce slug existe déjà" });
+        }
+
+        let imageUrl = null;
+        if (req.file) {
+            imageUrl = await uploadToR2(req.file, "images-articles-blog");
+        }
+
+        const article = await prisma.article.create({
+            data: {
+                title,
+                slug,
+                excerpt,
+                content,
+                image: imageUrl,
+                author: author || "Sacs à Bonheurs",
+                category: category || "Blog",
+                keywords,
+                metaDescription,
+                readingTime: parseInt(readingTime) || 5,
+                published: published === "true" || false,
+            },
+        });
+
+        res.status(201).json(article);
+    } catch (error: any) {
+        console.error("Erreur création article:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.put("/api/admin/articles/:id", requireAuth, requireAdmin, upload.single("image"), async (req, res) => {
+    try {
+        const { title, slug, excerpt, content, author, category, keywords, metaDescription, readingTime, published } = req.body;
+
+        const existingArticle = await prisma.article.findUnique({
+            where: { slug },
+        });
+
+        if (existingArticle && existingArticle.id !== parseInt(req.params.id)) {
+            return res.status(400).json({ error: "Ce slug existe déjà" });
+        }
+
+        let imageUrl = undefined;
+        if (req.file) {
+            imageUrl = await uploadToR2(req.file, "images-articles-blog");
+        }
+
+        const article = await prisma.article.update({
+            where: { id: parseInt(req.params.id) },
+            data: {
+                ...(title && { title }),
+                ...(slug && { slug }),
+                ...(excerpt && { excerpt }),
+                ...(content && { content }),
+                ...(imageUrl && { image: imageUrl }),
+                ...(author && { author }),
+                ...(category && { category }),
+                ...(keywords && { keywords }),
+                ...(metaDescription && { metaDescription }),
+                ...(readingTime && { readingTime: parseInt(readingTime) }),
+                ...(published !== undefined && { published: published === "true" }),
+            },
+        });
+
+        res.json(article);
+    } catch (error: any) {
+        console.error("Erreur modification article:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
+app.delete("/api/admin/articles/:id", requireAuth, requireAdmin, async (req, res) => {
+    try {
+        const article = await prisma.article.findUnique({
+            where: { id: parseInt(req.params.id) },
+        });
+
+        if (!article) {
+            return res.status(404).json({ error: "Article non trouvé" });
+        }
+
+        if (article.image) {
+            try {
+                await deleteImagesFromR2([article.image]);
+            } catch (error) {
+                console.warn("Erreur suppression image:", error);
+            }
+        }
+
+        await prisma.article.delete({
+            where: { id: parseInt(req.params.id) },
+        });
+
+        res.json({ success: true });
+    } catch (error: any) {
+        console.error("Erreur suppression article:", error);
+        res.status(500).json({ error: "Erreur serveur" });
+    }
+});
+
 // Merchant google routes
 app.get('/api/google-merchant-feed.xml', async (req: Request, res: Response) => {
     try {
