@@ -57,7 +57,7 @@ export default function OrdersClient() {
                         { label: "Mes commandes", }
                     ]}
                 />
-                <h1 className="text-2xl font-bold mb-4">Aucune commande trouvée</h1>
+                <h1 className="text-3xl sm:text-4xl font-bold">Aucune commande trouvée</h1>
                 <p className="text-gray-600">
                      Vous n'avez pas encore passé de commande.
                 </p>
@@ -73,7 +73,7 @@ export default function OrdersClient() {
                     { label: "Mes commandes", }
                 ]}
             />
-            <h1 className="text-2xl font-bold">Historique des commandes</h1>
+            <h1 className="text-3xl sm:text-4xl font-bold">Historique des commandes</h1>
             <div className="py-4 w-full">
                 <Table>
                     <TableHeader>

@@ -143,6 +143,10 @@
     @apply font-montserrat text-primary;
   }
 
+  h1 {
+    margin-bottom: calc(var(--spacing) * 4);
+  }
+
   a {
     @apply text-primary hover:text-accent transition-colors;
   }
