@@ -9,8 +9,8 @@ export const s3 = new S3Client({
     },
 });
 
-export async function uploadToR2(file: Express.Multer.File): Promise<string> {
-    const key = `${file.originalname}`;
+export async function uploadToR2(file: Express.Multer.File, folder?: string): Promise<string> {
+    const key = folder ? `${folder}/${file.originalname}` : file.originalname;
     try {
         await s3.send(new PutObjectCommand({
             Bucket: process.env.R2_BUCKET!,
