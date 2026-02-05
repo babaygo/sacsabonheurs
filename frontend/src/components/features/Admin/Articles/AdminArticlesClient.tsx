@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BlogArticle } from "@/types/BlogArticle";
+import { Article } from "@/types/Article";
 import { getAdminArticles, createArticle, updateArticle, deleteArticle } from "@/lib/api/blog";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -9,11 +9,11 @@ import { AlertCircle, Edit2, Trash2, Plus } from "lucide-react";
 import { ArticleDialog } from "../../../shared/Dialogs/ArticleDialog";
 
 export default function AdminArticlesClient() {
-    const [articles, setArticles] = useState<BlogArticle[]>([]);
+    const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
-    const [editingArticle, setEditingArticle] = useState<BlogArticle | null>(null);
+    const [editingArticle, setEditingArticle] = useState<Article | null>(null);
 
     useEffect(() => {
         loadArticles();
@@ -32,7 +32,7 @@ export default function AdminArticlesClient() {
         }
     };
 
-    const handleOpenDialog = (article?: BlogArticle) => {
+    const handleOpenDialog = (article?: Article) => {
         setEditingArticle(article || null);
         setOpenDialog(true);
     };

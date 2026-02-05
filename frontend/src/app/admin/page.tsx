@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { PackageSearch, Handbag, Scale, ListTree, Banana, RectangleEllipsis, Ship, TruckElectric } from "lucide-react";
+import { PackageSearch, Handbag, Scale, ListTree, RectangleEllipsis, TruckElectric, BookOpen } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useEffect } from "react";
@@ -103,6 +103,22 @@ export default function AdminHomePage() {
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
                                 Ajouter, supprimer, modifier les bannières.
+                            </p>
+                        </CardContent>
+                    </Card>
+                </Link>
+
+                <Link href="/admin/articles" className="h-full w-full">
+                    <Card className="h-full w-full hover:shadow-md transition">
+                        <CardHeader>
+                            <CardTitle className="flex items-center gap-2">
+                                <BookOpen className="w-5 h-5" />
+                                Articles
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <p className="text-sm text-muted-foreground">
+                                Ajouter, supprimer, modifier les articles de blog.
                             </p>
                         </CardContent>
                     </Card>
