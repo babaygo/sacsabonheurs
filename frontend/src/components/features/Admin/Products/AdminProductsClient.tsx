@@ -3,13 +3,14 @@
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { AddDialog } from "@/components/shared/Dialogs/ProductAddDialog";
-import { EditDialog } from "@/components/shared/Dialogs/ProductEditDialog";
+import { ProductDialog } from "@/components/shared/Dialogs/ProductDialog";
 import { DeleteDialog } from "@/components/shared/Dialogs/ProductDeleteDialog";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useCategories } from "@/hooks/useCategories";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { Product } from "@/types/Product";
 
 export default function AdminProducts() {
     const { user, loadingUser } = useSessionContext();
@@ -20,6 +21,8 @@ export default function AdminProducts() {
     const [filter, setFilter] = useState("all");
     const [products, setProducts] = useState<any[]>([]);
     const [page, setPage] = useState(0);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
 
     useEffect(() => {
         if (!loadingUser && user?.role !== "admin") {
@@ -52,6 +55,21 @@ export default function AdminProducts() {
 
     if (loadingUser) return null;
 
+    const handleAdd = () => {
+        setSelectedProduct(null);
+        setOpenDialog(true);
+    };
+
+    const handleEdit = (product: Product) => {
+        setSelectedProduct(product);
+        setOpenDialog(true);
+    };
+
+    const handleRefresh = () => {
+        setPage(0);
+        fetchProducts(24, false, 0);
+    };
+
     const filteredProducts = products.filter((product) => {
         if (filter === "rupture-stock") return product.stock < 1;
         if (filter === "hidden") return product.hidden === true;
@@ -62,14 +80,19 @@ export default function AdminProducts() {
         <div className="min-h-screen pt-4 px-4 md:px-8">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                 <h1 className="text-3xl sm:text-4xl font-bold">Produits</h1>
-                <AddDialog
-                    categories={categories}
-                    onSuccess={() => {
-                        setPage(0);
-                        fetchProducts(24, false, 0);
-                    }}
-                />
+                <Button variant="outline" onClick={handleAdd}>
+                    <Plus />
+                    Ajouter un sac
+                </Button>
             </div>
+
+            <ProductDialog
+                open={openDialog}
+                onOpenChange={setOpenDialog}
+                product={selectedProduct}
+                categories={categories}
+                onSave={handleRefresh}
+            />
 
             <div className="mb-8">
                 <Select value={filter} onValueChange={setFilter}>
@@ -99,21 +122,18 @@ export default function AdminProducts() {
                             <h2 className="text-lg font-semibold">{product.name}</h2>
 
                             <div className="flex flex-wrap gap-2 mt-2">
-                                <EditDialog
-                                    product={product}
-                                    categories={categories}
-                                    onSuccess={() => {
-                                        setPage(0);
-                                        fetchProducts(24, false, 0);
-                                    }}
-                                />
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleEdit(product)}
+                                    className="w-full"
+                                >
+                                    Modifier
+                                </Button>
 
                                 <DeleteDialog
                                     productId={product.id}
-                                    onSuccess={() => {
-                                        setPage(0);
-                                        fetchProducts(24, false, 0);
-                                    }}
+                                    onSuccess={handleRefresh}
                                 />
                             </div>
                         </div>

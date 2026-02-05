@@ -58,3 +58,45 @@ export async function getProductsByCategory(categoryId: number): Promise<Product
         return [];
     }
 }
+
+export async function createProduct(data: FormData): Promise<Product> {
+    const res = await fetch(`${getBaseUrl()}/api/admin/products`, {
+        method: "POST",
+        credentials: "include",
+        body: data,
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Erreur création produit");
+    }
+
+    return await res.json();
+}
+
+export async function updateProduct(id: number, data: FormData): Promise<Product> {
+    const res = await fetch(`${getBaseUrl()}/api/admin/products/${id}`, {
+        method: "PUT",
+        credentials: "include",
+        body: data,
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Erreur modification produit");
+    }
+
+    return await res.json();
+}
+
+export async function deleteProduct(id: number): Promise<void> {
+    const res = await fetch(`${getBaseUrl()}/api/admin/products/${id}`, {
+        method: "DELETE",
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Erreur suppression produit");
+    }
+}

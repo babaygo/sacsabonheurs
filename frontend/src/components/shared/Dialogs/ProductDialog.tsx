@@ -2,43 +2,84 @@
 
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Select, SelectContent, SelectItem, SelectTrigger, } from "@/components/ui/select";
 import { ImageUploader } from "@/components/shared/ImageUploader";
 import toast from "react-hot-toast";
-import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { RichTextEditor } from "../RichEditorText";
 import { Category } from "@/types/Category";
 import { validateSalePrice, calculateComplementaryValue } from "@/lib/utils/priceCalculator";
+import { AlertCircle } from "lucide-react";
+import { createProduct, updateProduct } from "@/lib/api/product";
 
-export function EditDialog({ product, categories, onSuccess }: { product: Product, categories: Category[], onSuccess: () => void }) {
-    const [open, setOpen] = useState(false);
-    const [form, setForm] = useState(product);
+interface ProductDialogProps {
+    open: boolean;
+    onOpenChange: (open: boolean) => void;
+    product?: Product | null;
+    categories: Category[];
+    onSave: () => void;
+}
 
+const emptyProduct = {
+    name: "",
+    slug: "",
+    description: "",
+    hidden: false,
+    price: 0,
+    stock: 1,
+    weight: 0,
+    height: 0,
+    lenght: 0,
+    width: 0,
+    categoryId: 0,
+    color: "",
+    material: "",
+    isOnSale: false,
+    salePrice: null,
+    salePercentage: null,
+};
+
+export function ProductDialog({
+    open,
+    onOpenChange,
+    product,
+    categories,
+    onSave,
+}: ProductDialogProps) {
+    const [form, setForm] = useState<Partial<Product>>(emptyProduct);
+    const [files, setFiles] = useState<File[]>([]);
+    const [keptImages, setKeptImages] = useState<string[]>([]);
+    const [removeImages, setRemoveImages] = useState<string[]>([]);
+    const [saleError, setSaleError] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
+
+    const isEditMode = !!product;
 
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
     );
 
-    const existingImages = product.images as string[];
-
-    const [files, setFiles] = useState<File[]>([]);
-    const [keptImages, setKeptImages] = useState<string[]>(existingImages);
-    const [removeImages, setRemoveImages] = useState<string[]>([]);
-    const [saleError, setSaleError] = useState<string>("");
-
     useEffect(() => {
         if (open) {
-            setKeptImages(product.images);
+            if (isEditMode && product) {
+                setForm(product);
+                setKeptImages(product.images as string[]);
+                setRemoveImages([]);
+            } else {
+                setForm(emptyProduct);
+                setKeptImages([]);
+                setRemoveImages([]);
+            }
             setFiles([]);
             setSaleError("");
+            setIsLoading(false);
         }
-    }, [open]);
+    }, [open, product, isEditMode]);
 
     const removeImage = async (url: string) => {
         setKeptImages((prev) => prev.filter((img) => img !== url));
@@ -50,10 +91,10 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
 
         if ((field === "salePrice" || field === "salePercentage") && form.isOnSale) {
             if (field === "salePrice" && value) {
-                const calculatedPercentage = calculateComplementaryValue(form.price, "price", value);
+                const calculatedPercentage = calculateComplementaryValue(form.price as number, "price", value);
                 newForm.salePercentage = calculatedPercentage;
             } else if (field === "salePercentage" && value) {
-                const calculatedPrice = calculateComplementaryValue(form.price, "percentage", value);
+                const calculatedPrice = calculateComplementaryValue(form.price as number, "percentage", value);
                 newForm.salePrice = calculatedPrice;
             }
         }
@@ -66,7 +107,7 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                 const newSalePercentage = field === "salePercentage" ? value : newForm.salePercentage;
                 
                 const validation = validateSalePrice(
-                    form.price,
+                    form.price as number,
                     newSalePrice,
                     newSalePercentage
                 );
@@ -77,11 +118,27 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
         }
     };
 
+    // Auto-generate slug from name
+    const handleNameChange = (value: string) => {
+        handleChange("name", value);
+        
+        if (!isEditMode) {
+            const slug = value
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^a-z0-9\s-]/g, "")
+                .trim()
+                .replace(/\s+/g, "-");
+            setForm((prev) => ({ ...prev, slug }));
+        }
+    };
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (form.isOnSale) {
-            const validation = validateSalePrice(form.price, form.salePrice, form.salePercentage);
+            const validation = validateSalePrice(form.price as number, form.salePrice, form.salePercentage);
             if (!validation.valid) {
                 setSaleError(validation.error || "Erreur de validation");
                 toast.error(validation.error || "Erreur de validation");
@@ -89,58 +146,56 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
             }
         }
 
-        const formData = new FormData();
-        Object.entries(form).forEach(([key, value]) => {
-            const val = typeof value === "boolean" ? (value ? "true" : "false") : String(value);
-            formData.append(key, val);
-        });
-
-        keptImages.forEach((url) => {
-            formData.append("keptImages", url);
-        });
-
-        removeImages.forEach((url) => {
-            formData.append("removedImages", url);
-        });
-
-        files.forEach((file) => {
-            formData.append("images", file);
-        });
+        setIsLoading(true);
 
         try {
-            const res = await fetch(`${getBaseUrl()}/api/admin/products/${product.id}`, {
-                method: "PUT",
-                credentials: "include",
-                body: formData,
+            const formData = new FormData();
+            Object.entries(form).forEach(([key, value]) => {
+                const val = typeof value === "boolean" ? (value ? "true" : "false") : String(value ?? "");
+                formData.append(key, val);
             });
 
-            if (!res.ok) {
-                const { error } = await res.json();
-                throw new Error(error || "Erreur inconnue");
+            if (isEditMode && product) {
+                keptImages.forEach((url) => {
+                    formData.append("keptImages", url);
+                });
+                removeImages.forEach((url) => {
+                    formData.append("removedImages", url);
+                });
             }
 
-            setOpen(false);
-            onSuccess();
-            toast.success("Produit modifié avec succès !")
+            files.forEach((file) => {
+                formData.append("images", file);
+            });
+
+            if (isEditMode && product) {
+                await updateProduct(product.id, formData);
+                toast.success("Produit modifié avec succès !");
+            } else {
+                await createProduct(formData);
+                toast.success("Produit ajouté avec succès !");
+            }
+
+            onOpenChange(false);
+            onSave();
         } catch (err: any) {
             toast.error(err.message);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <DialogTrigger asChild>
-                <Button className="w-full" variant="outline" onClick={() => setOpen(true)}>
-                    Modifier le sac
-                </Button>
-            </DialogTrigger>
-
+        <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="max-h-screen overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle>Modifier le sac</DialogTitle>
+                    <DialogTitle>
+                        {isEditMode ? "Modifier le sac" : "Ajouter un sac"}
+                    </DialogTitle>
                     <DialogDescription>
-                        Modifiez les informations du sac et cliquez sur "Enregistrer" pour
-                        sauvegarder les modifications.
+                        {isEditMode
+                            ? "Modifiez les informations du sac et cliquez sur \"Enregistrer\" pour sauvegarder les modifications."
+                            : "Remplissez les informations du sac et cliquez sur \"Enregistrer\" pour l'ajouter à la boutique."}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -150,18 +205,18 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                             <Field>
                                 <FieldLabel>Nom du produit</FieldLabel>
                                 <Input
-                                    value={form.name}
+                                    value={form.name || ""}
+                                    disabled={isLoading}
                                     required
-                                    onChange={(e) => handleChange("name", e.target.value)}
+                                    onChange={(e) => handleNameChange(e.target.value)}
                                 />
                             </Field>
                             <Field>
                                 <FieldLabel>Slug</FieldLabel>
                                 <Input
-                                    value={form.slug}
+                                    value={form.slug || ""}
                                     disabled
                                     required
-                                    onChange={(e) => handleChange("slug", e.target.value)}
                                 />
                             </Field>
                         </div>
@@ -170,7 +225,7 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                             <FieldLabel>Description</FieldLabel>
                             <div className="border rounded-md bg-white">
                                 <RichTextEditor
-                                    value={form.description}
+                                    value={form.description || ""}
                                     onChange={(value) => handleChange("description", value)}
                                 />
                             </div>
@@ -178,8 +233,12 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
 
                         <Field>
                             <div className="flex items-start gap-3">
-                                <Checkbox id="hidden" checked={form.hidden}
-                                    onCheckedChange={(checked) => handleChange("hidden", checked)} />
+                                <Checkbox
+                                    id="hidden"
+                                    checked={form.hidden || false}
+                                    disabled={isLoading}
+                                    onCheckedChange={(checked) => handleChange("hidden", checked)}
+                                />
                                 <div className="grid gap-2">
                                     <Label htmlFor="hidden">Masquer dans la boutique</Label>
                                 </div>
@@ -193,7 +252,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.price}
+                                    disabled={isLoading}
+                                    value={form.price || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -207,7 +267,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.stock}
+                                    disabled={isLoading}
+                                    value={form.stock || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -219,10 +280,11 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
 
                         <Field>
                             <div className="flex items-start gap-3">
-                                <Checkbox 
-                                    id="isOnSale" 
+                                <Checkbox
+                                    id="isOnSale"
                                     checked={form.isOnSale || false}
-                                    onCheckedChange={(checked) => handleChange("isOnSale", checked)} 
+                                    disabled={isLoading}
+                                    onCheckedChange={(checked) => handleChange("isOnSale", checked)}
                                 />
                                 <div className="grid gap-2">
                                     <Label htmlFor="isOnSale">Mettre en solde</Label>
@@ -238,7 +300,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                         type="number"
                                         step="any"
                                         min={0}
-                                        value={form.salePrice || ""}
+                                        disabled={isLoading}
+                                        value={form.salePrice ?? ""}
                                         placeholder="Optionnel"
                                         onChange={(e) => {
                                             const value = e.target.value;
@@ -253,7 +316,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                         step="any"
                                         min={0}
                                         max={100}
-                                        value={form.salePercentage || ""}
+                                        disabled={isLoading}
+                                        value={form.salePercentage ?? ""}
                                         placeholder="Optionnel"
                                         onChange={(e) => {
                                             const value = e.target.value;
@@ -262,8 +326,9 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     />
                                 </Field>
                                 {saleError && (
-                                    <div className="col-span-2 p-3 bg-red-100 border border-red-400 rounded text-red-700 text-sm">
-                                        ⚠️ {saleError}
+                                    <div className="col-span-2 flex items-start gap-2 p-3 bg-red-100 border border-red-400 rounded text-red-700 text-sm">
+                                        <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                                        <span>{saleError}</span>
                                     </div>
                                 )}
                             </div>
@@ -276,7 +341,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.weight}
+                                    disabled={isLoading}
+                                    value={form.weight || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -290,7 +356,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.height}
+                                    disabled={isLoading}
+                                    value={form.height || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -304,7 +371,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.lenght}
+                                    disabled={isLoading}
+                                    value={form.lenght || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -318,7 +386,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                                     type="number"
                                     step="any"
                                     min={0}
-                                    value={form.width}
+                                    disabled={isLoading}
+                                    value={form.width || ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
@@ -332,7 +401,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                             <Field>
                                 <FieldLabel>Couleur (ex: Noir)</FieldLabel>
                                 <Input
-                                    value={form.color}
+                                    value={form.color || ""}
+                                    disabled={isLoading}
                                     required
                                     onChange={(e) => handleChange("color", e.target.value)}
                                 />
@@ -340,7 +410,8 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                             <Field>
                                 <FieldLabel>Matière</FieldLabel>
                                 <Input
-                                    value={form.material}
+                                    value={form.material || ""}
+                                    disabled={isLoading}
                                     required
                                     onChange={(e) => handleChange("material", e.target.value)}
                                 />
@@ -350,10 +421,11 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
                         <Field>
                             <FieldLabel>Catégorie</FieldLabel>
                             <Select
+                                disabled={isLoading}
                                 onValueChange={(value) =>
                                     handleChange("categoryId", parseInt(value))
                                 }
-                                value={String(form.categoryId)}
+                                value={String(form.categoryId || "")}
                             >
                                 <SelectTrigger>
                                     {selectedCategory
@@ -372,23 +444,36 @@ export function EditDialog({ product, categories, onSuccess }: { product: Produc
 
                         <Field>
                             <FieldLabel>Photos</FieldLabel>
-                            <ul className="mt-2 text-sm">
-                                {keptImages.map((url, i) => (
-                                    <li key={i} className="flex justify-between items-center text-muted-foreground">
-                                        <span className="truncate">{url.split("/").pop()}</span>
-                                        <button type="button" onClick={() => removeImage(url)} className="text-red-500 text-xs">
-                                            Supprimer
-                                        </button>
-                                    </li>
-                                ))}
-                            </ul>
-                            <ImageUploader onChange={setFiles} />
+                            {isEditMode && keptImages.length > 0 && (
+                                <ul className="mt-2 text-sm">
+                                    {keptImages.map((url, i) => (
+                                        <li
+                                            key={i}
+                                            className="flex justify-between items-center text-muted-foreground"
+                                        >
+                                            <span className="truncate">
+                                                {url.split("/").pop()}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                disabled={isLoading}
+                                                onClick={() => removeImage(url)}
+                                                className="text-red-500 text-xs hover:underline disabled:opacity-50"
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                            <div className={isLoading ? "opacity-50 pointer-events-none" : ""}>
+                                <ImageUploader onChange={setFiles} />
+                            </div>
                         </Field>
 
-                        <Button type="submit" className="w-full">
-                            Enregistrer
+                        <Button type="submit" disabled={isLoading} className="w-full">
+                            {isLoading ? "Enregistrement..." : "Enregistrer"}
                         </Button>
-
                     </FieldGroup>
                 </form>
             </DialogContent>

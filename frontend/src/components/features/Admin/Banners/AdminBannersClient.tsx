@@ -4,24 +4,25 @@ import { useEffect, useState } from "react";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
-import { AddBannerDialog } from "@/components/shared/Dialogs/BannerAddDialog";
-import { EditBannerDialog } from "@/components/shared/Dialogs/BannerEditDialog";
+import { BannerDialog } from "@/components/shared/Dialogs/BannerDialog";
 import { Banner } from "@/types/Banner";
-import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import toast from "react-hot-toast";
 import { DeleteBannerDialog } from "@/components/shared/Dialogs/BannerDeleteDialog";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import { getBanners } from "@/lib/api/banner";
 
 
 export default function AdminBannersClient() {
     const { user, loadingUser } = useSessionContext();
     const router = useRouter();
     const [banners, setBanners] = useState<Banner[]>([]);
+    const [openDialog, setOpenDialog] = useState(false);
+    const [selectedBanner, setSelectedBanner] = useState<Banner | null>(null);
 
     const fetchBanners = async () => {
         try {
-            const res = await fetch(`${getBaseUrl()}/api/admin/banners`, { credentials: 'include' });
-            if (!res.ok) throw new Error("Erreur récupération banners");
-            const data = await res.json();
+            const data = await getBanners();
             setBanners(data);
         } catch (err: any) {
             toast.error(err.message || "Erreur serveur");
@@ -38,13 +39,36 @@ export default function AdminBannersClient() {
         }
     }, [user, loadingUser]);
 
+    const handleAdd = () => {
+        setSelectedBanner(null);
+        setOpenDialog(true);
+    };
+
+    const handleEdit = (banner: Banner) => {
+        setSelectedBanner(banner);
+        setOpenDialog(true);
+    };
+
     return (
         <div className="min-h-screen pt-4">
             <div className="space-y-8">
                 <div className="flex justify-between">
                     <h1 className="text-3xl sm:text-4xl font-bold">Bannières</h1>
-                    <AddBannerDialog onSuccess={fetchBanners} />
+                    <Button variant="outline" onClick={handleAdd}>
+                        <Plus />
+                        Ajouter une bannière
+                    </Button>
                 </div>
+
+                <BannerDialog
+                    open={openDialog}
+                    onOpenChange={setOpenDialog}
+                    banner={selectedBanner}
+                    onSave={async () => {
+                        
+                        await fetchBanners();
+                    }}
+                />
 
                 {banners.length > 0 ? (
                     <Table>
@@ -69,7 +93,13 @@ export default function AdminBannersClient() {
                                     </TableCell>
                                     <TableCell>{banner.active ? "Oui" : "Non"}</TableCell>
                                     <TableCell className="text-right space-x-2">
-                                        <EditBannerDialog banner={banner} onSuccess={fetchBanners} />
+                                        <Button 
+                                            variant="outline" 
+                                            size="sm"
+                                            onClick={() => handleEdit(banner)}
+                                        >
+                                            Modifier
+                                        </Button>
                                         <DeleteBannerDialog banner={banner} onSuccess={fetchBanners} />
                                     </TableCell>
                                 </TableRow>
