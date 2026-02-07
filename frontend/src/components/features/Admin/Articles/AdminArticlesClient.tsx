@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react";
 import { Article } from "@/types/Article";
-import { getAdminArticles, createArticle, updateArticle, deleteArticle } from "@/lib/api/blog";
+import { getAdminArticles, createArticle, updateArticle, deleteArticle } from "@/lib/api/article";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { AlertCircle, Edit2, Trash2, Plus } from "lucide-react";
+import { AlertCircle, Plus } from "lucide-react";
 import { ArticleDialog } from "../../../shared/Dialogs/ArticleDialog";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DeleteArticleDialog } from "@/components/shared/Dialogs/ArticleDeleteDialog";
 
 export default function AdminArticlesClient() {
     const [articles, setArticles] = useState<Article[]>([]);
@@ -56,17 +58,6 @@ export default function AdminArticlesClient() {
         }
     };
 
-    const handleDeleteArticle = async (id: number) => {
-        if (!confirm("Êtes-vous sûr de vouloir supprimer cet article ?")) return;
-
-        try {
-            await deleteArticle(id);
-            await loadArticles();
-        } catch (err: any) {
-            setError(err.message);
-        }
-    };
-
     if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
@@ -76,12 +67,12 @@ export default function AdminArticlesClient() {
     }
 
     return (
-        <div className="space-y-6">
+        <div className="min-h-screen pt-4">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold">Gestion des Articles</h1>
-                <Button onClick={() => handleOpenDialog()}>
-                    <Plus className="w-4 h-4 mr-2" />
-                    Nouvel article
+                <h1 className="text-3xl sm:text-4xl font-bold">Articles</h1>
+                <Button variant="outline" onClick={() => handleOpenDialog()}>
+                    <Plus />
+                    Ajouter un article
                 </Button>
             </div>
 
@@ -95,75 +86,50 @@ export default function AdminArticlesClient() {
             {articles.length === 0 ? (
                 <div className="text-center py-12">
                     <p className="text-gray-500 mb-4">Aucun article trouvé</p>
-                    <Button onClick={() => handleOpenDialog()}>
-                        <Plus className="w-4 h-4 mr-2" />
-                        Créer le premier article
-                    </Button>
                 </div>
             ) : (
-                <div className="overflow-x-auto">
-                    <table className="w-full border-collapse">
-                        <thead>
-                            <tr className="bg-gray-100 border-b">
-                                <th className="px-4 py-2 text-left font-semibold">Titre</th>
-                                <th className="px-4 py-2 text-left font-semibold">Slug</th>
-                                <th className="px-4 py-2 text-left font-semibold">Catégorie</th>
-                                <th className="px-4 py-2 text-left font-semibold">Publié</th>
-                                <th className="px-4 py-2 text-left font-semibold">Créé</th>
-                                <th className="px-4 py-2 text-center font-semibold">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {articles.map((article) => (
-                                <tr key={article.id} className="border-b hover:bg-gray-50">
-                                    <td className="px-4 py-3 font-medium max-w-xs truncate">
-                                        {article.title}
-                                    </td>
-                                    <td className="px-4 py-3 text-sm text-gray-600">
-                                        {article.slug}
-                                    </td>
-                                    <td className="px-4 py-3 text-sm">
-                                        <span className="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full text-xs">
-                                            {article.category}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <span
-                                            className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${
-                                                article.published
-                                                    ? "bg-green-100 text-green-700"
-                                                    : "bg-yellow-100 text-yellow-700"
-                                            }`}
-                                        >
-                                            {article.published ? "Publié" : "Brouillon"}
-                                        </span>
-                                    </td>
-                                    <td className="px-4 py-3 text-sm text-gray-600">
-                                        {new Date(article.createdAt).toLocaleDateString("fr-FR")}
-                                    </td>
-                                    <td className="px-4 py-3">
-                                        <div className="flex items-center justify-center gap-2">
-                                            <Button
-                                                size="sm"
-                                                variant="outline"
-                                                onClick={() => handleOpenDialog(article)}
-                                            >
-                                                <Edit2 className="w-4 h-4" />
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                variant="destructive"
-                                                onClick={() => handleDeleteArticle(article.id)}
-                                            >
-                                                <Trash2 className="w-4 h-4" />
-                                            </Button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                <Table>
+                    <TableHeader>
+                        <TableRow>
+                            <TableHead>Titre</TableHead>
+                            <TableHead>Slug</TableHead>
+                            <TableHead>Catégorie</TableHead>
+                            <TableHead>Publié</TableHead>
+                            <TableHead>Créé</TableHead>
+                            <TableHead className="text-right">Actions</TableHead>
+                        </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                        {articles.map((article) => (
+                            <TableRow key={article.id}>
+                                <TableCell className="truncate">
+                                    {article.title}
+                                </TableCell>
+                                <TableCell>
+                                    {article.slug}
+                                </TableCell>
+                                <TableCell>
+                                    {article.category}
+                                </TableCell>
+                                <TableCell>
+                                    {article.published ? "Publié" : "Brouillon"}
+                                </TableCell>
+                                <TableCell>
+                                    {new Date(article.createdAt).toLocaleDateString("fr-FR")}
+                                </TableCell>
+                                <TableCell className="text-right space-x-2">
+                                    <Button
+                                        variant="outline"
+                                        onClick={() => handleOpenDialog(article)}
+                                    >
+                                        Modifier
+                                    </Button>
+                                    <DeleteArticleDialog article={article} onSuccess={loadArticles} />
+                                </TableCell>
+                            </TableRow>
+                        ))}
+                    </TableBody>
+                </Table>
             )}
 
             <ArticleDialog
