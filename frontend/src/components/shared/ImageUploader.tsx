@@ -5,8 +5,15 @@ import { useCallback, useState } from "react";
 import { Trash } from "lucide-react";
 import toast from "react-hot-toast";
 
-export function ImageUploader({ onChange }: { onChange: (files: File[]) => void }) {
+interface ImageUploaderProps {
+    onChange: (files: File | File[]) => void;
+    maxFiles?: number;
+}
+
+export function ImageUploader({ onChange, maxFiles = 7 }: ImageUploaderProps) {
     const [files, setFiles] = useState<File[]>([]);
+    const normalizedMaxFiles = Math.min(Math.max(maxFiles, 1), 7);
+    const isSingleMode = normalizedMaxFiles === 1;
 
     function sanitizeFileName(name: string): string {
         return name
@@ -25,16 +32,23 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
                 return new File([file], cleanName, { type: file.type });
             });
 
+            if (isSingleMode) {
+                const next = sanitizedFiles.slice(0, 1);
+                setFiles(next);
+                onChange(next[0] ?? []);
+                return;
+            }
+
             const combined = [...files, ...sanitizedFiles];
-            if (combined.length > 7) {
-                toast.error("Maximum 7 images autorisées");
+            if (combined.length > normalizedMaxFiles) {
+                toast.error(`Maximum ${normalizedMaxFiles} images autorisees`);
                 return;
             }
 
             setFiles(combined);
             onChange(combined);
         },
-        [files, onChange]
+        [files, isSingleMode, normalizedMaxFiles, onChange]
     );
 
     const removeFile = (e: React.MouseEvent, index: number) => {
@@ -49,8 +63,8 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
         accept: { "image/*": [] },
-        multiple: true,
-        maxFiles: 7,
+        multiple: !isSingleMode,
+        maxFiles: normalizedMaxFiles,
     });
 
     return (
@@ -60,9 +74,9 @@ export function ImageUploader({ onChange }: { onChange: (files: File[]) => void 
         >
             <input {...getInputProps()} />
             {isDragActive ? (
-                <p>Déposez jusqu'à 7 images…</p>
+                <p>Deposez jusqu'a {normalizedMaxFiles} image{normalizedMaxFiles > 1 ? "s" : ""}…</p>
             ) : (
-                <p>Glissez vos images ici ou cliquez (max 7)</p>
+                <p>Glissez vos images ici ou cliquez (max {normalizedMaxFiles})</p>
             )}
 
             {files.length > 0 && (

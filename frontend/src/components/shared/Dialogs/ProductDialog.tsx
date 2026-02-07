@@ -105,7 +105,7 @@ export function ProductDialog({
             if (value === true || (field !== "isOnSale" && form.isOnSale)) {
                 const newSalePrice = field === "salePrice" ? value : newForm.salePrice;
                 const newSalePercentage = field === "salePercentage" ? value : newForm.salePercentage;
-                
+
                 const validation = validateSalePrice(
                     form.price as number,
                     newSalePrice,
@@ -118,10 +118,9 @@ export function ProductDialog({
         }
     };
 
-    // Auto-generate slug from name
     const handleNameChange = (value: string) => {
         handleChange("name", value);
-        
+
         if (!isEditMode) {
             const slug = value
                 .toLowerCase()
@@ -293,7 +292,7 @@ export function ProductDialog({
                         </Field>
 
                         {form.isOnSale && (
-                            <div className="grid grid-cols-2 gap-4 bg-amber-50 p-4 rounded-md border border-amber-200">
+                            <div className="grid grid-cols-2 gap-4">
                                 <Field>
                                     <FieldLabel>Nouveau prix (€)</FieldLabel>
                                     <Input
@@ -302,7 +301,6 @@ export function ProductDialog({
                                         min={0}
                                         disabled={isLoading}
                                         value={form.salePrice ?? ""}
-                                        placeholder="Optionnel"
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             handleChange("salePrice", value === "" ? null : parseFloat(value));
@@ -318,7 +316,6 @@ export function ProductDialog({
                                         max={100}
                                         disabled={isLoading}
                                         value={form.salePercentage ?? ""}
-                                        placeholder="Optionnel"
                                         onChange={(e) => {
                                             const value = e.target.value;
                                             handleChange("salePercentage", value === "" ? null : parseFloat(value));
@@ -467,7 +464,13 @@ export function ProductDialog({
                                 </ul>
                             )}
                             <div className={isLoading ? "opacity-50 pointer-events-none" : ""}>
-                                <ImageUploader onChange={setFiles} />
+                                <ImageUploader onChange={(files) => {
+                                    if (Array.isArray(files)) {
+                                        setFiles(files);
+                                    } else {
+                                        setFiles([files]);
+                                    }
+                                }} maxFiles={7} />
                             </div>
                         </Field>
 
