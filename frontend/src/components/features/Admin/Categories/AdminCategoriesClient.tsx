@@ -84,7 +84,6 @@ export default function AdminCategoriesClient() {
                                     <TableCell className="text-right space-x-2">
                                         <Button 
                                             variant="outline"
-                                            size="sm"
                                             onClick={() => handleEdit(category)}
                                         >
                                             Modifier
