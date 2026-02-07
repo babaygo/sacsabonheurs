@@ -30,7 +30,7 @@ export async function generateMetadata({
             type: "article",
             title: article.title,
             description: article.excerpt,
-            images: [article.image],
+            ...(article.image && { images: [article.image] }),
             publishedTime: new Date(article.createdAt).toLocaleDateString("fr-FR", {
                 year: "numeric",
                 month: "long",
