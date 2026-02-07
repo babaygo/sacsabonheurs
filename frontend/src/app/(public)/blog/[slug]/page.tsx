@@ -5,7 +5,7 @@ import { Metadata } from "next";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Button } from "@/components/ui/button";
 import { Article } from "@/types/Article";
-import { getArticleBySlug, getArticles } from "@/lib/api/blog";
+import { getArticleBySlug, getArticles } from "@/lib/api/article";
 
 export async function generateMetadata({
     params,

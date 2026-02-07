@@ -27,7 +27,7 @@ async function deleteProduct(id: number) {
     }
 }
 
-export function DeleteDialog({ productId, onSuccess }: { productId: number, onSuccess: () => void }) {
+export function DeleteProductDialog({ productId, onSuccess }: { productId: number, onSuccess: () => void }) {
     const [open, setOpen] = useState(false);
 
     return (

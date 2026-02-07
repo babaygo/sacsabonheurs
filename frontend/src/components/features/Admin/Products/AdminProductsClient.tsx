@@ -4,7 +4,7 @@ import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ProductDialog } from "@/components/shared/Dialogs/ProductDialog";
-import { DeleteDialog } from "@/components/shared/Dialogs/ProductDeleteDialog";
+import { DeleteProductDialog } from "@/components/shared/Dialogs/ProductDeleteDialog";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useCategories } from "@/hooks/useCategories";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -131,7 +131,7 @@ export default function AdminProducts() {
                                     Modifier
                                 </Button>
 
-                                <DeleteDialog
+                                <DeleteProductDialog
                                     productId={product.id}
                                     onSuccess={handleRefresh}
                                 />

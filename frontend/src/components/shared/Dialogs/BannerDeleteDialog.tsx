@@ -8,7 +8,7 @@ import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import { Trash } from "lucide-react";
 import Banner from "@/types/Banner";
 
-async function deleteCategory(id: number) {
+async function deleteBanner(id: number) {
     try {
         const res = await fetch(
             `${getBaseUrl()}/api/admin/banners/${id}`,
@@ -52,7 +52,7 @@ export function DeleteBannerDialog({ banner, onSuccess }: { banner: Banner, onSu
                     className="w-full"
                     variant="destructive"
                     onClick={async () => {
-                        const result = await deleteCategory(banner.id);
+                        const result = await deleteBanner(banner.id);
                         if (result) {
                             setOpen(false);
                             onSuccess();
