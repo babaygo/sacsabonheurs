@@ -6,13 +6,25 @@ import { RichTextEditor } from "@/components/shared/RichEditorText";
 import {
     Dialog,
     DialogContent,
+    DialogDescription,
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { AlertCircle, Upload } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { AlertCircle } from "lucide-react";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { ImageUploader } from "../ImageUploader";
 
 interface ArticleDialogProps {
     open: boolean;
@@ -36,8 +48,9 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
     });
 
     const [imageFile, setImageFile] = useState<File | null>(null);
-    const [imagePreview, setImagePreview] = useState<string>("");
-    const [loading, setLoading] = useState(false);
+    const [existingImage, setExistingImage] = useState<string | null>(null);
+    const [removeImage, setRemoveImage] = useState(false);
+    const [isLoading, setisLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -54,9 +67,6 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
                 readingTime: String(article.readingTime),
                 published: article.published || false,
             });
-            if (article.image) {
-                setImagePreview(article.image);
-            }
         } else {
             setFormData({
                 title: "",
@@ -70,11 +80,17 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
                 readingTime: "5",
                 published: false,
             });
-            setImagePreview("");
         }
         setImageFile(null);
+        setExistingImage(article?.image ?? null);
+        setRemoveImage(false);
         setError(null);
     }, [article, open]);
+
+    const handleRemoveImage = () => {
+        setExistingImage(null);
+        setRemoveImage(true);
+    };
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
         const { name, value, type } = e.target as HTMLInputElement;
@@ -84,48 +100,25 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
         });
     };
 
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) {
-            setImageFile(file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result as string);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        handleInputChange(e);
 
-    const generateSlug = () => {
-        const slug = formData.title
+        const slug = e.target.value
             .toLowerCase()
-            .replace(/[^\w\s-]/g, "")
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-");
-        setFormData({ ...formData, slug });
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9\s-]/g, "")
+            .trim()
+            .replace(/\s+/g, "-");
+        setFormData((prev) => ({ ...prev, slug }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError(null);
 
-        if (!formData.title.trim()) {
-            setError("Le titre est requis");
-            return;
-        }
-
-        if (!formData.slug.trim()) {
-            setError("Le slug est requis");
-            return;
-        }
-
-        if (!formData.content.trim()) {
-            setError("Le contenu est requis");
-            return;
-        }
-
         try {
-            setLoading(true);
+            setisLoading(true);
 
             const data = new FormData();
             data.append("title", formData.title);
@@ -139,6 +132,10 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
             data.append("readingTime", formData.readingTime);
             data.append("published", String(formData.published));
 
+            if (removeImage) {
+                data.append("removeImage", "true");
+            }
+
             if (imageFile) {
                 data.append("image", imageFile);
             }
@@ -148,17 +145,22 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
         } catch (err: any) {
             setError(err.message);
         } finally {
-            setLoading(false);
+            setisLoading(false);
         }
     };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+            <DialogContent className="max-h-screen overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>
                         {article ? "Modifier l'article" : "Créer un nouvel article"}
                     </DialogTitle>
+                    <DialogDescription>
+                        {article
+                            ? "Modifiez les informations de l'article et cliquez sur \"Enregistrer\" pour sauvegarder les modifications."
+                            : "Remplissez les informations de l'article et cliquez sur \"Enregistrer\" pour l'ajouter au blog."}
+                    </DialogDescription>
                 </DialogHeader>
 
                 {error && (
@@ -169,197 +171,173 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Titre */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Titre *</label>
-                        <div className="flex gap-2">
+                    <FieldGroup>
+                        <Field>
+                            <FieldLabel>Titre</FieldLabel>
+                            <Input
+                                name="title"
+                                value={formData.title || ""}
+                                disabled={isLoading}
+                                required
+                                onChange={(e) => handleNameChange(e)}
+                            />
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Slug</FieldLabel>
+                            <Input
+                                name="slug"
+                                value={formData.slug || ""}
+                                disabled
+                                required
+                            />
+                        </Field>
+
+
+                        <Field>
+                            <FieldLabel>Photo</FieldLabel>
+                            {existingImage && (
+                                <ul className="mt-2 text-sm">
+                                    <li className="flex justify-between items-center text-muted-foreground">
+                                        <span className="truncate">
+                                            {existingImage.split("/").pop()}
+                                        </span>
+                                        <button
+                                            type="button"
+                                            disabled={isLoading}
+                                            onClick={handleRemoveImage}
+                                            className="text-red-500 text-xs hover:underline disabled:opacity-50"
+                                        >
+                                            Supprimer
+                                        </button>
+                                    </li>
+                                </ul>
+                            )}
+                            <div className={isLoading ? "opacity-50 pointer-events-none" : ""}>
+                                <ImageUploader
+                                    onChange={(files) => {
+                                        const nextFile = Array.isArray(files) ? files[0] : files;
+                                        setImageFile(nextFile ?? null);
+                                        if (article?.image) {
+                                            setRemoveImage(true);
+                                        }
+                                    }}
+                                    maxFiles={1}
+                                />
+                            </div>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Extrait (résumé court)</FieldLabel>
+                            <Textarea
+                                name="excerpt"
+                                value={formData.excerpt}
+                                onChange={handleInputChange}
+                                placeholder="Résumé court du contenu de l'article"
+                                rows={3}
+                                required
+                            />
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Contenu</FieldLabel>
+                            <RichTextEditor
+                                value={formData.content}
+                                onChange={(value) => setFormData({ ...formData, content: value })}
+                            />
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Auteur</FieldLabel>
                             <Input
                                 type="text"
-                                name="title"
-                                value={formData.title}
+                                name="author"
+                                value={formData.author}
                                 onChange={handleInputChange}
-                                placeholder="Titre de l'article"
+                                placeholder="Sacs à Bonheurs"
+                                required
                             />
-                            <Button
-                                type="button"
-                                onClick={generateSlug}
-                                variant="outline"
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Catégorie</FieldLabel>
+                            <Select
+                                value={formData.category}
+                                onValueChange={(value) =>
+                                    setFormData((prev) => ({ ...prev, category: value }))
+                                }
                             >
-                                Générer slug
-                            </Button>
-                        </div>
-                    </div>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Choisir une catégorie" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="Blog">Blog</SelectItem>
+                                    <SelectItem value="Guide">Guide</SelectItem>
+                                    <SelectItem value="Durabilité">Durabilité</SelectItem>
+                                    <SelectItem value="Tendances">Tendances</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </Field>
 
-                    {/* Slug */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Slug *</label>
-                        <Input
-                            type="text"
-                            name="slug"
-                            value={formData.slug}
-                            onChange={handleInputChange}
-                            placeholder="mon-article-slug"
-                        />
-                    </div>
-
-                    {/* Image */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Image</label>
-                        <div className="flex gap-4">
-                            <div className="flex-1">
-                                <label className="flex items-center justify-center px-4 py-6 border-2 border-dashed rounded-lg cursor-pointer hover:bg-gray-50">
-                                    <div className="text-center">
-                                        <Upload className="w-8 h-8 mx-auto text-gray-400" />
-                                        <p className="mt-2 text-sm text-gray-600">Cliquez pour uploader une image</p>
-                                    </div>
-                                    <input
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={handleImageChange}
-                                        className="hidden"
-                                    />
-                                </label>
-                            </div>
-                            {imagePreview && (
-                                <div className="w-32 h-32">
-                                    <img
-                                        src={imagePreview}
-                                        alt="Aperçu"
-                                        className="w-full h-full object-cover rounded-lg"
-                                    />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Excerpt */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Extrait (résumé court)</label>
-                        <textarea
-                            name="excerpt"
-                            value={formData.excerpt}
-                            onChange={handleInputChange}
-                            placeholder="Résumé court du contenu de l'article"
-                            rows={3}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                    </div>
-
-                    {/* Contenu riche */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Contenu *</label>
-                        <RichTextEditor
-                            value={formData.content}
-                            onChange={(value) => setFormData({ ...formData, content: value })}
-                        />
-                    </div>
-
-                    {/* Auteur */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Auteur</label>
-                        <Input
-                            type="text"
-                            name="author"
-                            value={formData.author}
-                            onChange={handleInputChange}
-                            placeholder="Sacs à Bonheurs"
-                        />
-                    </div>
-
-                    {/* Catégorie */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Catégorie</label>
-                        <select
-                            name="category"
-                            value={formData.category}
-                            onChange={handleInputChange}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        >
-                            <option value="Blog">Blog</option>
-                            <option value="Guide">Guide</option>
-                            <option value="Durabilité">Durabilité</option>
-                            <option value="Tendances">Tendances</option>
-                        </select>
-                    </div>
-
-                    {/* Mots-clés */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Mots-clés (séparés par des virgules)</label>
-                        <Input
-                            type="text"
-                            name="keywords"
-                            value={formData.keywords}
-                            onChange={handleInputChange}
-                            placeholder="mot-clé1, mot-clé2, mot-clé3"
-                        />
-                    </div>
-
-                    {/* Meta description */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Meta description (155-160 caractères)</label>
-                        <textarea
-                            name="metaDescription"
-                            value={formData.metaDescription}
-                            onChange={handleInputChange}
-                            placeholder="Description pour les moteurs de recherche"
-                            rows={2}
-                            maxLength={160}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-                        />
-                        <p className="text-xs text-gray-500">
-                            {formData.metaDescription.length}/160 caractères
-                        </p>
-                    </div>
-
-                    {/* Temps de lecture */}
-                    <div className="space-y-2">
-                        <label className="block text-sm font-semibold">Temps de lecture (minutes)</label>
-                        <Input
-                            type="number"
-                            name="readingTime"
-                            value={formData.readingTime}
-                            onChange={handleInputChange}
-                            min="1"
-                        />
-                    </div>
-
-                    {/* Publié */}
-                    <div className="space-y-2">
-                        <label className="flex items-center gap-2">
-                            <input
-                                type="checkbox"
-                                name="published"
-                                checked={formData.published}
+                        <Field>
+                            <FieldLabel>Mots-clés (séparés par des virgules)</FieldLabel>
+                            <Input
+                                type="text"
+                                name="keywords"
+                                value={formData.keywords}
                                 onChange={handleInputChange}
-                                className="w-4 h-4 rounded border-gray-300"
+                                placeholder="mot-clé1, mot-clé2, mot-clé3"
+                                required
                             />
-                            <span className="text-sm font-semibold">Publier cet article</span>
-                        </label>
-                    </div>
+                        </Field>
 
-                    {/* Boutons */}
-                    <div className="flex gap-2 justify-end pt-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={() => onOpenChange(false)}
-                            disabled={loading}
-                        >
-                            Annuler
+                        <Field>
+                            <FieldLabel>Meta description (155-160 caractères)</FieldLabel>
+                            <Textarea
+                                name="metaDescription"
+                                value={formData.metaDescription}
+                                onChange={handleInputChange}
+                                placeholder="Description pour les moteurs de recherche"
+                                rows={2}
+                                maxLength={160}
+                                required
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                {formData.metaDescription.length}/160 caractères
+                            </p>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Temps de lecture (minutes)</FieldLabel>
+                            <Input
+                                type="number"
+                                name="readingTime"
+                                value={formData.readingTime}
+                                onChange={handleInputChange}
+                                min="1"
+                            />
+                        </Field>
+
+                        <Field>
+                            <div className="flex items-center gap-2">
+                                <Checkbox
+                                    id="published"
+                                    checked={formData.published}
+                                    onCheckedChange={(checked) =>
+                                        setFormData((prev) => ({
+                                            ...prev,
+                                            published: checked === true,
+                                        }))
+                                    }
+                                />
+                                <Label htmlFor="published">Publier cet article</Label>
+                            </div>
+                        </Field>
+
+                        <Button type="submit" disabled={isLoading} className="w-full">
+                            {isLoading ? "Enregistrement..." : "Enregistrer"}
                         </Button>
-                        <Button type="submit" disabled={loading}>
-                            {loading ? (
-                                <>
-                                    <Spinner className="w-4 h-4 mr-2" />
-                                    Enregistrement...
-                                </>
-                            ) : article ? (
-                                "Modifier"
-                            ) : (
-                                "Créer"
-                            )}
-                        </Button>
-                    </div>
+                    </FieldGroup>
                 </form>
             </DialogContent>
         </Dialog>

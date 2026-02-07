@@ -4,7 +4,7 @@ export interface Article {
     slug: string;
     excerpt: string;
     content: string;
-    image: string;
+    image: string | null;
     author: string;
     category: string;
     keywords: string;
