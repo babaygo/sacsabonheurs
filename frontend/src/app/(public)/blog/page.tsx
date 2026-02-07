@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Metadata } from "next";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Article } from "@/types/Article";
-import { getArticles } from "@/lib/api/blog";
+import { getArticles } from "@/lib/api/article";
 
 export const metadata: Metadata = {
     title: "Blog - Sacs à Bonheurs - Conseils Mode et Accessoires",
@@ -86,31 +86,6 @@ export default async function BlogPage() {
                 ))}
             </div>
 
-            <div className="mt-16 bg-gradient-to-r from-primary/10 to-primary/5 rounded-lg p-8 md:p-12">
-                <div className="max-w-2xl">
-                    <h3 className="text-2xl font-bold mb-2">Restez à jour</h3>
-                    <p className="text-gray-600 mb-6">
-                        Inscrivez-vous à notre newsletter pour recevoir les derniers articles sur la mode,
-                        les tendances et nos offres exclusives.
-                    </p>
-                    <form className="flex flex-col sm:flex-row gap-3">
-                        <input
-                            type="email"
-                            placeholder="Votre email"
-                            className="flex-1 px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary"
-                            required
-                        />
-                        <button
-                            type="submit"
-                            className="px-6 py-3 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 transition-colors"
-                        >
-                            S'inscrire
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            {/* SEO Schema for Blog Collection */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{
