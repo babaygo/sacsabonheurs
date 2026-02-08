@@ -4,8 +4,18 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import HardBreak from "@tiptap/extension-hard-break";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
+import { TextStyle } from "@tiptap/extension-text-style";
+import Color from "@tiptap/extension-color";
+import { Extension } from "@tiptap/core";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import {
     Bold,
     Italic,
@@ -26,6 +36,29 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+    const FontSize = Extension.create({
+        name: "fontSize",
+        addGlobalAttributes() {
+            return [
+                {
+                    types: ["textStyle"],
+                    attributes: {
+                        fontSize: {
+                            default: null,
+                            parseHTML: (element) => element.style.fontSize || null,
+                            renderHTML: (attributes) => {
+                                if (!attributes.fontSize) {
+                                    return {};
+                                }
+                                return { style: `font-size: ${attributes.fontSize}` };
+                            },
+                        },
+                    },
+                },
+            ];
+        },
+    });
+
     const editor = useEditor({
         immediatelyRender: false,
         extensions: [
@@ -45,6 +78,9 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                     class: "text-blue-600 underline",
                 },
             }),
+            TextStyle,
+            FontSize,
+            Color,
             HardBreak
         ],
         content: value,
@@ -58,7 +94,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         },
     });
 
-    // Mettre à jour le contenu de l'éditeur quand la valeur change
     useEffect(() => {
         if (editor && value !== editor.getHTML()) {
             editor.commands.setContent(value);
@@ -68,6 +103,27 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     if (!editor) {
         return null;
     }
+
+    const fontSizes = ["12px", "14px", "16px", "18px", "20px", "24px", "32px"];
+    const currentFontSize = editor.getAttributes("textStyle").fontSize || "16px";
+    const currentColor = editor.getAttributes("textStyle").color || "var(--rte-color-ink)";
+
+    const colorOptions = [
+        { label: "Encre", value: "var(--rte-color-ink)" },
+        { label: "Primaire", value: "var(--rte-color-primary)" },
+        { label: "Accent", value: "var(--rte-color-accent)" },
+        { label: "Muted", value: "var(--rte-color-muted)" },
+        { label: "Creme", value: "var(--rte-color-cream)" },
+        { label: "Alerte", value: "var(--rte-color-destructive)" },
+    ];
+
+    const setFontSize = (size: string) => {
+        editor.chain().focus().setMark("textStyle", { fontSize: size }).run();
+    };
+
+    const setTextColor = (color: string) => {
+        editor.chain().focus().setColor(color).run();
+    };
 
     const addLink = () => {
         const url = window.prompt("URL du lien:");
@@ -79,7 +135,38 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     return (
         <div className="border border-gray-300 rounded-md overflow-hidden bg-white">
             {/* Barre d'outils */}
-            <div className="flex flex-wrap gap-1 p-2 border-b border-gray-300 bg-gray-50">
+            <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-300 bg-gray-50">
+                <Select value={currentFontSize} onValueChange={setFontSize}>
+                    <SelectTrigger className="h-8 w-[110px]">
+                        <SelectValue placeholder="Taille" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {fontSizes.map((size) => (
+                            <SelectItem key={size} value={size}>
+                                {size}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <Select value={currentColor} onValueChange={setTextColor}>
+                    <SelectTrigger className="h-8 w-[140px]">
+                        <SelectValue placeholder="Couleur" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        {colorOptions.map((color) => (
+                            <SelectItem key={color.value} value={color.value}>
+                                <span className="inline-flex items-center gap-2">
+                                    <span
+                                        className="h-3 w-3 rounded-full border border-gray-300"
+                                        style={{ backgroundColor: color.value }}
+                                    />
+                                    {color.label}
+                                </span>
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+                <div className="w-px h-6 bg-gray-300 mx-1" />
                 <Button
                     type="button"
                     variant="ghost"
@@ -185,7 +272,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                 </Button>
             </div>
 
-            {/* Zone d'édition */}
             <EditorContent editor={editor} />
         </div>
     );

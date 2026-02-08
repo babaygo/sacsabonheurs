@@ -90,6 +90,12 @@
   --chart-5: #3C3C3C;
   --container-7xl: 96rem;
   --header-height: 108px;
+  --rte-color-ink: var(--foreground);
+  --rte-color-primary: var(--primary);
+  --rte-color-accent: var(--accent);
+  --rte-color-muted: var(--muted-foreground);
+  --rte-color-cream: var(--secondary);
+  --rte-color-destructive: var(--destructive);
 }
 
 .dark {
