@@ -6,6 +6,7 @@ import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
 import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
+import TextAlign from "@tiptap/extension-text-align";
 import { Extension } from "@tiptap/core";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,10 @@ import {
     Heading2,
     Heading3,
     Link as LinkIcon,
+    AlignLeft,
+    AlignCenter,
+    AlignRight,
+    AlignJustify,
     Undo,
     Redo,
     Underline,
@@ -81,6 +86,9 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
             TextStyle,
             FontSize,
             Color,
+            TextAlign.configure({
+                types: ["heading", "paragraph"],
+            }),
             HardBreak
         ],
         content: value,
@@ -166,6 +174,43 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                         ))}
                     </SelectContent>
                 </Select>
+                <div className="w-px h-6 bg-gray-300 mx-1" />
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().setTextAlign("left").run()}
+                    className={editor.isActive({ textAlign: "left" }) ? "bg-gray-200" : ""}
+                >
+                    <AlignLeft className="h-4 w-4" />
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().setTextAlign("center").run()}
+                    className={editor.isActive({ textAlign: "center" }) ? "bg-gray-200" : ""}
+                >
+                    <AlignCenter className="h-4 w-4" />
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().setTextAlign("right").run()}
+                    className={editor.isActive({ textAlign: "right" }) ? "bg-gray-200" : ""}
+                >
+                    <AlignRight className="h-4 w-4" />
+                </Button>
+                <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => editor.chain().focus().setTextAlign("justify").run()}
+                    className={editor.isActive({ textAlign: "justify" }) ? "bg-gray-200" : ""}
+                >
+                    <AlignJustify className="h-4 w-4" />
+                </Button>
                 <div className="w-px h-6 bg-gray-300 mx-1" />
                 <Button
                     type="button"
