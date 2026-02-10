@@ -3,9 +3,7 @@ import { getBaseUrl } from "../utils/getBaseUrl";
 
 export async function getArticles(): Promise<Article[]> {
     try {
-        const res = await fetch(`${getBaseUrl()}/api/articles`, {
-            next: { revalidate: 3600 },
-        });
+        const res = await fetch(`${getBaseUrl()}/api/articles`);
 
         if (!res.ok) return [];
 
@@ -18,9 +16,7 @@ export async function getArticles(): Promise<Article[]> {
 
 export async function getArticleBySlug(slug: string): Promise<Article | null> {
     try {
-        const res = await fetch(`${getBaseUrl()}/api/articles/${slug}`, {
-            next: { revalidate: 3600 },
-        });
+        const res = await fetch(`${getBaseUrl()}/api/articles/${slug}`);
 
         if (!res.ok) return null;
 
