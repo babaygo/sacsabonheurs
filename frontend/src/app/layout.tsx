@@ -65,7 +65,7 @@ export default async function RootLayout({
             <ProductsProvider>
               <Header />
               <Toaster position="top-right" />
-              <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <main className="max-w-7xl mx-auto px-4 mt-3 sm:px-6 lg:px-8">
                 {children}
               </main>
               <CookiesBanner />
