@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Article } from "@/types/Article";
 import { getArticleBySlug, getArticles } from "@/lib/api/article";
 
+export const revalidate = 60;
+
 export async function generateMetadata({
     params,
 }: {

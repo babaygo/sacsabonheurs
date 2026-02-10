@@ -5,6 +5,9 @@ import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Article } from "@/types/Article";
 import { getArticles } from "@/lib/api/article";
 
+// Revalidate every 1 minute to fetch updated articles
+export const revalidate = 60;
+
 export const metadata: Metadata = {
     title: "Blog - Sacs à Bonheurs - Conseils Mode et Accessoires",
     description: "Découvrez nos articles de blog sur la mode, les sacs artisanaux, la durabilité et les tendances 2026. Conseils d'experts pour bien choisir votre sac.",

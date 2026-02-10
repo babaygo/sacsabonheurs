@@ -28,7 +28,7 @@ export function DeleteArticleDialog({ article, onSuccess }: { article: Article, 
                     className="w-full"
                     variant="destructive"
                     onClick={async () => {
-                        const result = await deleteArticle(article.id);
+                        const result = await deleteArticle(article.id, article.slug);
                         if (result) {
                             setOpen(false);
                             onSuccess();

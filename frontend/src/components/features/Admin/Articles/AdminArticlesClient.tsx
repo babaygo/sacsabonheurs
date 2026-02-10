@@ -47,7 +47,7 @@ export default function AdminArticlesClient() {
     const handleSaveArticle = async (articleData: any) => {
         try {
             if (editingArticle) {
-                await updateArticle(editingArticle.id, articleData);
+                await updateArticle(editingArticle.id, articleData, editingArticle.slug);
             } else {
                 await createArticle(articleData);
             }

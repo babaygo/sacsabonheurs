@@ -1,6 +1,21 @@
 import { Article } from "@/types/Article";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
+async function revalidateCache(paths: string[]) {
+    try {
+        await fetch("/api/revalidate", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "x-revalidate-secret": process.env.NEXT_PUBLIC_REVALIDATE_SECRET || "",
+            },
+            body: JSON.stringify({ paths }),
+        });
+    } catch (error) {
+        console.warn("Cache revalidation failed:", error);
+    }
+}
+
 export async function getArticles(): Promise<Article[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/articles`);
@@ -55,14 +70,16 @@ export async function createArticle(data: FormData): Promise<Article> {
             throw new Error(error.error || "Erreur création article");
         }
 
-        return await res.json();
+        const article = await res.json();
+        await revalidateCache(["/blog", `/blog/${article.slug}`]);
+        return article;
     } catch (error) {
         console.error("Erreur création article:", error);
         throw new Error("Erreur création article");
     }
 }
 
-export async function updateArticle(id: number, data: FormData): Promise<Article> {
+export async function updateArticle(id: number, data: FormData, oldSlug?: string): Promise<Article> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/articles/${id}`, {
             method: "PUT",
@@ -75,14 +92,20 @@ export async function updateArticle(id: number, data: FormData): Promise<Article
             throw new Error(error.error || "Erreur modification article");
         }
 
-        return await res.json();
+        const article = await res.json();
+        const pathsToRevalidate = ["/blog", `/blog/${article.slug}`];
+        if (oldSlug && oldSlug !== article.slug) {
+            pathsToRevalidate.push(`/blog/${oldSlug}`);
+        }
+        await revalidateCache(pathsToRevalidate);
+        return article;
     } catch (error) {
         console.error("Erreur modification article:", error);
         throw new Error("Erreur modification article");
     }
 }
 
-export async function deleteArticle(id: number): Promise<any> {
+export async function deleteArticle(id: number, slug?: string): Promise<any> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/articles/${id}`, {
             method: "DELETE",
@@ -93,9 +116,14 @@ export async function deleteArticle(id: number): Promise<any> {
             const error = await res.json();
             throw new Error(error.error || "Erreur suppression article");
         }
-        return await res.json();
+        const result = await res.json();
+        if (slug) {
+            await revalidateCache(["/blog", `/blog/${slug}`]);
+        }
+        return result;
     } catch (error) {
         console.error("Erreur suppression article:", error);
         throw new Error("Erreur suppression article");
     }
 }
+
