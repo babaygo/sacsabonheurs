@@ -43,6 +43,7 @@ interface RichTextEditorProps {
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     const [selectedFontSize, setSelectedFontSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
+    const [, setToolbarTick] = useState(0);
     const FontSize = Extension.create({
         name: "fontSize",
         addGlobalAttributes() {
@@ -110,6 +111,28 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         }
     }, [value, editor]);
 
+    useEffect(() => {
+        if (!editor) {
+            return;
+        }
+
+        const syncToolbarState = () => {
+            const textStyle = editor.getAttributes("textStyle");
+            setSelectedFontSize(textStyle.fontSize || "16px");
+            setSelectedColor(textStyle.color || "var(--rte-color-ink)");
+            setToolbarTick((tick) => tick + 1);
+        };
+
+        syncToolbarState();
+        editor.on("selectionUpdate", syncToolbarState);
+        editor.on("transaction", syncToolbarState);
+
+        return () => {
+            editor.off("selectionUpdate", syncToolbarState);
+            editor.off("transaction", syncToolbarState);
+        };
+    }, [editor]);
+
     if (!editor) {
         return null;
     }
@@ -126,12 +149,10 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
 
     const setFontSize = (size: string) => {
         editor.chain().focus().setMark("textStyle", { fontSize: size }).run();
-        setSelectedFontSize("");
     };
 
     const setTextColor = (color: string) => {
         editor.chain().focus().setColor(color).run();
-        setSelectedColor("");
     };
 
     const addLink = () => {
