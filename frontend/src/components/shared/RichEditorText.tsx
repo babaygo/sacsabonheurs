@@ -8,7 +8,7 @@ import { TextStyle } from "@tiptap/extension-text-style";
 import Color from "@tiptap/extension-color";
 import TextAlign from "@tiptap/extension-text-align";
 import { Extension } from "@tiptap/core";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -41,6 +41,8 @@ interface RichTextEditorProps {
 }
 
 export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+    const [selectedFontSize, setSelectedFontSize] = useState("");
+    const [selectedColor, setSelectedColor] = useState("");
     const FontSize = Extension.create({
         name: "fontSize",
         addGlobalAttributes() {
@@ -113,9 +115,6 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     }
 
     const fontSizes = ["12px", "14px", "16px", "18px", "20px", "24px", "32px"];
-    const currentFontSize = editor.getAttributes("textStyle").fontSize || "16px";
-    const currentColor = editor.getAttributes("textStyle").color || "var(--rte-color-ink)";
-
     const colorOptions = [
         { label: "Encre", value: "var(--rte-color-ink)" },
         { label: "Primaire", value: "var(--rte-color-primary)" },
@@ -127,10 +126,12 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
 
     const setFontSize = (size: string) => {
         editor.chain().focus().setMark("textStyle", { fontSize: size }).run();
+        setSelectedFontSize("");
     };
 
     const setTextColor = (color: string) => {
         editor.chain().focus().setColor(color).run();
+        setSelectedColor("");
     };
 
     const addLink = () => {
@@ -144,7 +145,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         <div className="border border-gray-300 rounded-md overflow-hidden bg-white">
             {/* Barre d'outils */}
             <div className="flex flex-wrap items-center gap-1 p-2 border-b border-gray-300 bg-gray-50">
-                <Select value={currentFontSize} onValueChange={setFontSize}>
+                <Select value={selectedFontSize || undefined} onValueChange={setFontSize}>
                     <SelectTrigger className="h-8 w-[110px]">
                         <SelectValue placeholder="Taille" />
                     </SelectTrigger>
@@ -156,7 +157,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                         ))}
                     </SelectContent>
                 </Select>
-                <Select value={currentColor} onValueChange={setTextColor}>
+                <Select value={selectedColor || undefined} onValueChange={setTextColor}>
                     <SelectTrigger className="h-8 w-[140px]">
                         <SelectValue placeholder="Couleur" />
                     </SelectTrigger>
