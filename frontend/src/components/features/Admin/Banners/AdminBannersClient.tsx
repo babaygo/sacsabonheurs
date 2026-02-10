@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 import { DeleteBannerDialog } from "@/components/shared/Dialogs/BannerDeleteDialog";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
-import { getBanners } from "@/lib/api/banner";
+import { getAdminBanners } from "@/lib/api/banner";
 
 
 export default function AdminBannersClient() {
@@ -22,7 +22,7 @@ export default function AdminBannersClient() {
 
     const fetchBanners = async () => {
         try {
-            const data = await getBanners();
+            const data = await getAdminBanners();
             setBanners(data);
         } catch (err: any) {
             toast.error(err.message || "Erreur serveur");

@@ -1,7 +1,7 @@
 import { Banner } from "@/types/Banner";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
-export async function getBanners(): Promise<Banner[]> {
+export async function getAdminBanners(): Promise<Banner[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/banners`, {
             credentials: "include",
@@ -12,6 +12,21 @@ export async function getBanners(): Promise<Banner[]> {
         return await res.json();
     } catch (error) {
         console.error("Erreur récupération banneaux:", error);
+        return [];
+    }
+}
+
+export async function getBanners(): Promise<Banner[]> {
+    try {
+        const res = await fetch(`${getBaseUrl()}/api/banners`, {
+            next: { revalidate: 300 },
+        });
+
+        if (!res.ok) return [];
+
+        return await res.json();
+    } catch (error) {
+        console.error("Erreur récupération bannières:", error);
         return [];
     }
 }
