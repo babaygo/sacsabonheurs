@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { notFound, useParams, useRouter } from "next/navigation";
+import { useSessionContext } from "@/components/shared/SessionProvider";
 import { Order } from "@/types/Order";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
@@ -19,6 +20,13 @@ const statusMap: Record<OrderStatusType, { label: string; color: string }> = {
 export default function OrderPage() {
     const { id } = useParams();
     const router = useRouter();
+    const { user, loadingUser } = useSessionContext();
+
+    useEffect(() => {
+        if (!loadingUser && user?.role !== "admin") {
+            router.push("/");
+        }
+    }, [user, loadingUser, router]);
 
     const [order, setOrder] = useState<Order | null>(null);
     const [loading, setLoading] = useState(true);

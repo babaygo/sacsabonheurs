@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSessionContext } from "@/components/shared/SessionProvider";
 import { Article } from "@/types/Article";
 import { getAdminArticles, createArticle, updateArticle, deleteArticle } from "@/lib/api/article";
 import { Button } from "@/components/ui/button";
@@ -11,11 +13,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { DeleteArticleDialog } from "@/components/shared/Dialogs/ArticleDeleteDialog";
 
 export default function AdminArticlesClient() {
+    const { user, loadingUser } = useSessionContext();
+    const router = useRouter();
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
     const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+
+    useEffect(() => {
+        if (!loadingUser && user?.role !== "admin") {
+            router.push("/");
+        }
+    }, [user, loadingUser, router]);
 
     useEffect(() => {
         loadArticles();
