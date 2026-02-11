@@ -14,6 +14,7 @@ async function main() {
     // Nettoyer la base de données
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
+    await prisma.article.deleteMany();
 
     // --- Catégories ---
     const pochetteBandoulière = await prisma.category.create({
@@ -60,6 +61,92 @@ async function main() {
                     'https://media.sacsabonheurs.fr/pochette-bandouliere-liege-et-cuir-5.jpg'
                 ],
                 categoryId: pochetteBandoulière.id
+            }
+        ]
+    });
+
+    // --- Articles ---
+    await prisma.article.createMany({
+        data: [
+            {
+                title: "Comment choisir un sac artisanal durable",
+                slug: "choisir-sac-artisanal-durable",
+                excerpt:
+                    "Guide pratique pour choisir un sac artisanal qui dure dans le temps, sans compromis sur le style.",
+                content:
+                    "<p>Un sac artisanal durable repose sur des matieres robustes, des coutures solides et un design intemporel.</p><p>Regardez les finitions, la doublure, et privilegiez les petites series pour une meilleure qualite.</p>",
+                image: "https://media.sacsabonheurs.fr/blog/sac-artisanal-durable.jpg",
+                author: "Sacs a Bonheurs",
+                category: "Conseils",
+                keywords: "sac artisanal, durable, qualite, conseils",
+                metaDescription:
+                    "Conseils simples pour choisir un sac artisanal durable et elegant.",
+                readingTime: 4,
+                published: true
+            },
+            {
+                title: "Les tendances sacs pour la saison",
+                slug: "tendances-sacs-saison",
+                excerpt:
+                    "Couleurs, matieres et formes: les grandes tendances sacs a adopter cette saison.",
+                content:
+                    "<p>Les tons naturels et les textures douces dominent, avec une preference pour les formats pratiques.</p><p>Les details en liege et les finitions minimalistes apportent une touche chic.</p>",
+                image: "https://media.sacsabonheurs.fr/blog/tendances-sacs-saison.jpg",
+                author: "Sacs a Bonheurs",
+                category: "Tendances",
+                keywords: "tendances, sacs, saison, mode",
+                metaDescription:
+                    "Decouvrez les tendances sacs de la saison: couleurs, matieres et formats.",
+                readingTime: 5,
+                published: true
+            },
+            {
+                title: "Pourquoi le liege est un materiau d'avenir",
+                slug: "liege-materiau-avenir",
+                excerpt:
+                    "Le liege est leger, resistant et responsable. Decouvrez ses avantages.",
+                content:
+                    "<p>Le liege est un materiau naturel, renouvelable et tres resilient.</p><p>Il est ideal pour des accessoires du quotidien, faciles a entretenir.</p>",
+                image: "https://media.sacsabonheurs.fr/blog/liege-materiau-avenir.jpg",
+                author: "Sacs a Bonheurs",
+                category: "Materiaux",
+                keywords: "liege, materiau, durable, eco",
+                metaDescription:
+                    "Les atouts du liege pour des sacs esthetiques et durables.",
+                readingTime: 3,
+                published: true
+            },
+            {
+                title: "Entretenir son sac en cuir au quotidien",
+                slug: "entretenir-sac-cuir",
+                excerpt:
+                    "Les bons gestes pour garder votre sac en cuir propre et beau plus longtemps.",
+                content:
+                    "<p>Nettoyez delicatement avec un chiffon doux et utilisez un lait d'entretien adapte.</p><p>Evitez l'exposition prolongee au soleil et a l'humidite.</p>",
+                image: "https://media.sacsabonheurs.fr/blog/entretenir-sac-cuir.jpg",
+                author: "Sacs a Bonheurs",
+                category: "Entretien",
+                keywords: "cuir, entretien, sac, conseils",
+                metaDescription:
+                    "Astuces simples pour entretenir un sac en cuir et prolonger sa duree de vie.",
+                readingTime: 4,
+                published: true
+            },
+            {
+                title: "Comment porter un sac cabas avec style",
+                slug: "porter-sac-cabas-style",
+                excerpt:
+                    "Des idees de looks pour porter un sac cabas au quotidien, sans faute de gout.",
+                content:
+                    "<p>Le sac cabas s'associe parfaitement a des tenues casual chic.</p><p>Jouez sur les contrastes de matieres pour un look equilibre.</p>",
+                image: "https://media.sacsabonheurs.fr/blog/porter-sac-cabas-style.jpg",
+                author: "Sacs a Bonheurs",
+                category: "Style",
+                keywords: "sac cabas, style, look, mode",
+                metaDescription:
+                    "Inspiration pour porter un sac cabas avec style et simplicite.",
+                readingTime: 5,
+                published: true
             }
         ]
     });
