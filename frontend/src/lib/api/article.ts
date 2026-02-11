@@ -16,15 +16,47 @@ async function revalidateCache(paths: string[]) {
     }
 }
 
-export async function getArticles(): Promise<Article[]> {
+export async function getArticles(
+    page: number = 1,
+    limit: number = 5,
+    excludeSlug?: string
+): Promise<{ data: Article[]; pagination: { total: number; page: number; limit: number; pages: number } }> {
     try {
-        const res = await fetch(`${getBaseUrl()}/api/articles`);
+        const params = new URLSearchParams({
+            page: String(page),
+            limit: String(limit),
+        });
+        if (excludeSlug) {
+            params.set("excludeSlug", excludeSlug);
+        }
+        const res = await fetch(`${getBaseUrl()}/api/articles?${params.toString()}`);
 
-        if (!res.ok) return [];
+        if (!res.ok) return { data: [], pagination: { total: 0, page: 1, limit, pages: 0 } };
 
         return await res.json();
     } catch (error) {
         console.error("Erreur récupération articles DB:", error);
+        return { data: [], pagination: { total: 0, page: 1, limit, pages: 0 } };
+    }
+}
+
+export async function getAllArticles(): Promise<Article[]> {
+    try {
+        const allArticles: Article[] = [];
+        let page = 1;
+        let hasMore = true;
+        const limit = 50;
+
+        while (hasMore) {
+            const { data, pagination } = await getArticles(page, limit);
+            allArticles.push(...data);
+            hasMore = page < pagination.pages;
+            page++;
+        }
+
+        return allArticles;
+    } catch (error) {
+        console.error("Erreur récupération tous les articles:", error);
         return [];
     }
 }

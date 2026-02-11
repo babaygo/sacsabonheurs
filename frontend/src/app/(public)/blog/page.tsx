@@ -4,115 +4,119 @@ import { Metadata } from "next";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Article } from "@/types/Article";
 import { getArticles } from "@/lib/api/article";
+import { MoveRight } from "lucide-react";
+import BlogListClient from "../../../components/features/Blog/BlogListClient";
 
-// Revalidate every 1 minute to fetch updated articles
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-    title: "Blog - Sacs à Bonheurs - Conseils Mode et Accessoires",
-    description: "Découvrez nos articles de blog sur la mode, les sacs artisanaux, la durabilité et les tendances 2026. Conseils d'experts pour bien choisir votre sac.",
-    keywords: "blog sacs, conseils mode, sacs artisanaux, tendances mode, matériaux durables",
+    title: "Blog - Sacs à Bonheurs",
+    description: "Plongez dans l'univers de la maroquinerie durable. Tendances, coulisses de l'atelier et conseils pour adopter une consommation responsable.",
+    keywords: "blog sacs, conseils mode, sacs artisanaux, tendances mode, matériaux durables, entretien sacs, histoire de la maroquinerie, interviews artisans, nouveautés sacs à bonheurs",
 };
 
-export default async function BlogPage() {
-    const articles = await getArticles();
+export default async function BlogPage({
+    searchParams,
+}: {
+    searchParams: Promise<{ page?: string }>;
+}) {
+    const params = await searchParams;
+    const currentPage = Math.max(1, parseInt(params.page || "1"));
 
+    const { data: featuredPageArticles } = await getArticles(1, 1);
+    const featuredArticle = featuredPageArticles[0];
     return (
-        <div className="min-h-screen pt-4">
-            <BreadCrumb
-                items={[
-                    { label: "Accueil", href: "/" },
-                    { label: "Blog" },
-                ]}
-            />
+        <div className="min-h-screen">
+            <div className="container pt-6 pb-20">
 
-            {/* Header */}
-            <div className="mb-12">
-                <h1 className="text-3xl sm:text-4xl font-bold">Notre Blog</h1>
-                <p className="text-lg text-gray-600 max-w-3xl">
-                    Explorez nos articles de blog pour découvrir des conseils en mode, des tendances,
-                    et tout ce que vous devez savoir sur les sacs artisanaux durables.
-                </p>
-            </div>
+                <BreadCrumb
+                    items={[
+                        { label: "Accueil", href: "/" },
+                        { label: "Blog" },
+                    ]}
+                />
 
-            {/* Articles Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {articles.map((article: Article) => (
-                    <Link key={article.id} href={`/blog/${article.slug}`}>
-                        <article className="group cursor-pointer">
-                            {/* Image */}
-                            {article.image && (
-                                <div className="relative w-full aspect-video overflow-hidden rounded-lg mb-4 bg-gray-200">
+                <h1 className="mb-8">
+                    Le Blog
+                </h1>
+
+                {featuredArticle && (
+                    <Link key={featuredArticle.id} href={`/blog/${featuredArticle.slug}`} className="group block mb-16">
+                        <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:items-center">
+                            <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius)] border border-border">
+                                {featuredArticle.image && (
                                     <Image
-                                        src={article.image}
-                                        alt={article.title}
+                                        src={featuredArticle.image}
+                                        alt={featuredArticle.title}
                                         fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
-                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        fetchPriority="high"
+                                        loading="lazy"
+                                        sizes="(max-width: 1024px) 100vw, 50vw"
                                     />
-                                </div>
-                            )}
-
-                            {/* Category Badge */}
-                            <div className="flex items-center gap-2 mb-2">
-                                <span className="text-xs font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
-                                    {article.category}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                    {article.readingTime} min de lecture
-                                </span>
+                                )}
                             </div>
 
-                            {/* Title */}
-                            <h2 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">
-                                {article.title}
-                            </h2>
+                            <div className="flex flex-col justify-center lg:pl-10">
+                                <h2 className="text-2xl sm:text-3xl font-playfair-display font-bold mb-6 leading-tight group-hover:text-accent transition-colors">
+                                    {featuredArticle.title}
+                                </h2>
 
-                            {/* Excerpt */}
-                            <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                {article.excerpt}
-                            </p>
-
-                            {/* Meta */}
-                            <div className="flex items-center justify-between text-xs text-gray-500">
-                                <span>{article.author}</span>
-                                <span>
-                                    {new Date(article.createdAt).toLocaleDateString("fr-FR", {
-                                        year: "numeric",
-                                        month: "long",
+                                <div className="flex items-center gap-3 text-sm text-muted-foreground mb-4">
+                                    <span className="bg-secondary text-primary px-3 py-1 rounded-full font-medium">
+                                        {featuredArticle.category}
+                                    </span>
+                                    <span className="text-accent">•</span>
+                                    <span>{new Date(featuredArticle.createdAt).toLocaleDateString("fr-FR", {
                                         day: "numeric",
-                                    })}
+                                        month: "long",
+                                        year: "numeric",
+                                    })}</span>
+                                </div>
+
+                                <p className="text-muted-foreground text-lg leading-relaxed mb-6">
+                                    {featuredArticle.excerpt}
+                                </p>
+
+
+
+                                <span className="inline-flex items-center text-primary font-semibold hover:underline underline-offset-4 decoration-accent">
+                                    Lire l'article à la une
+                                    <MoveRight className="w-5 h-5 ml-1 transition-transform group-hover:translate-x-1" />
                                 </span>
                             </div>
-                        </article>
+                        </div>
                     </Link>
-                ))}
-            </div>
+                )}
 
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{
-                    __html: JSON.stringify({
-                        "@context": "https://schema.org",
-                        "@type": "Blog",
-                        name: "Sacs à Bonheurs - Blog",
-                        url: "https://sacsabonheurs.com/blog",
-                        description:
-                            "Blog officiel de Sacs à Bonheurs avec des articles sur la mode, les sacs artisanaux et la durabilité",
-                        blogPost: articles.map((article: Article) => ({
-                            "@type": "BlogPosting",
-                            headline: article.title,
-                            description: article.excerpt,
-                            image: article.image,
-                            datePublished: article.createdAt,
-                            author: {
-                                "@type": "Organization",
-                                name: article.author,
-                            },
-                        })),
-                    }),
-                }}
-            />
+                <div className="border-t border-border mb-16"></div>
+
+                <BlogListClient
+                    initialPage={currentPage}
+                    featuredSlug={featuredArticle?.slug}
+                />
+
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{
+                        __html: JSON.stringify({
+                            "@context": "https://schema.org",
+                            "@type": "Blog",
+                            name: "Blog - Sacs à Bonheurs",
+                            url: "https://sacsabonheurs.fr/blog",
+                            description: "Blog officiel de Sacs à Bonheurs...",
+                            blogPost: featuredPageArticles.map((article: Article) => ({
+                                "@type": "BlogPosting",
+                                headline: article.title,
+                                description: article.excerpt,
+                                image: article.image,
+                                datePublished: article.createdAt,
+                                author: { "@type": "Organization", name: "Sacs à Bonheurs" },
+                            })),
+                        }),
+                    }}
+                />
+            </div>
         </div>
     );
 }

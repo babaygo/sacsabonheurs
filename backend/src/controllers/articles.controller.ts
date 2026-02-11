@@ -4,8 +4,33 @@ import { uploadToR2, deleteImagesFromR2 } from '../lib/bucket.js';
 
 export async function getArticles(req: Request, res: Response) {
     try {
-        const articles = await prisma.article.findMany({ where: { published: true }, orderBy: { createdAt: 'desc' } });
-        res.json(articles);
+        const page = Math.max(1, parseInt(req.query.page as string) || 1);
+        const limitParam = parseInt(req.query.limit as string) || 5;
+        const limit = Math.min(30, Math.max(1, limitParam));
+        const excludeSlug = (req.query.excludeSlug as string) || "";
+        const skip = (page - 1) * limit;
+        const whereClause = {
+            published: true,
+            ...(excludeSlug ? { slug: { not: excludeSlug } } : {}),
+        };
+        const [articles, total] = await Promise.all([
+            prisma.article.findMany({
+                where: whereClause,
+                orderBy: { createdAt: 'desc' },
+                skip,
+                take: limit,
+            }),
+            prisma.article.count({ where: whereClause }),
+        ]);
+        res.json({
+            data: articles,
+            pagination: {
+                total,
+                page,
+                limit,
+                pages: Math.ceil(total / limit),
+            },
+        });
     } catch (error: any) {
         console.error('Erreur récupération articles:', error);
         res.status(500).json({ error: 'Erreur serveur' });
