@@ -5,8 +5,7 @@ import { Metadata } from "next";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Button } from "@/components/ui/button";
 import { Article } from "@/types/Article";
-import { getArticleBySlug, getArticles } from "@/lib/api/article";
-import { MoveLeft } from "lucide-react";
+import { getArticleBySlug, getAllArticles } from "@/lib/api/article";
 
 export const revalidate = 60;
 
@@ -45,7 +44,7 @@ export async function generateMetadata({
 }
 
 export async function generateStaticParams() {
-    const articles = await getArticles();
+    const articles = await getAllArticles();
     return articles.map((article: Article) => ({
         slug: article.slug,
     }));
@@ -116,30 +115,46 @@ export default async function ArticlePage({
                     ]}
                 />
 
-                <header className="mb-8">
-                    <div className="flex items-center gap-3 mb-4">
-                        <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
-                            {article.category}
-                        </span>
-                        <span className="text-sm text-gray-500">
-                            {article.readingTime} min de lecture
-                        </span>
-                    </div>
-
-                    <h1 className="text-3xl sm:text-4xl font-bold">{article.title}</h1>
-
-                    <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm text-gray-600 border-t border-b border-gray-200 py-4">
-                        <div className="flex items-center gap-4">
-                            <span>Par <strong>{article.author}</strong></span>
-                            <span>
-                                {new Date(article.createdAt).toLocaleDateString("fr-FR", {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })}
+                <header className="mb-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:items-center">
+                    <div className="order-2 md:order-1">
+                        <div className="flex items-center gap-3 mb-4">
+                            <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
+                                {article.category}
+                            </span>
+                            <span className="text-sm text-gray-500">
+                                {article.readingTime} min de lecture
                             </span>
                         </div>
+
+                        <h1>{article.title}</h1>
+
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm py-2">
+                            <div className="flex items-center gap-4">
+                                <span>Par <strong>{article.author}</strong></span>
+                                <span>
+                                    {new Date(article.createdAt).toLocaleDateString("fr-FR", {
+                                        year: "numeric",
+                                        month: "long",
+                                        day: "numeric",
+                                    })}
+                                </span>
+                            </div>
+                        </div>
                     </div>
+
+                    {article.image && (
+                        <div className="relative order-1 w-full overflow-hidden rounded-xl aspect-[4/3] md:order-2">
+                            <Image
+                                src={article.image}
+                                alt={article.title}
+                                fill
+                                sizes="(min-width: 768px) 420px, 100vw"
+                                className="object-contain"
+                                fetchPriority="high"
+                                loading="lazy"
+                            />
+                        </div>
+                    )}
                 </header>
 
                 <article className="prose prose-lg max-w-none mb-8">
@@ -198,7 +213,7 @@ export default async function ArticlePage({
                         </p>
                     </div>
 
-                    <div className="mb-12 border-t pt-8">
+                    <div className="text-center mb-12 border-t pt-8">
                         <h2 className="text-2xl font-bold mb-4">Découvrez mes sacs artisanaux</h2>
                         <p className="mb-6">
                             Trouvez le sac parfait qui correspond à vos besoins et à vos valeurs.
