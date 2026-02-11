@@ -2,24 +2,23 @@
 module.exports = {
     siteUrl: 'https://sacsabonheurs.fr',
     generateRobotsTxt: true,
-    sitemapSize: 5000,
-    changefreq: 'weekly',
-    priority: 0.7,
-    exclude: ['/admin*', '/choose-relay', '/signup', '/login', '/reset-password', '/orders'],
+    exclude: [
+        '/admin*',
+        '/choose-relay',
+        '/signup',
+        '/login',
+        '/reset-password',
+        '/forgot-password',
+        '/orders',
+        '/orders/*',
+    ],
     robotsTxtOptions: {
-        sitemaps: [
-            'https://sacsabonheurs.fr/sitemap.xml',
-        ],
         policies: [
             {
                 userAgent: '*',
                 allow: '/',
-                disallow: ['/admin', '/orders', '/api/*'],
+                disallow: ['/admin', '/orders', '/api/*', '/choose-relay'],
             },
         ],
     },
-    additionalSitemaps: [
-        'https://sacsabonheurs.fr/sitemap-products.xml',
-        'https://sacsabonheurs.fr/sitemap-blog.xml',
-    ],
 };
