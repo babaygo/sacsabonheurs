@@ -18,7 +18,7 @@ export default function ZoomableImage({ images, index, alt }: Props) {
       <Image
         src={images[index]}
         alt={alt || `Image ${index + 1}`}
-        className="cursor-zoom-in w-2/3 hover:opacity-90 transition"
+        className="cursor-zoom-in w-2/3 hover:opacity-90 transition duration-300 shadow-md mx-auto mb-4"
         onClick={() => setOpen(true)}
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         width={800}
