@@ -63,7 +63,7 @@ export default function OrderPage() {
                     { label: `Commande #${order.id}` }
                 ]}
             />
-            <h1 className="text-3xl sm:text-4xl font-bold">Détails de la commande #{order.id}</h1>
+            <h1>Détails de la commande #{order.id}</h1>
             <div className="flex items-center mb-2 space-x-6">
                 <p className="text-sm text-muted-foreground">
                     Date de la commande : {new Date(order.createdAt).toLocaleDateString("fr-FR", {

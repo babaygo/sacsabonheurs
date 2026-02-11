@@ -142,7 +142,6 @@
     font-family: 'Montserrat', sans-serif;
   }
 
-  h1,
   h2,
   h3,
   h4 {
@@ -150,7 +149,7 @@
   }
 
   h1 {
-    margin-bottom: calc(var(--spacing) * 4);
+    @apply text-3xl sm:text-4xl font-playfair-display font-bold mb-4 text-primary;
   }
 
   a {

@@ -34,7 +34,7 @@ export default async function MentionsLegalesPage() {
                     { label: "Mentions légales" },
                 ]}
             />
-            <h1 className="text-3xl sm:text-4xl font-bold">Mentions légales</h1>
+            <h1>Mentions légales</h1>
             <div
                 className="prose prose-sm max-w-none py-4"
                 dangerouslySetInnerHTML={{ __html: mentions }}

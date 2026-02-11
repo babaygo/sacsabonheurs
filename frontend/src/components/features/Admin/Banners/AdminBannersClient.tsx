@@ -53,7 +53,7 @@ export default function AdminBannersClient() {
         <div className="min-h-screen pt-4">
             <div className="space-y-8">
                 <div className="flex justify-between">
-                    <h1 className="text-3xl sm:text-4xl font-bold">Bannières</h1>
+                    <h1>Bannières</h1>
                     <Button variant="outline" onClick={handleAdd}>
                         <Plus />
                         Ajouter une bannière

@@ -55,7 +55,7 @@ export default function ContactPage() {
                     { label: "Contact", }
                 ]}
             />
-            <h1 className="text-3xl sm:text-4xl font-bold">Contact</h1>
+            <h1>Contact</h1>
             <p className="py-4">
                 Besoin d'aide ?<br />
                 Vous avez une question concernant une commande récente ou un produit ?

@@ -69,7 +69,7 @@ export default function AdminArticlesClient() {
     return (
         <div className="min-h-screen pt-4">
             <div className="flex items-center justify-between">
-                <h1 className="text-3xl sm:text-4xl font-bold">Articles</h1>
+                <h1>Articles</h1>
                 <Button variant="outline" onClick={() => handleOpenDialog()}>
                     <Plus />
                     Ajouter un article
