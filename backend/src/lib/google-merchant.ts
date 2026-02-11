@@ -5,6 +5,12 @@ interface GoogleMerchantConfig {
     brandName: string;
 }
 
+type ProductWithCategory = Product & {
+    category?: {
+        name: string;
+    };
+};
+
 /**
  * Échappe les caractères spéciaux pour XML
  */
@@ -43,10 +49,12 @@ function stripHtml(html: string): string {
  * Génère une entrée XML pour un produit
  */
 function generateProductItem(
-    product: Product,
+    product: ProductWithCategory,
     config: GoogleMerchantConfig
 ): string {
     const { baseUrl, brandName } = config;
+    const toImageUrl = (image: string): string =>
+        image.startsWith('http') ? image : `${baseUrl}${image}`;
     const id = String(product.id);
     const title = product.name;
     const description = stripHtml(product.description);
@@ -54,16 +62,33 @@ function generateProductItem(
     let imageLink = `${baseUrl}/images/placeholder.jpg`;
     if (product.images && product.images.length > 0) {
         const firstImage = product.images[0];
-        imageLink = firstImage.startsWith('http')
-            ? firstImage
-            : `${baseUrl}${firstImage}`;
+        imageLink = toImageUrl(firstImage);
     }
     const price = `${product.price.toFixed(2)} EUR`;
-    const availability = product.stock > 0 ? 'in stock' : 'out of stock';
+    const availability = product.stock > 0 ? 'in_stock' : 'out_of_stock';
     const condition = 'new';
     const brand = brandName;
     const color = product.color;
     const material = product.material;
+    const productType = product.category?.name;
+    const salePrice = product.isOnSale && product.salePrice
+        ? `${product.salePrice.toFixed(2)} EUR`
+        : null;
+    const additionalImages = (product.images || []).slice(1, 11);
+    const weightUnit = 'g';
+    const dimensionUnit = 'cm';
+    const shippingWeight = product.weight > 0
+        ? `${product.weight} ${weightUnit}`
+        : null;
+    const shippingLength = product.lenght > 0
+        ? `${product.lenght} ${dimensionUnit}`
+        : null;
+    const shippingWidth = product.width > 0
+        ? `${product.width} ${dimensionUnit}`
+        : null;
+    const shippingHeight = product.height > 0
+        ? `${product.height} ${dimensionUnit}`
+        : null;
 
     return `
     <item>
@@ -72,14 +97,33 @@ function generateProductItem(
       <g:description>${escapeXml(description)}</g:description>
       <g:link>${escapeXml(link)}</g:link>
       <g:image_link>${escapeXml(imageLink)}</g:image_link>
+      ${additionalImages
+            .map(image => `
+        <g:additional_image_link>${escapeXml(toImageUrl(image))}</g:additional_image_link>`)
+            .join('')}
       <g:price>${escapeXml(price)}</g:price>
+      ${salePrice ? `
+      <g:sale_price>${escapeXml(salePrice)}</g:sale_price>` : ''}
       <g:availability>${escapeXml(availability)}</g:availability>
       <g:condition>${escapeXml(condition)}</g:condition>
       <g:brand>${escapeXml(brand)}</g:brand>
+      <g:identifier_exists>${escapeXml("no")}</g:identifier_exists>
       <g:age_group>${escapeXml("adult")}</g:age_group>
       <g:gender>${escapeXml("female")}</g:gender>
-      <g:color>${escapeXml(color)}</g:color>
-      <g:material>${escapeXml(material)}</g:material>
+            ${color ? `
+            <g:color>${escapeXml(color)}</g:color>` : ''}
+            ${material ? `
+            <g:material>${escapeXml(material)}</g:material>` : ''}
+      ${productType ? `
+      <g:product_type>${escapeXml(productType)}</g:product_type>` : ''}
+      ${shippingWeight ? `
+      <g:shipping_weight>${escapeXml(shippingWeight)}</g:shipping_weight>` : ''}
+      ${shippingLength ? `
+      <g:shipping_length>${escapeXml(shippingLength)}</g:shipping_length>` : ''}
+      ${shippingWidth ? `
+      <g:shipping_width>${escapeXml(shippingWidth)}</g:shipping_width>` : ''}
+      ${shippingHeight ? `
+      <g:shipping_height>${escapeXml(shippingHeight)}</g:shipping_height>` : ''}
     </item>`;
 }
 
@@ -87,7 +131,7 @@ function generateProductItem(
  * Génère le flux XML complet pour Google Merchant Center
  */
 export function generateProductFeed(
-    products: Product[],
+    products: ProductWithCategory[],
     config: GoogleMerchantConfig
 ): string {
     const { baseUrl, brandName } = config;
