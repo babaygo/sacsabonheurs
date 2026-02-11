@@ -97,7 +97,7 @@ export default function BlogListClient({ initialPage, featuredSlug }: BlogListCl
     if (articles.length === 0) {
         return (
             <div className="text-center py-16">
-                <p className="text-muted-foreground text-lg">Aucun article disponible.</p>
+                <p className="text-muted-foreground text-lg">Aucun autre article disponible.</p>
             </div>
         );
     }

@@ -78,8 +78,6 @@ export default async function BlogPage({
                                     {featuredArticle.excerpt}
                                 </p>
 
-
-
                                 <span className="inline-flex items-center text-primary font-semibold hover:underline underline-offset-4 decoration-accent">
                                     Lire l'article à la une
                                     <MoveRight className="w-5 h-5 ml-1 transition-transform group-hover:translate-x-1" />

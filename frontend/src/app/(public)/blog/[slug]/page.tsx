@@ -118,7 +118,7 @@ export default async function ArticlePage({
                 <header className="mb-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:items-center">
                     <div className="order-2 md:order-1">
                         <div className="flex items-center gap-3 mb-4">
-                            <span className="text-sm font-semibold bg-primary/10 text-primary px-3 py-1 rounded-full">
+                            <span className="bg-secondary text-primary px-3 py-1 rounded-full font-medium">
                                 {article.category}
                             </span>
                             <span className="text-sm text-gray-500">
@@ -160,14 +160,7 @@ export default async function ArticlePage({
                 <article className="prose prose-lg max-w-none mb-8">
                     <div
                         dangerouslySetInnerHTML={{ __html: article.content }}
-                        className="prose prose-lg max-w-none
-                                prose-h2:text-3xl prose-h2:font-bold prose-h2:mt-8 prose-h2:mb-4
-                                prose-h3:text-xl prose-h3:font-bold prose-h3:mt-6 prose-h3:mb-3
-                                prose-p:text-gray-700 prose-p:leading-relaxed prose-p:mb-4
-                                prose-ul:my-4 prose-li:my-2
-                                prose-a:text-primary prose-a:no-underline hover:prose-a:underline
-                                prose-strong:font-bold
-                            "
+                        className="prose prose-sm max-w-none"
                     />
 
                     <div className="mt-6">
