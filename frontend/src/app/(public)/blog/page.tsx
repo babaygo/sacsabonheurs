@@ -101,7 +101,7 @@ export default async function BlogPage({
                             "@context": "https://schema.org",
                             "@type": "Blog",
                             name: "Blog - Sacs à Bonheurs",
-                            url: "https://sacsabonheurs.fr/blog",
+                            url: `${process.env.NEXT_PUBLIC_URL_FRONT}/blog`,
                             description: "Blog officiel de Sacs à Bonheurs...",
                             blogPost: featuredPageArticles.map((article: Article) => ({
                                 "@type": "BlogPosting",
