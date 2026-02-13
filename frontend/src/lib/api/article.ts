@@ -3,14 +3,19 @@ import { getBaseUrl } from "../utils/getBaseUrl";
 
 async function revalidateCache(paths: string[]) {
     try {
-        await fetch("/api/revalidate", {
+        const response = await fetch("/api/revalidate", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-                "x-revalidate-secret": process.env.NEXT_PUBLIC_REVALIDATE_SECRET || "",
             },
+            credentials: "include",
             body: JSON.stringify({ paths }),
         });
+
+        if (!response.ok) {
+            const details = await response.text();
+            console.warn("Cache revalidation failed:", response.status, details);
+        }
     } catch (error) {
         console.warn("Cache revalidation failed:", error);
     }
