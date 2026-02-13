@@ -6,14 +6,17 @@ export async function POST(request: NextRequest) {
         const secret = request.headers.get("x-revalidate-secret");
         const expectedSecret = process.env.REVALIDATE_SECRET;
 
-        if (!expectedSecret) {
-            return NextResponse.json({ error: "REVALIDATE_SECRET is not configured" }, { status: 500 });
-        }
+        const origin = request.headers.get("origin");
+        const referer = request.headers.get("referer") || "";
+        const requestOrigin = request.nextUrl.origin;
 
-        const origin = request.headers.get("origin") || "";
-        const isLocalDev = process.env.NODE_ENV !== "production" && origin.includes("localhost");
+        const isSameOrigin =
+            (origin && origin === requestOrigin) ||
+            (!origin && referer.startsWith(requestOrigin));
 
-        if (!isLocalDev && secret !== expectedSecret) {
+        const hasValidSecret = Boolean(expectedSecret) && secret === expectedSecret;
+
+        if (!isSameOrigin && !hasValidSecret) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
