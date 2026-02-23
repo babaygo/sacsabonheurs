@@ -151,7 +151,7 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-screen overflow-y-auto">
+            <DialogContent className="max-h-screen overflow-y-auto min-w-3/4">
                 <DialogHeader>
                     <DialogTitle>
                         {article ? "Modifier l'article" : "Créer un nouvel article"}

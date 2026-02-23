@@ -41,7 +41,7 @@ export default async function BlogPage({
                 </h1>
 
                 {featuredArticle && (
-                    <Link key={featuredArticle.id} href={`/blog/${featuredArticle.slug}`} className="group block mb-16">
+                    <Link key={featuredArticle.id} href={`/blog/${featuredArticle.slug}`} className="group block mb-10 transition-transform hover:-translate-y-1">
                         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:items-center">
                             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius)] border border-border">
                                 {featuredArticle.image && (
@@ -87,7 +87,7 @@ export default async function BlogPage({
                     </Link>
                 )}
 
-                <div className="border-t border-border mb-16"></div>
+                <div className="border-t border-border mb-10"></div>
 
                 <BlogListClient
                     initialPage={currentPage}

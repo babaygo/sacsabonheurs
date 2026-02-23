@@ -107,7 +107,7 @@ export default async function ArticlePage({
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaObj) }}
             />
 
-            <div className="min-h-screen">
+            <div className="min-h-screen mx-auto max-w-5xl">
                 <BreadCrumb
                     items={[
                         { label: "Accueil", href: "/" },
@@ -143,7 +143,7 @@ export default async function ArticlePage({
                     </div>
 
                     {article.image && (
-                        <div className="relative order-1 w-full overflow-hidden rounded-xl aspect-[4/3] md:order-2">
+                        <div className="relative order-1 w-full overflow-hidden rounded-xl aspect-[16/9] md:order-2">
                             <Image
                                 src={article.image}
                                 alt={article.title}
