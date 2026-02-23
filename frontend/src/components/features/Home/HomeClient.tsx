@@ -390,7 +390,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                             </Link>
                         </div>
 
-                        {blogPosts.length > 2 && (
+                        {blogPosts.length >= 2 && (
                             <div className="flex flex-col gap-4">
                                 <h3 className="font-playfair-display font-semibold text-xl">Plus d'articles</h3>
                                 {blogPosts.slice(1, 4).map((post) => (
