@@ -117,7 +117,6 @@ export default function Footer() {
                         <Image src="/assets/visa-classic-svgrepo-com.svg" alt="Visa" width={40} height={40} className="h-8 md:h-10 w-auto" />
                         <Image src="/assets/apple-pay-svgrepo-com.svg" alt="Apple Pay" width={40} height={40} className="h-8 md:h-10 w-auto" />
                         <Image src="/assets/google-pay-svgrepo-com.svg" alt="Google Pay" width={40} height={40} className="h-8 md:h-10 w-auto" />
-                        <Image src="https://storage.mondialrelay.fr/mrlogoprincipal.png" alt="Mondial Relay" width={40} height={40} className="h-8 md:h-10 w-auto" />
                     </div>
                 </div>
             </div>
