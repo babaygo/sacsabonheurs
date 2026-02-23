@@ -1,0 +1,49 @@
+version: 2
+updates:
+  # Backend npm packages
+  - package-ecosystem: "npm"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
+      day: "friday"
+    open-pull-requests-limit: 10
+    groups:
+      # Patchs groupés ensemble (auto-merge possible)
+      patch-updates:
+        update-types:
+          - "patch"
+      # Mises à jour AWS SDK groupées
+      aws-sdk:
+        patterns:
+          - "@aws-sdk/*"
+          - "@smithy/*"
+      # Mises à jour Prisma groupées
+      prisma:
+        patterns:
+          - "@prisma/*"
+          - "prisma"
+      # Types groupés ensemble
+      types:
+        patterns:
+          - "@types/*"
+
+  # Frontend npm packages
+  - package-ecosystem: "npm"
+    directory: "/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 10
+    groups:
+      patch-updates:
+        update-types:
+          - "patch"
+      types:
+        patterns:
+          - "@types/*"
+
+  # Docker base images
+  - package-ecosystem: "docker"
+    directory: "/backend"
+    schedule:
+      interval: "weekly"
