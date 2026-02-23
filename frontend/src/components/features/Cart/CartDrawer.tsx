@@ -2,7 +2,6 @@
 
 import { useMemo } from "react";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose, DrawerFooter, DrawerDescription } from "@/components/ui/drawer";
-import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 import { useCartDrawerStore } from "@/lib/stores/cartDrawerStore";
 import { useCartStore } from "@/lib/stores/cartStore";
@@ -12,7 +11,7 @@ import Image from "next/image";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
-import { Info } from "lucide-react";
+import { Info, X } from "lucide-react";
 import Link from "next/link";
 import { formatPrice } from "@/lib/utils/priceCalculator";
 
@@ -68,9 +67,7 @@ export default function CartDrawer() {
                 <DrawerHeader className="flex items-center justify-between px-4 py-4 border-b">
                     <DrawerTitle>Ton panier</DrawerTitle>
                     <DrawerClose asChild>
-                        <button>
-                            <XMarkIcon className="size-6 text-gray-500 hover:text-black" />
-                        </button>
+                        <X className="size-6" />
                     </DrawerClose>
                 </DrawerHeader>
 
