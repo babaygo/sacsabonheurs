@@ -106,7 +106,7 @@ export default function BlogListClient({ initialPage, featuredSlug }: BlogListCl
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mb-12">
                 {articles.map((article: Article) => (
-                    <Link key={article.id} href={`/blog/${article.slug}`} className="group flex flex-col h-full">
+                    <Link key={article.id} href={`/blog/${article.slug}`} className="group flex flex-col h-full rounded-lg shadow-sm border border-border p-4 transition-transform hover:-translate-y-1">
                         <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[var(--radius)] mb-5 bg-muted border border-border">
                             {article.image && (
                                 <Image
@@ -115,6 +115,8 @@ export default function BlogListClient({ initialPage, featuredSlug }: BlogListCl
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                    fetchPriority="high"
+                                    loading="lazy"
                                 />
                             )}
                         </div>
@@ -144,7 +146,7 @@ export default function BlogListClient({ initialPage, featuredSlug }: BlogListCl
             </div>
 
             {pagination.pages > 1 && (
-                <div className="flex items-center justify-center gap-2 mt-16 pt-12 border-t border-border">
+                <div className="flex items-center justify-center gap-2 pt-6 border-t border-border">
                     <div className="flex items-center gap-1">
                         {Array.from({ length: pagination.pages }, (_, i) => i + 1).map((page) => (
                             <Link key={page} href={`/blog?page=${page}`}>

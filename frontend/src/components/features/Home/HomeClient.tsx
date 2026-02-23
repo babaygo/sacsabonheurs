@@ -4,13 +4,15 @@ import TextType from "@/components/shared/TextType";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
-import { ArrowRight, Hammer, Heart, Lock, MapPin, PackageCheck, Spool } from "lucide-react";
+import { ArrowRight, Hammer, Heart, Lock, MapPin, MoveRight, PackageCheck, Spool } from "lucide-react";
 import Link from "next/link";
 import PreviewProduct from "../Product/PreviewProduct";
 import { useEffect, useState } from "react";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { Separator } from "@/components/ui/separator";
 import { Carousel, CarouselApi, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+import { getArticles } from "@/lib/api/article";
+import { Article } from "@/types/Article";
 
 export default function HomeClient({ initialProducts }: { initialProducts: Product[] }) {
     const { products: liveProducts, fetchProducts } = useProductsContext();
@@ -19,6 +21,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
     const [expanded, setExpanded] = useState(false);
+    const [blogPosts, setBlogPosts] = useState<Article[]>([]);
 
     const intro = (
         <>
@@ -90,6 +93,23 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
     }, [fetchProducts]);
 
     useEffect(() => {
+        let isMounted = true;
+
+        const loadArticles = async () => {
+            const { data } = await getArticles(1, 4);
+            if (isMounted) {
+                setBlogPosts(data);
+            }
+        };
+
+        loadArticles();
+
+        return () => {
+            isMounted = false;
+        };
+    }, []);
+
+    useEffect(() => {
         if (liveProducts && liveProducts.length > 0) {
             setProducts(liveProducts);
         }
@@ -106,7 +126,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
 
     return (
         <div className="min-h-screen flex flex-col">
-            <section className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center py-10 sm:py-14 lg:py-18">
+            <section className="flex flex-col lg:flex-row gap-8 lg:gap-12 items-center py-8 sm:py-12 lg:py-16">
                 <div className="flex flex-col space-y-6 lg:space-y-8 w-full lg:w-1/2 order-1">
                     <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary">
                         <Separator className="w-8!" /> MADE IN FRANCE
@@ -127,7 +147,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         </p>
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center lg:justify-start">
+                    <div className="flex gap-3 sm:gap-4 justify-center lg:justify-start">
                         <Link href="/boutique">
                             <Button size="lg" className="w-full px-4 sm:px-6 py-3 text-sm sm:text-base font-medium">Découvrir la boutique</Button>
                         </Link>
@@ -167,7 +187,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 </div>
             </section>
 
-            <section className="py-10 sm:py-14 lg:py-18">
+            <section className="py-8 sm:py-12 lg:py-16">
                 <div className="flex flex-col items-center space-y-2 mb-10 sm:mb-14">
                     <span className="text-primary font-medium tracking-widest text-xs uppercase">
                         COLLECTIONS
@@ -245,11 +265,11 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 </div>
             </section>
 
-            <section className="flex flex-col items-center py-10 sm:py-14 lg:py-18">
+            <section className="flex flex-col items-center py-8 sm:py-12 lg:py-16">
                 <div className="w-full flex flex-col items-start sm:flex-row sm:justify-between sm:items-end mb-8 sm:mb-10">
                     <div className="flex flex-col items-start space-y-2">
                         <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl">
-                            Nouveautés
+                            Les Nouveautés
                         </h2>
                         <span className="text-sm sm:text-base font-light text-mute-foreground">
                             Pièces uniques fraîchements sorties de l'atelier.
@@ -294,20 +314,8 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                 </div>
             </section>
 
-            <section className="flex text-center sm:text-start sm:justify-between py-10 sm:py-14 lg:py-18">
-                <div className="w-full hidden sm:block">
-                    <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer" className="hidden sm:flex justify-center">
-                        <iframe
-                            id="border"
-                            title="rejoindre crealOuest"
-                            width="315"
-                            height="315"
-                            src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
-                            className="pointer-events-none"
-                        />
-                    </Link>
-                </div>
-                <div className="w-full space-y-6">
+            <section className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-8 py-8 sm:py-12 lg:py-16">
+                <div className="w-full space-y-6 order-1">
                     <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl">La Boutique</h2>
 
                     <p className="text-base text-justify leading-relaxed pr-0 md:pr-6">
@@ -324,11 +332,107 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         {expanded ? "Voir moins" : "Voir plus"}
                     </Button>
                 </div>
+                <div className="w-full hidden sm:block order-2">
+                    <Link href="https://crealouest.fr/" target="_blank" rel="noopener noreferrer" className="hidden sm:flex justify-center">
+                        <iframe
+                            id="border"
+                            title="rejoindre crealOuest"
+                            width="315"
+                            height="315"
+                            src="https://crealouest.fr/widgets/rejoignez_crealouest_ft_clair.html"
+                            className="pointer-events-none"
+                        />
+                    </Link>
+                </div>
             </section>
 
-            <section className="w-full">
-                <Separator />
+            {blogPosts.length > 0 && (
+                <section className="py-8 sm:py-12 lg:py-16">
+                    <div className="flex justify-between gap-6 mb-8 sm:mb-10">
+                        <h2 className="font-playfair-display font-semibold text-2xl sm:text-3xl lg:text-4xl">
+                            Mon Blog
+                        </h2>
+                        <Link href="/blog">
+                            <Button size="lg" variant="link" className="w-full sm:w-auto">
+                                Voir tous les articles
+                                <MoveRight className="w-4 h-4 ml-2" />
+                            </Button>
+                        </Link>
+                    </div>
 
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-10">
+                        <div className="lg:col-span-2 border rounded-lg p-6 sm:p-8 bg-background">
+                            <span className="text-primary text-xs uppercase tracking-widest">A la une</span>
+                            <h2 className="font-playfair-display font-bold text-2xl sm:text-3xl mt-3">
+                                {blogPosts[0].title}
+                            </h2>
+                            <p className="text-base text-muted-foreground mt-3">
+                                {blogPosts[0].excerpt}
+                            </p>
+                            <div className="relative w-full aspect-[16/9] rounded-lg overflow-hidden">
+                                {blogPosts[0].image ? (
+                                    <Image
+                                        src={blogPosts[0].image}
+                                        alt={blogPosts[0].title}
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 66vw"
+                                        className="object-cover"
+                                        fetchPriority="auto"
+                                        loading="lazy"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full" />
+                                )}
+                            </div>
+                            <Link href={`/blog/${blogPosts[0].slug}`} className="inline-flex items-center mt-5">
+                                Lire l'article
+                                <MoveRight className="w-4 h-4 ml-2" />
+                            </Link>
+                        </div>
+
+                        {blogPosts.length > 3 && (
+                            <div className="flex flex-col gap-4">
+                                <h3 className="font-playfair-display font-semibold text-xl">Plus d'articles</h3>
+                                {blogPosts.slice(1, 4).map((post) => (
+                                    <Link
+                                        key={post.slug}
+                                        href={`/blog/${post.slug}`}
+                                        className="border rounded-lg p-2 sm:p-4 bg-background flex gap-4 items-center shadow-sm"
+                                    >
+                                        <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-md overflow-hidden bg-muted">
+                                            {post.image ? (
+                                                <Image
+                                                    src={post.image}
+                                                    alt={post.title}
+                                                    fill
+                                                    sizes="96px"
+                                                    className="object-cover"
+                                                    fetchPriority="auto"
+                                                    loading="lazy"
+                                                />
+                                            ) : (
+                                                <div className="w-full h-full" />
+                                            )}
+                                        </div>
+                                        <div className="flex flex-col">
+                                            <h3 className="font-semibold text-lg leading-snug">{post.title}</h3>
+                                            <span className="text-sm text-muted-foreground mt-1">
+                                                {new Date(post.createdAt).toLocaleDateString("fr-FR", {
+                                                    day: "2-digit",
+                                                    month: "long",
+                                                    year: "numeric",
+                                                })}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                </section>
+            )}
+
+            <section className="w-full mt-6 sm:mt-8 lg:mt-12">
                 <div className="block sm:hidden py-6">
                     <Carousel opts={{ align: "center", loop: true }} setApi={setApi}>
                         <CarouselContent className="m-0">
@@ -354,11 +458,11 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                         </CarouselContent>
                     </Carousel>
                     <div className="flex justify-center mt-2">
-                        <div className="flex gap-2 px-3 py-2 bg-gray-200/60 backdrop-blur-md rounded-full">
+                        <div className="flex gap-2 px-3 py-2 bg-secondary backdrop-blur-md rounded-full">
                             {Array.from({ length: items.length + 1 }).map((_, i) => (
                                 <span
                                     key={i}
-                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-gray-300"
+                                    className={`w-2 h-2 rounded-full transition ${i === current ? "bg-primary" : "bg-accent"
                                         }`}
                                 />
                             ))}
