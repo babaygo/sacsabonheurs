@@ -70,6 +70,12 @@ export default function HomeClientV2({
     const [expanded, setExpanded] = useState(false);
     const [blogPosts, setBlogPosts] = useState<Article[]>([]);
 
+    /* Lock hero height once at mount — immune to Firefox mobile address bar */
+    const [heroH, setHeroH] = useState<string>("100svh");
+    useEffect(() => {
+        setHeroH(`${window.innerHeight}px`);
+    }, []);
+
     const collectionsReveal = useReveal();
     const productsReveal = useReveal();
     const aboutReveal = useReveal();
@@ -149,7 +155,10 @@ export default function HomeClientV2({
             {/* ============================================================ */}
             {/*  HERO                                                        */}
             {/* ============================================================ */}
-            <section className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-16 lg:py-20 -mt-6 lg:mt-0">
+            <section
+                className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-16 lg:py-20 -mt-6 lg:mt-0 lg:!min-h-0"
+                style={{ minHeight: `calc(${heroH} - var(--header-height))` }}
+            >
                 {/* --- mobile background image --- */}
                 <div className="lg:hidden absolute inset-0 -mx-[var(--container-padding,1rem)] -mt-6 overflow-hidden">
                     <Image
@@ -157,7 +166,7 @@ export default function HomeClientV2({
                         alt="Hero image"
                         fill
                         sizes="100vw"
-                        className="object-cover object-top"
+                        className="object-cover object-center"
                         fetchPriority="high"
                         loading="lazy"
                         aria-hidden="true"
@@ -165,7 +174,10 @@ export default function HomeClientV2({
                 </div>
 
                 {/* --- text --- */}
-                <div className="relative flex flex-col lg:space-y-8 w-full lg:w-1/2 order-1 z-10 lg:py-0 min-h-[calc(100svh-var(--header-height))] lg:min-h-0 justify-between py-12 md:py-16">
+                <div
+                    className="relative flex flex-col lg:space-y-8 w-full lg:w-1/2 order-1 z-10 lg:py-0 lg:!min-h-0 justify-between py-12 md:py-16"
+                    style={{ minHeight: `calc(${heroH} - var(--header-height))` }}
+                >
                     {/* top block: badge + title */}
                     <div className="space-y-5 text-center lg:text-left">
                         <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary uppercase tracking-widest">
@@ -225,7 +237,7 @@ export default function HomeClientV2({
 
                 {/* --- hero image (desktop only) --- */}
                 <div className="relative hidden lg:block lg:w-1/2 order-2">
-                    <div className="relative w-full lg:h-[calc(100svh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
+                    <div className="relative w-full lg:h-[calc(100vh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
                         <Image
                             src="/assets/hero_image.webp"
                             alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
