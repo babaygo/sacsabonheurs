@@ -165,7 +165,7 @@ export default function HomeClientV2({
                 </div>
 
                 {/* --- text --- */}
-                <div className="relative flex flex-col lg:space-y-8 w-full lg:w-1/2 order-1 z-10 lg:py-0 min-h-[calc(100vh-var(--header-height))] lg:min-h-0 justify-between py-12 md:py-16">
+                <div className="relative flex flex-col lg:space-y-8 w-full lg:w-1/2 order-1 z-10 lg:py-0 min-h-[calc(100svh-var(--header-height))] lg:min-h-0 justify-between py-12 md:py-16">
                     {/* top block: badge + title */}
                     <div className="space-y-5 text-center lg:text-left">
                         <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary uppercase tracking-widest">
@@ -225,7 +225,7 @@ export default function HomeClientV2({
 
                 {/* --- hero image (desktop only) --- */}
                 <div className="relative hidden lg:block lg:w-1/2 order-2">
-                    <div className="relative w-full lg:h-[calc(100vh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
+                    <div className="relative w-full lg:h-[calc(100svh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
                         <Image
                             src="/assets/hero_image.webp"
                             alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
