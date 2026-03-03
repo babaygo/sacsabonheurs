@@ -237,10 +237,10 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                             (window.innerWidth >= 768 && window.innerWidth < 1024 && similarProducts.length > 3) ||
                             (window.innerWidth >= 1024 && similarProducts.length > 5)
                         ) && (
-                                <>
+                                <div className="hidden md:flex">
                                     <CarouselPrevious />
                                     <CarouselNext />
-                                </>
+                                </div>
                             )}
                     </Carousel>
                 </div>
