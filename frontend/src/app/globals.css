@@ -138,18 +138,23 @@
   }
 
   body {
-    @apply bg-background text-foreground antialiased;
-    font-family: 'Montserrat', sans-serif;
-  }
-
-  h2,
-  h3,
-  h4 {
-    @apply font-montserrat text-primary;
+    @apply font-montserrat bg-background text-foreground antialiased;
   }
 
   h1 {
-    @apply text-3xl sm:text-4xl font-playfair-display font-bold mb-4 text-primary;
+    @apply font-playfair-display font-bold text-3xl md:text-5xl lg:text-6xl mb-4 text-primary;
+  }
+
+  h2 {
+    @apply font-playfair-display font-semibold text-2xl md:text-3xl lg:text-4xl text-primary;
+  }
+
+  h3 {
+    @apply font-playfair-display font-bold text-lg md:text-xl lg:text-2xl text-primary;
+  }
+
+  h4 {
+    @apply font-montserrat text-primary;
   }
 
   a {
@@ -174,5 +179,76 @@
 
   .animate-fade-in-right {
     animation: fade-in-right 1s ease-out 0.2s both;
+  }
+
+  @keyframes typewriter {
+    from {
+      max-width: 0;
+    }
+
+    to {
+      max-width: 100%;
+    }
+  }
+
+  .animate-typewriter-line1 {
+    max-width: 0;
+    animation: typewriter 1s steps(14, end) 0.3s forwards;
+  }
+
+  .animate-typewriter-line2 {
+    max-width: 0;
+    animation: typewriter 1.1s steps(16, end) 1.4s forwards;
+  }
+
+  .scrollbar-none {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer components {
+  .text-body-lg {
+    @apply text-base md:text-lg lg:text-xl;
+  }
+
+  .text-body {
+    @apply text-sm md:text-base;
+  }
+
+  .text-caption {
+    @apply text-xs md:text-sm;
+  }
+
+  .section-padding {
+    @apply py-10 md:py-14 lg:py-20;
+  }
+
+  .section-label {
+    @apply text-primary font-medium tracking-widest text-xs uppercase;
+  }
+
+  .section-header-mb {
+    @apply mb-8 md:mb-12;
+  }
+
+  .btn-cta {
+    @apply px-6 py-3 text-sm md:px-8 md:py-3.5 md:text-base;
+  }
+
+  .link-section {
+    @apply inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-accent transition-colors shrink-0;
+  }
+
+  .overlay-gradient {
+    @apply bg-gradient-to-t from-black/60 via-black/10 to-transparent;
+  }
+
+  .trust-icon {
+    @apply flex items-center justify-center rounded-full bg-primary/10 text-primary;
   }
 }

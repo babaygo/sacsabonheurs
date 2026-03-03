@@ -57,6 +57,8 @@ export default async function RootLayout({
         <meta property="og:site_name" content="Sacs à Bonheurs" />
         <meta property="og:locale" content="fr_FR" />
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
         <DynamicBanner />
