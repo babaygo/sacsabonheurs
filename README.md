@@ -28,20 +28,20 @@ Sacs à Bonheurs is a modern e-commerce web application built with Next.js and E
 
 ## Tech Stack
 
-| Layer | Technology | Version |
+| Layer | Technology |
 |-------|-----------|---------|
-| **Frontend** | Next.js | 15.5.4 |
-| **UI Library** | React | 19.1.0 |
-| **Backend** | Express.js | Latest |
-| **Database** | PostgreSQL | Latest |
-| **ORM** | Prisma | Latest |
-| **Authentication** | better-auth | 1.3.23 |
-| **Payments** | Stripe | Latest |
-| **Storage** | Cloudflare R2 | S3-compatible |
-| **Email** | Resend | Latest |
-| **State Management** | Zustand | 5.0.8 |
-| **Styling** | Tailwind CSS | 4.1.13 |
-| **Rich Text** | TipTap | 3.7.2 |
+| **Frontend** | Next.js |
+| **UI Library** | React |
+| **Backend** | Express.js |
+| **Database** | PostgreSQL |
+| **ORM** | Prisma |
+| **Authentication** | better-auth|
+| **Payments** | Stripe |
+| **Storage** | Cloudflare R2  |
+| **Email** | Resend |
+| **State Management** | Zustand |
+| **Styling** | Tailwind CSS |
+| **Rich Text** | TipTap |
 
 
 
