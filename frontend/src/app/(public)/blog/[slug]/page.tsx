@@ -2,12 +2,56 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { Metadata } from "next";
+import { ArrowRight, CalendarDays, Facebook, Linkedin, Share2 } from "lucide-react";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Button } from "@/components/ui/button";
 import { Article } from "@/types/Article";
 import { getArticleBySlug, getAllArticles } from "@/lib/api/article";
 
 export const revalidate = 60;
+
+function stripHtmlTags(value: string) {
+    return value
+        .replace(/<[^>]+>/g, " ")
+        .replace(/&nbsp;/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+function slugify(value: string) {
+    return value
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+}
+
+function enrichArticleContent(content: string) {
+    const headings: Array<{ id: string; label: string; level: "h2" | "h3" }> = [];
+    const usedIds = new Set<string>();
+
+    const enhancedContent = content.replace(
+        /<(h2|h3)([^>]*)>(.*?)<\/\1>/gi,
+        (_, tag: "h2" | "h3", attrs: string, inner: string) => {
+            const label = stripHtmlTags(inner);
+            if (!label) {
+                return `<${tag}${attrs}>${inner}</${tag}>`;
+            }
+
+            let id = slugify(label) || `section-${headings.length + 1}`;
+            while (usedIds.has(id)) {
+                id = `${id}-${headings.length + 1}`;
+            }
+            usedIds.add(id);
+
+            headings.push({ id, label, level: tag });
+            return `<${tag}${attrs} id="${id}">${inner}</${tag}>`;
+        }
+    );
+
+    return { headings, enhancedContent };
+}
 
 export async function generateMetadata({
     params,
@@ -33,11 +77,7 @@ export async function generateMetadata({
             title: article.title,
             description: article.excerpt,
             ...(article.image && { images: [article.image] }),
-            publishedTime: new Date(article.createdAt).toLocaleDateString("fr-FR", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-            }),
+            publishedTime: new Date(article.createdAt).toISOString(),
             authors: [article.author],
         },
     };
@@ -50,15 +90,15 @@ export async function generateStaticParams() {
     }));
 }
 
-function buildArticleSchema(article: any) {
+function buildArticleSchema(article: Article) {
     return {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         headline: article.title,
         description: article.excerpt,
         image: article.image,
-        datePublished: article.publishedAt,
-        dateModified: article.publishedAt,
+        datePublished: new Date(article.createdAt).toISOString(),
+        dateModified: new Date(article.updatedAt).toISOString(),
         author: {
             "@type": "Organization",
             name: article.author,
@@ -72,17 +112,6 @@ function buildArticleSchema(article: any) {
                 url: "https://sacsabonheurs.fr/logo.png",
                 width: 200,
                 height: 60,
-            },
-        },
-        mainEntity: {
-            "@type": "Article",
-            headline: article.title,
-            image: article.image,
-            datePublished: article.publishedAt,
-            dateModified: article.publishedAt,
-            author: {
-                "@type": "Organization",
-                name: article.author,
             },
         },
     };
@@ -99,6 +128,13 @@ export default async function ArticlePage({
     if (!article) return notFound();
 
     const schemaObj = buildArticleSchema(article);
+    const shareUrl = `https://sacsabonheurs.fr/blog/${article.slug}`;
+    const formattedDate = new Date(article.createdAt).toLocaleDateString("fr-FR", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+    const { headings, enhancedContent } = enrichArticleContent(article.content);
 
     return (
         <>
@@ -107,115 +143,179 @@ export default async function ArticlePage({
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaObj) }}
             />
 
-            <div className="min-h-screen mx-auto max-w-5xl">
-                <BreadCrumb
-                    items={[
-                        { label: "Accueil", href: "/" },
-                        { label: "Blog", href: "/blog" }
-                    ]}
-                />
-
-                <header className="mb-8 grid gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,420px)] md:items-center">
-                    <div className="order-2 md:order-1">
-                        <div className="flex items-center gap-3 mb-4">
-                            <span className="bg-secondary text-primary px-3 py-1 rounded-full font-medium">
-                                {article.category}
-                            </span>
-                            <span className="text-sm text-gray-500">
-                                {article.readingTime} min de lecture
-                            </span>
-                        </div>
-
-                        <h1>{article.title}</h1>
-
-                        <div className="flex flex-col md:flex-row md:items-center md:justify-between text-sm py-2">
-                            <div className="flex items-center gap-4">
-                                <span>Par <strong>{article.author}</strong></span>
-                                <span>
-                                    {new Date(article.createdAt).toLocaleDateString("fr-FR", {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                    })}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    {article.image && (
-                        <div className="relative order-1 w-full overflow-hidden rounded-xl aspect-[16/9] md:order-2">
-                            <Image
-                                src={article.image}
-                                alt={article.title}
-                                fill
-                                sizes="(min-width: 768px) 420px, 100vw"
-                                className="object-contain"
-                                fetchPriority="high"
-                                loading="lazy"
-                            />
-                        </div>
-                    )}
-                </header>
-
-                <article className="prose prose-lg max-w-none mb-8">
-                    <div
-                        dangerouslySetInnerHTML={{ __html: article.content }}
-                        className="prose prose-sm max-w-none"
+            <div className="min-h-screen pb-12">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                    <BreadCrumb
+                        items={[
+                            { label: "Accueil", href: "/" },
+                            { label: "Blog", href: "/blog" },
+                        ]}
                     />
 
-                    <div className="mt-6">
-                        <p className="font-semibold mb-3">Partager cet article</p>
-                        <div className="flex gap-3">
-                            <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
-                                title="Partager sur Twitter"
-                            >
-                                𝕏
-                            </a>
-                            <a
-                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
-                                title="Partager sur Facebook"
-                            >
-                                f
-                            </a>
-                            <a
-                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
-                                title="Partager sur LinkedIn"
-                            >
-                                in
-                            </a>
+                    <header className="mb-8 overflow-hidden rounded-[28px] border border-border bg-card shadow-sm">
+                        <div className="grid lg:grid-cols-[1.15fr_0.85fr]">
+                            <div className="order-2 p-6 sm:p-8 lg:order-1 lg:p-10">
+                                <div className="mb-4 flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+                                    <span className="rounded-full bg-secondary px-3 py-1 font-semibold text-primary">
+                                        {article.category}
+                                    </span>
+                                    <span className="rounded-full border border-border bg-background px-3 py-1 text-muted-foreground">
+                                        {article.readingTime} min de lecture
+                                    </span>
+                                </div>
+
+                                <h1 className="mb-4 !text-3xl leading-tight md:!text-5xl">
+                                    {article.title}
+                                </h1>
+
+                                <p className="max-w-2xl text-base leading-7 text-muted-foreground md:text-lg">
+                                    {article.excerpt}
+                                </p>
+
+                                <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+                                    <span className="inline-flex items-center gap-2">
+                                        <CalendarDays className="h-4 w-4 text-primary" />
+                                        {formattedDate}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {article.image && (
+                                <div className="relative order-1 min-h-[260px] overflow-hidden bg-secondary lg:order-2 lg:min-h-full">
+                                    <Image
+                                        src={article.image}
+                                        alt={article.title}
+                                        fill
+                                        sizes="(max-width: 1024px) 100vw, 40vw"
+                                        className="object-cover"
+                                        fetchPriority="high"
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+                                </div>
+                            )}
                         </div>
-                    </div>
-                </article>
+                    </header>
 
-                <footer className="border-t pt-8 mb-8">
-                    <div className="flex flex-col mb-6">
-                        <h2 className="text-2xl font-bold mb-4">Qui je suis ?</h2>
-                        <p>
-                            {article.author} est une marque de sacs artisanaux de haute qualité,
-                            basée sur les valeurs de durabilité et de créativité.
-                        </p>
-                    </div>
+                    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_280px] lg:items-start">
+                        <div className="min-w-0">
+                            {headings.length > 0 && (
+                                <nav className="mb-5 rounded-2xl border border-border bg-card p-4 shadow-sm lg:hidden">
+                                    <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                                        Sommaire
+                                    </p>
+                                    <div className="flex flex-wrap gap-2">
+                                        {headings.map((heading) => (
+                                            <a
+                                                key={heading.id}
+                                                href={`#${heading.id}`}
+                                                className="rounded-full border border-border bg-background px-3 py-1.5 text-sm text-foreground hover:border-primary"
+                                            >
+                                                {heading.label}
+                                            </a>
+                                        ))}
+                                    </div>
+                                </nav>
+                            )}
 
-                    <div className="text-center mb-12 border-t pt-8">
-                        <h2 className="text-2xl font-bold mb-4">Découvrez mes sacs artisanaux</h2>
-                        <p className="mb-6">
-                            Trouvez le sac parfait qui correspond à vos besoins et à vos valeurs.
-                        </p>
-                        <Button asChild size="lg">
-                            <Link href="/boutique">Parcourir la collection</Link>
-                        </Button>
+                            <article className="rounded-[28px] border border-border bg-card p-5 shadow-sm sm:p-8 lg:p-10">
+                                <div
+                                    dangerouslySetInnerHTML={{ __html: enhancedContent }}
+                                    className="blog-article-content"
+                                />
+
+                                <div className="mt-10 border-t border-border pt-6">
+                                    <p className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                                        <Share2 className="h-4 w-4" />
+                                        Partager cet article
+                                    </p>
+                                    <div className="flex flex-wrap gap-3">
+                                        <a
+                                            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(shareUrl)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:border-primary"
+                                            title="Partager sur X"
+                                        >
+                                            <span>X</span>
+                                        </a>
+                                        <a
+                                            href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:border-primary"
+                                            title="Partager sur Facebook"
+                                        >
+                                            <Facebook className="h-4 w-4" />
+                                            Facebook
+                                        </a>
+                                        <a
+                                            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(shareUrl)}`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="inline-flex items-center gap-2 rounded-full border border-border bg-background px-4 py-2 text-sm font-medium hover:border-primary"
+                                            title="Partager sur LinkedIn"
+                                        >
+                                            <Linkedin className="h-4 w-4" />
+                                            LinkedIn
+                                        </a>
+                                    </div>
+                                </div>
+                            </article>
+
+                            <section className="mt-8 grid gap-4 md:grid-cols-2">
+                                <div className="rounded-[24px] border border-border bg-card p-6 shadow-sm">
+                                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                                        À propos
+                                    </p>
+                                    <h2 className="mb-3 !text-2xl">Qui je suis ?</h2>
+                                    <p className="text-sm leading-7 text-muted-foreground md:text-base">
+                                        {article.author} crée des sacs artisanaux durables, pensés pour allier style, qualité et usage quotidien.
+                                    </p>
+                                </div>
+
+                                <div className="rounded-[24px] border border-border p-6 shadow-sm">
+                                    <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                                        Découverte
+                                    </p>
+                                    <h2 className="mb-3 !text-2xl">Découvrez mes sacs artisanaux</h2>
+                                    <p className="mb-5 text-sm leading-7 text-muted-foreground md:text-base">
+                                        Trouvez le sac parfait selon vos besoins, votre style et vos valeurs.
+                                    </p>
+                                    <Button asChild size="lg" className="w-full sm:w-auto">
+                                        <Link href="/boutique" className="inline-flex items-center gap-2">
+                                            Parcourir la collection
+                                            <ArrowRight className="h-4 w-4" />
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </section>
+                        </div>
+
+                        <aside className="hidden lg:block">
+                            <div className="sticky top-28 space-y-4">
+                                {headings.length > 0 && (
+                                    <nav className="rounded-[24px] border border-border bg-card p-5 shadow-sm">
+                                        <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                                            Sommaire
+                                        </p>
+                                        <ul className="space-y-2">
+                                            {headings.map((heading) => (
+                                                <li key={heading.id}>
+                                                    <a
+                                                        href={`#${heading.id}`}
+                                                        className={`block text-sm leading-6 hover:text-primary ${heading.level === "h3" ? "pl-3 text-muted-foreground" : "font-medium text-foreground"}`}
+                                                    >
+                                                        {heading.label}
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </nav>
+                                )}
+                            </div>
+                        </aside>
                     </div>
-                </footer>
+                </div>
             </div>
         </>
     );
