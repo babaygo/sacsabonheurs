@@ -29,7 +29,7 @@ Sacs à Bonheurs is a modern e-commerce web application built with Next.js and E
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|---------|
+|-------|-----------|
 | **Frontend** | Next.js |
 | **UI Library** | React |
 | **Backend** | Express.js |
