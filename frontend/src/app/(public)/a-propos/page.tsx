@@ -160,7 +160,7 @@ export default function AProposPage() {
                         <p>
                             La confection se fait entièrement dans mon atelier, où je prends le temps nécessaire pour
                             assembler, coudre et finaliser chaque détail. C'est ce temps accordé à chaque pièce qui fait
-                            toute la différence et garantit la qualité exceptionnelle de mes créations.
+                            toute la différence et garantit la qualité de mes créations.
                         </p>
                     </div>
                 </section>
