@@ -69,7 +69,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
             label: "Description",
             content: (
                 <div
-                    className="site-rich-content"
+                    className="rich-content"
                     dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(product?.description) }}
                 />
             ),

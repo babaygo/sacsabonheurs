@@ -37,7 +37,7 @@ export default async function MentionsLegalesPage() {
             />
             <h1>Mentions légales</h1>
             <div
-                className="site-rich-content py-4"
+                className="rich-content py-4"
                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(mentions) }}
             />
         </div>

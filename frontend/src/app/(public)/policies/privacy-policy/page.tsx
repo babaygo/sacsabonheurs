@@ -37,7 +37,7 @@ export default async function PrivacyPolicyPage() {
             />
             <h1>Politique de confidentialité</h1>
             <div
-                className="site-rich-content py-4"
+                className="rich-content py-4"
                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(privacy) }}
             />
         </div>

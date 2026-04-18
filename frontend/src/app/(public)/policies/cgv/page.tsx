@@ -37,7 +37,7 @@ export default async function CGVPage() {
             />
             <h1>Conditions générales de vente</h1>
             <div
-                className="site-rich-content py-4"
+                className="rich-content py-4"
                 dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(cgv) }}
             />
         </div>
