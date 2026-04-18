@@ -207,7 +207,7 @@ export function RichTextEditor({ value, onChange, variant = "site" }: RichTextEd
         },
         editorProps: {
             attributes: {
-                class: "rich-editor-content max-w-none min-h-[200px] p-4 focus:outline-none",
+                class: "rich-editor-content max-w-none min-h-full p-4 focus:outline-none",
             },
         },
     });
@@ -649,7 +649,9 @@ export function RichTextEditor({ value, onChange, variant = "site" }: RichTextEd
                 </div>
             </div>
 
-            <EditorContent editor={editor} />
+            <div className="h-[480px] overflow-y-auto">
+                <EditorContent editor={editor} />
+            </div>
 
             <div className="border-t border-border bg-muted/40 px-3 py-2 text-xs text-muted-foreground">
                 <span>{characterCount} caractères</span>

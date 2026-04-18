@@ -186,7 +186,7 @@ export function ProductDialog({
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="max-h-screen overflow-y-auto">
+            <DialogContent className="max-h-[90vh] w-[95vw] max-w-6xl overflow-y-auto md:w-[75vw]">
                 <DialogHeader>
                     <DialogTitle>
                         {isEditMode ? "Modifier le sac" : "Ajouter un sac"}
