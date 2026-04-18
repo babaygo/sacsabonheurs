@@ -138,6 +138,11 @@ export function ProductDialog({
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!(form.metaDescription || "").trim()) {
+            toast.error("La meta description est obligatoire.");
+            return;
+        }
+
         if (form.isOnSale) {
             const validation = validateSalePrice(form.price as number, form.salePrice, form.salePercentage);
             if (!validation.valid) {
@@ -241,6 +246,7 @@ export function ProductDialog({
                                 placeholder="Description courte pour les moteurs de recherche"
                                 rows={3}
                                 maxLength={160}
+                                required
                                 onChange={(e) => handleChange("metaDescription", e.target.value)}
                             />
                             <p className="text-xs text-muted-foreground">

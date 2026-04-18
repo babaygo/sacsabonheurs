@@ -140,7 +140,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 </div>
 
                 <div className="col-span-1 md:col-span-2 flex flex-col space-y-4">
-                    <p className="text-2xl mt-2 md:mt-4">{product?.name}</p>
+                    <h1 className="font-montserrat font-semibold text-2xl mt-2 md:mt-4">{product?.name}</h1>
                     
                     {(() => {
                         const priceInfo = calculateSalePrice(

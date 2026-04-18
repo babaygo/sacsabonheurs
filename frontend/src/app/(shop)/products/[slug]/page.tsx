@@ -51,7 +51,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const product = await getProductBySlug(slug);
 
     return {
-        title: product ? `${product.name} - Sacs à Bonheurs` : "Produit introuvable - Sacs à Bonheurs"
+        title: product ? `${product.name} - Sacs à Bonheurs` : "Produit introuvable - Sacs à Bonheurs",
+        description: product?.metaDescription,
     };
 }
 
