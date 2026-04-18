@@ -15,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { useProductsByCategory } from "@/hooks/useProductsByCategory";
 import { Spinner } from "@/components/ui/spinner";
 import { calculateSalePrice, formatPrice } from "@/lib/utils/priceCalculator";
+import { normalizeRichTextContent } from "@/lib/utils/richText";
 
 export default function ProductClient({ initialProduct, slug }: { initialProduct: Product; slug: string }) {
     const { product: liveProduct, loadingProduct, errorProduct } = useProductBySlug(slug);
@@ -68,8 +69,8 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
             label: "Description",
             content: (
                 <div
-                    className="prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: product?.description || "" }}
+                    className="site-rich-content"
+                    dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(product?.description) }}
                 />
             ),
         },

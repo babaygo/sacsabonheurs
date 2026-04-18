@@ -46,9 +46,10 @@ import {
 interface RichTextEditorProps {
     value: string;
     onChange: (value: string) => void;
+    variant?: "site" | "blog";
 }
 
-export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
+export function RichTextEditor({ value, onChange, variant = "site" }: RichTextEditorProps) {
     const [selectedFontSize, setSelectedFontSize] = useState("");
     const [selectedColor, setSelectedColor] = useState("");
     const [selectedLineHeight, setSelectedLineHeight] = useState("");
@@ -135,16 +136,11 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
                 heading: {
                     levels: [1, 2, 3],
                 },
-                paragraph: {
-                    HTMLAttributes: {
-                        class: "mb-3"
-                    }
-                }
             }),
             Link.configure({
                 openOnClick: false,
                 HTMLAttributes: {
-                    class: "text-blue-600 underline",
+                    rel: "noopener noreferrer",
                 },
             }),
             TextStyle,
@@ -162,7 +158,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
         },
         editorProps: {
             attributes: {
-                class: "prose prose-sm max-w-none focus:outline-none min-h-[200px] p-4 [&_ul]:list-disc [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:pl-6 [&_li]:my-1",
+                class: `rich-editor-content rich-editor-content--${variant} max-w-none focus:outline-none min-h-[200px] p-4`,
             },
         },
     });

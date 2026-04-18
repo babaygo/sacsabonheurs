@@ -113,6 +113,7 @@ export default function AdminLegalClient() {
                     <PdfExtractor onExtract={handleExtract("mentions")} />
                     <RichTextEditor
                         value={legal.mentions}
+                        variant="site"
                         onChange={handleChange("mentions")}
                     />
                 </div>
@@ -122,6 +123,7 @@ export default function AdminLegalClient() {
                     <PdfExtractor onExtract={handleExtract("cgv")} />
                     <RichTextEditor
                         value={legal.cgv}
+                        variant="site"
                         onChange={handleChange("cgv")}
                     />
                 </div>
@@ -131,6 +133,7 @@ export default function AdminLegalClient() {
                     <PdfExtractor onExtract={handleExtract("privacy")} />
                     <RichTextEditor
                         value={legal.privacy}
+                        variant="site"
                         onChange={handleChange("privacy")}
                     />
                 </div>

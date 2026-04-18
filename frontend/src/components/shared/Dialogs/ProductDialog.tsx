@@ -225,6 +225,7 @@ export function ProductDialog({
                             <div className="border rounded-md bg-white">
                                 <RichTextEditor
                                     value={form.description || ""}
+                                    variant="site"
                                     onChange={(value) => handleChange("description", value)}
                                 />
                             </div>

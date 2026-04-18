@@ -1,5 +1,6 @@
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import BreadCrumb from "@/components/shared/BreadCrumb";
+import { normalizeRichTextContent } from "@/lib/utils/richText";
 
 export const metadata = {
     title: "Mentions légales - Sacs à Bonheur",
@@ -36,8 +37,8 @@ export default async function MentionsLegalesPage() {
             />
             <h1>Mentions légales</h1>
             <div
-                className="prose prose-sm max-w-none py-4"
-                dangerouslySetInnerHTML={{ __html: mentions }}
+                className="site-rich-content py-4"
+                dangerouslySetInnerHTML={{ __html: normalizeRichTextContent(mentions) }}
             />
         </div>
     );

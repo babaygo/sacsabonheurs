@@ -243,6 +243,7 @@ export function ArticleDialog({ open, onOpenChange, article, onSave }: ArticleDi
                             <FieldLabel>Contenu</FieldLabel>
                             <RichTextEditor
                                 value={formData.content}
+                                variant="blog"
                                 onChange={(value) => setFormData({ ...formData, content: value })}
                             />
                         </Field>
