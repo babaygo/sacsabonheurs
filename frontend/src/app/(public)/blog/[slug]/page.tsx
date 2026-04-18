@@ -62,14 +62,14 @@ function buildArticleSchema(article: any) {
         author: {
             "@type": "Organization",
             name: article.author,
-            url: "https://sacsabonheurs.com",
+            url: "https://sacsabonheurs.fr",
         },
         publisher: {
             "@type": "Organization",
             name: "Sacs à Bonheurs",
             logo: {
                 "@type": "ImageObject",
-                url: "https://sacsabonheurs.com/logo.png",
+                url: "https://sacsabonheurs.fr/logo.png",
                 width: 200,
                 height: 60,
             },
@@ -167,7 +167,7 @@ export default async function ArticlePage({
                         <p className="font-semibold mb-3">Partager cet article</p>
                         <div className="flex gap-3">
                             <a
-                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://sacsabonheurs.com/blog/${article.slug}`)}`}
+                                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(article.title)}&url=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
@@ -176,7 +176,7 @@ export default async function ArticlePage({
                                 𝕏
                             </a>
                             <a
-                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://sacsabonheurs.com/blog/${article.slug}`)}`}
+                                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
@@ -185,7 +185,7 @@ export default async function ArticlePage({
                                 f
                             </a>
                             <a
-                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://sacsabonheurs.com/blog/${article.slug}`)}`}
+                                href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(`https://sacsabonheurs.fr/blog/${article.slug}`)}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-200 hover:bg-primary hover:text-white transition-colors"
