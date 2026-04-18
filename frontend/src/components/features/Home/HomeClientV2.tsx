@@ -183,12 +183,12 @@ export default function HomeClientV2({
                         <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary uppercase tracking-widest">
                             <Separator className="w-8!" /> MADE IN FRANCE
                         </span>
-                        <h1>
+                        <h1 className="font-bold text-4xl md:text-5xl lg:text-6xl leading-tight">
                             Bienvenue chez
                             <br />
                             Sacs à Bonheurs
                         </h1>
-                        <p className="hidden sm:flex text-body-lg text-muted-foreground max-w-lg mx-auto lg:mx-0">
+                        <p className="hidden md:flex text-body-lg text-muted-foreground max-w-lg mx-auto lg:mx-0">
                             Des sacs artisanaux imaginés et confectionnés
                             avec passion, dans mon atelier en Loire-Atlantique.
                         </p>
