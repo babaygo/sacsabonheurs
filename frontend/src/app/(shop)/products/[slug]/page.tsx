@@ -1,5 +1,6 @@
 import ProductClient from "@/components/features/Product/ProductClient";
 import { getProductBySlug } from "@/lib/api/product";
+import { Product } from "@/types/Product";
 import { notFound } from "next/navigation";
 
 function sanitizeDescription(html?: string) {
@@ -7,11 +8,11 @@ function sanitizeDescription(html?: string) {
     return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
-function buildProductSchema(product: any) {
+function buildProductSchema(product: Product) {
     const price = product?.isOnSale && product?.salePrice ? product.salePrice : product.price;
     const images = Array.isArray(product?.images) ? product.images : [];
 
-    const schema: any = {
+    const schema: Record<string, any> = {
         "@context": "https://schema.org/",
         "@type": "Product",
         name: product?.name || "",

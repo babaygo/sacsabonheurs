@@ -6,6 +6,7 @@ export interface Product {
     name: string;
     slug: string;
     description: string;
+    metaDescription?: string | null;
     price: number;
     isOnSale: boolean;
     salePrice: number | null;

@@ -25,6 +25,7 @@ model Product {
   name           String
   slug           String      @unique
   description    String
+  metaDescription String?
   price          Float
   isOnSale       Boolean     @default(false)
   salePrice      Float?

@@ -69,7 +69,7 @@ export async function getProductsByCategory(req: Request, res: Response) {
 export async function createProduct(req: Request, res: Response) {
     try {
         const {
-            name, slug, description, price, categoryId,
+            name, slug, description, metaDescription, price, categoryId,
             stock, weight, height, lenght, width, hidden, color, material
         } = req.body;
 
@@ -86,6 +86,7 @@ export async function createProduct(req: Request, res: Response) {
                 name,
                 slug,
                 description,
+                metaDescription: metaDescription?.trim() || null,
                 price: parseFloat(price),
                 stock: parseInt(stock),
                 weight: parseFloat(weight),
@@ -116,7 +117,7 @@ export async function createProduct(req: Request, res: Response) {
 export async function updateProduct(req: Request, res: Response) {
     const { id } = req.params;
     const {
-        name, slug, description, price, stock,
+        name, slug, description, metaDescription, price, stock,
         weight, height, lenght, width, categoryId, hidden, color, material,
         isOnSale, salePrice, salePercentage
     } = req.body;
@@ -149,6 +150,7 @@ export async function updateProduct(req: Request, res: Response) {
                 name,
                 slug,
                 description,
+                metaDescription: metaDescription?.trim() || null,
                 price: parseFloat(price),
                 stock: parseInt(stock),
                 weight: parseFloat(weight),

@@ -15,6 +15,7 @@ import { RichTextEditor } from "../RichEditorText";
 import { Category } from "@/types/Category";
 import { validateSalePrice, calculateComplementaryValue } from "@/lib/utils/priceCalculator";
 import { AlertCircle } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { createProduct, updateProduct } from "@/lib/api/product";
 
 interface ProductDialogProps {
@@ -29,6 +30,7 @@ const emptyProduct = {
     name: "",
     slug: "",
     description: "",
+    metaDescription: "",
     hidden: false,
     price: 0,
     stock: 1,
@@ -229,6 +231,21 @@ export function ProductDialog({
                                     onChange={(value) => handleChange("description", value)}
                                 />
                             </div>
+                        </Field>
+
+                        <Field>
+                            <FieldLabel>Meta description SEO (155-160 caractères)</FieldLabel>
+                            <Textarea
+                                value={form.metaDescription || ""}
+                                disabled={isLoading}
+                                placeholder="Description courte pour les moteurs de recherche"
+                                rows={3}
+                                maxLength={160}
+                                onChange={(e) => handleChange("metaDescription", e.target.value)}
+                            />
+                            <p className="text-xs text-muted-foreground">
+                                {(form.metaDescription || "").length}/160 caractères
+                            </p>
                         </Field>
 
                         <Field>
