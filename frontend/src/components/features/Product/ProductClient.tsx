@@ -176,7 +176,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                         <Separator />
                         {accordionItems.map(({ key, label, content }) => (
                             <AccordionItem key={key} value={key}>
-                                <AccordionTrigger className="font-semibold">{label}</AccordionTrigger>
+                                <AccordionTrigger className="font-montserrat font-medium text-primary text-base">{label}</AccordionTrigger>
                                 <AccordionContent>{content}</AccordionContent>
                             </AccordionItem>
                         ))}

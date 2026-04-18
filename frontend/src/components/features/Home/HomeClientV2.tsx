@@ -70,7 +70,6 @@ export default function HomeClientV2({
     const [expanded, setExpanded] = useState(false);
     const [blogPosts, setBlogPosts] = useState<Article[]>([]);
 
-    /* Lock hero height once at mount — immune to Firefox mobile address bar */
     const [heroH, setHeroH] = useState<string>("100svh");
     useEffect(() => {
         setHeroH(`${window.innerHeight}px`);
@@ -152,14 +151,10 @@ export default function HomeClientV2({
 
     return (
         <div className="min-h-screen flex flex-col">
-            {/* ============================================================ */}
-            {/*  HERO                                                        */}
-            {/* ============================================================ */}
             <section
                 className="relative flex flex-col lg:flex-row items-center gap-8 lg:gap-16 lg:py-20 -mt-6 lg:mt-0 lg:!min-h-0"
                 style={{ minHeight: `calc(${heroH} - var(--header-height))` }}
             >
-                {/* --- mobile background image --- */}
                 <div className="lg:hidden absolute inset-0 -mx-[var(--container-padding,1rem)] -mt-6 overflow-hidden">
                     <Image
                         src="/assets/hero_image.webp"
@@ -173,12 +168,10 @@ export default function HomeClientV2({
                     />
                 </div>
 
-                {/* --- text --- */}
                 <div
                     className="relative flex flex-col lg:space-y-8 w-full lg:w-1/2 order-1 z-10 lg:py-0 lg:!min-h-0 justify-between py-12 md:py-16"
                     style={{ minHeight: `calc(${heroH} - var(--header-height))` }}
                 >
-                    {/* top block: badge + title */}
                     <div className="space-y-5 text-center lg:text-left">
                         <span className="hidden lg:flex items-center gap-4 text-sm sm:text-base font-medium text-primary uppercase tracking-widest">
                             <Separator className="w-8!" /> MADE IN FRANCE
@@ -194,12 +187,9 @@ export default function HomeClientV2({
                         </p>
                     </div>
 
-                    {/* spacer — visible only on mobile to let the background image breathe */}
                     <div className="flex-1 lg:hidden" />
 
-                    {/* bottom block: CTAs + micro-infos */}
                     <div className="space-y-6">
-                        {/* CTAs */}
                         <div className="flex flex-row gap-3 md:gap-4 justify-center lg:justify-start">
                             <Link href="/boutique" className="w-full sm:w-auto">
                                 <Button
@@ -220,7 +210,6 @@ export default function HomeClientV2({
                             </Link>
                         </div>
 
-                        {/* micro-infos */}
                         <div className="flex flex-wrap gap-4 md:gap-6 justify-center lg:justify-start text-caption text-muted-foreground">
                             <span className="flex items-center gap-2">
                                 <MapPin className="w-4 h-4 text-primary" /> Saint-Nazaire
@@ -235,7 +224,6 @@ export default function HomeClientV2({
                     </div>
                 </div>
 
-                {/* --- hero image (desktop only) --- */}
                 <div className="relative hidden lg:block lg:w-1/2 order-2">
                     <div className="relative w-full lg:h-[calc(100vh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
                         <Image
@@ -247,11 +235,9 @@ export default function HomeClientV2({
                             priority
                         />
 
-                        {/* gradient overlay bottom */}
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
                     </div>
 
-                    {/* floating badge */}
                     <div className="absolute -bottom-5 left-8 bg-background rounded-2xl p-5 shadow-xl border border-border/50 backdrop-blur-sm">
                         <p className="font-playfair-display font-bold text-2xl md:text-3xl text-primary">
                             100%
@@ -264,9 +250,6 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  COLLECTIONS                                                 */}
-            {/* ============================================================ */}
             <section
                 ref={collectionsReveal.ref}
                 className={`section-padding transition-all duration-700 ${collectionsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
@@ -283,7 +266,6 @@ export default function HomeClientV2({
                     </p>
                 </div>
 
-                {/* desktop grid */}
                 <div className="hidden md:grid grid-cols-3 gap-6 lg:gap-8">
                     {collections.map((collection, idx) => (
                         <Link
@@ -300,10 +282,8 @@ export default function HomeClientV2({
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 loading="lazy"
                             />
-                            {/* overlay */}
                             <div className="absolute inset-0 overlay-gradient transition-opacity duration-500" />
 
-                            {/* text overlay */}
                             <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 transition-transform duration-500 group-hover:-translate-y-2">
                                 <h3 className="text-white mb-1">
                                     {collection.title}
@@ -319,7 +299,6 @@ export default function HomeClientV2({
                     ))}
                 </div>
 
-                {/* mobile carousel */}
                 <div className="md:hidden">
                     <Carousel opts={{ align: "center", loop: true }}>
                         <CarouselContent className="m-0">
@@ -355,9 +334,6 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  NOUVEAUTÉS                                                  */}
-            {/* ============================================================ */}
             <section
                 ref={productsReveal.ref}
                 className={`section-padding transition-all duration-700 ${productsReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
@@ -384,14 +360,12 @@ export default function HomeClientV2({
                     </Link>
                 </div>
 
-                {/* desktop grid */}
                 <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {sortedProducts.map((product) => (
                         <PreviewProduct key={product.id} product={product} />
                     ))}
                 </div>
 
-                {/* mobile carousel */}
                 <div className="md:hidden">
                     <Carousel
                         opts={{ align: "center", loop: true, watchDrag: false }}
@@ -421,15 +395,11 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  LA BOUTIQUE / À PROPOS                                      */}
-            {/* ============================================================ */}
             <section
                 ref={aboutReveal.ref}
                 className={`section-padding transition-all duration-700 ${aboutReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
             >
                 <div className="flex flex-col lg:flex-row items-center gap-10 lg:gap-16">
-                    {/* left: content */}
                     <div className="w-full lg:w-1/2 space-y-6">
                         <span className="section-label">
                             L'artisane
@@ -438,7 +408,6 @@ export default function HomeClientV2({
                             La Boutique
                         </h2>
 
-                        {/* quote */}
                         <div className="relative pl-6">
                             <Quote className="absolute -left-1 -top-2 w-6 h-6 text-primary/30" />
                             <p className="text-body-lg italic text-muted-foreground leading-relaxed">
@@ -505,7 +474,6 @@ export default function HomeClientV2({
                         </div>
                     </div>
 
-                    {/* right: Partners */}
                     <div className="w-full lg:w-1/2 hidden sm:flex flex-row justify-center items-center gap-8">
                         <Link
                             href="https://crealouest.fr/"
@@ -541,9 +509,6 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  BLOG                                                        */}
-            {/* ============================================================ */}
             {blogPosts.length > 0 && (
                 <section
                     ref={blogReveal.ref}
@@ -569,12 +534,10 @@ export default function HomeClientV2({
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                        {/* featured */}
                         <Link
                             href={`/blog/${blogPosts[0].slug}`}
                             className="lg:col-span-2 group relative rounded-2xl overflow-hidden bg-background border border-border/60 hover:shadow-lg transition-shadow duration-300"
                         >
-                            {/* image */}
                             <div className="relative w-full aspect-[16/9] overflow-hidden">
                                 {blogPosts[0].image ? (
                                     <Image
@@ -594,7 +557,7 @@ export default function HomeClientV2({
                                     </span>
                                 </div>
                             </div>
-                            {/* body */}
+
                             <div className="p-5 md:p-6 lg:p-8">
                                 <h3 className="mb-2 group-hover:text-primary transition-colors">
                                     {blogPosts[0].title}
@@ -609,7 +572,6 @@ export default function HomeClientV2({
                             </div>
                         </Link>
 
-                        {/* sidebar */}
                         {blogPosts.length >= 2 && (
                             <div className="flex flex-col gap-4">
                                 <h3 className="font-playfair-display font-semibold text-base md:text-lg">
@@ -657,9 +619,6 @@ export default function HomeClientV2({
                 </section>
             )}
 
-            {/* ============================================================ */}
-            {/*  TRUST BAR (compact, always visible)                         */}
-            {/* ============================================================ */}
             <section
                 ref={trustReveal.ref}
                 className={`hidden sm:flex py-8 md:py-10 transition-all duration-700 ${trustReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}`}
@@ -684,11 +643,7 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  MOBILE TRUST STRIP                                          */}
-            {/* ============================================================ */}
             <section className="sm:hidden py-8 space-y-8">
-                {/* Horizontal scrollable trust badges */}
                 <div className="flex gap-3 overflow-x-auto pb-2 snap-x snap-mandatory scrollbar-none px-1">
                     {trustItems.map((item, i) => (
                         <div
@@ -711,11 +666,7 @@ export default function HomeClientV2({
                 </div>
             </section>
 
-            {/* ============================================================ */}
-            {/*  MOBILE PARTNERS                                             */}
-            {/* ============================================================ */}
             <section className="sm:hidden py-8 flex justify-center">
-                {/* Partners */}
                 <div className="flex flex-col items-center gap-6">
                     <h2>Partenaires</h2>
                     <Link

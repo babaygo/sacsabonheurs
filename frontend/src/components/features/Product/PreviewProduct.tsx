@@ -102,8 +102,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 )}
             </div>
 
-            <div className="mt-4 text-start">
-                <h3 className="font-semibold text-[15px]">{product.name}</h3>
+            <div className="mt-3 text-start">
+                <span className="font-semibold">{product.name}</span>
                 {(() => {
                     const priceInfo = calculateSalePrice(product.price, product.isOnSale, product.salePrice, product.salePercentage);
                     if (priceInfo.isOnSale) {
