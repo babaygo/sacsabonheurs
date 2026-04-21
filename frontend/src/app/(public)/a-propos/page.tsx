@@ -77,7 +77,7 @@ export default function AProposPage() {
                 </header>
 
                 <div className="flex flex-col gap-6 mb-10 sm:mb-12 lg:flex-row lg:items-center">
-                    <div className="order-2 lg:order-1">
+                    <div className="order-1 lg:order-1 lg:flex-1">
                         <h2 className="mb-4">Qui suis-je ?</h2>
                         <div className="space-y-4 text-sm text-justify sm:text-base leading-relaxed">
                             <p>
@@ -113,6 +113,19 @@ export default function AProposPage() {
                                     Facebook
                                 </a>.
                             </p>
+                        </div>
+                    </div>
+                    <div className="order-2 lg:order-2 flex justify-center lg:justify-end lg:flex-shrink-0">
+                        <div className="relative w-full max-w-xs sm:max-w-sm lg:w-72 xl:w-80">
+                            <Image
+                                src={`${process.env.NEXT_PUBLIC_URL_MEDIA}/about/sophie.jpg`}
+                                alt="Sophie, créatrice de Sacs à Bonheurs"
+                                width={320}
+                                height={480}
+                                fetchPriority="high"
+                                loading="lazy"
+                                className="object-contain rounded-lg w-full h-auto"
+                            />
                         </div>
                     </div>
                 </div >
