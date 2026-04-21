@@ -38,7 +38,6 @@ export default async function RootLayout({
     <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
-        <link rel="canonical" href={process.env.NEXT_PUBLIC_URL_FRONT} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
