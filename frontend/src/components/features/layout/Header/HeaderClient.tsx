@@ -175,7 +175,7 @@ export default function HeaderClient() {
                                 <Image
                                     src="/assets/sacs-a-bonheurs-logo.png"
                                     alt="Logo Sacs à Bonheurs"
-                                    loading="lazy"
+                                    loading="eager"
                                     width={48}
                                     height={48}
                                     className="h-12 w-auto object-contain"

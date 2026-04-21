@@ -39,7 +39,6 @@ export default function PreviewProduct({ product }: { product: Product }) {
                     alt={product.name}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     fill
-                    fetchPriority="auto"
                     className="object-cover w-full h-auto block transition-opacity duration-300 group-hover:opacity-0"
                 />
 

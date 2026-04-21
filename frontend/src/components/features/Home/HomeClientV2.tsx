@@ -162,8 +162,7 @@ export default function HomeClientV2({
                         fill
                         sizes="100vw"
                         className="object-cover object-center"
-                        fetchPriority="high"
-                        loading="lazy"
+                        priority
                         aria-hidden="true"
                     />
                 </div>
@@ -314,7 +313,6 @@ export default function HomeClientV2({
                                             sizes="85vw"
                                             fill
                                             className="w-full h-full object-cover"
-                                            fetchPriority="auto"
                                             loading="lazy"
                                         />
                                         <div className="absolute inset-0 overlay-gradient" />
@@ -485,7 +483,6 @@ export default function HomeClientV2({
                                 alt="CréaLOuest - Réseau de créateurs en Pays de la Loire"
                                 width={250}
                                 height={100}
-                                fetchPriority="auto"
                                 loading="lazy"
                                 className="object-contain hover:opacity-80 transition-opacity"
                             />
@@ -500,7 +497,6 @@ export default function HomeClientV2({
                                 alt="Le Marché des Créateurs"
                                 width={250}
                                 height={100}
-                                fetchPriority="auto"
                                 loading="lazy"
                                 className="object-contain hover:opacity-80 transition-opacity"
                             />
@@ -679,7 +675,6 @@ export default function HomeClientV2({
                             alt="CréaLOuest - Réseau de créateurs en Pays de la Loire"
                             width={250}
                             height={100}
-                            fetchPriority="auto"
                             loading="lazy"
                             className="object-contain hover:opacity-80 transition-opacity"
                         />
@@ -694,7 +689,6 @@ export default function HomeClientV2({
                             alt="Le Marché des Créateurs"
                             width={250}
                             height={100}
-                            fetchPriority="auto"
                             loading="lazy"
                             className="object-contain hover:opacity-80 transition-opacity"
                         />

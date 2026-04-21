@@ -120,7 +120,7 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                                             fill
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             className="object-cover"
-                                            fetchPriority={i === 0 ? "high" : "auto"}
+                                            priority={i === 0}
                                         />
                                     </div>
                                 </CarouselItem>
@@ -203,7 +203,6 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                                                 alt={p.name}
                                                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                                 fill
-                                                fetchPriority="auto"
                                                 className="object-cover w-full h-auto block transition-opacity duration-300"
                                             />
                                             <div className="w-full flex justify-center py-2 px-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-600">

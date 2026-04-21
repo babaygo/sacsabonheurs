@@ -175,8 +175,7 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                             height={2061}
                             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 50vw"
                             className="w-full h-full object-cover hover:scale-105 transition-transform duration-1000 ease-out"
-                            fetchPriority="high"
-                            loading="lazy"
+                            priority
                         />
                     </div>
 
@@ -211,7 +210,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                                     height={1248}
                                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                    fetchPriority="auto"
                                     loading="lazy"
                                 />
                             </div>
@@ -245,7 +243,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                                             height={1248}
                                             sizes="100vw"
                                             className="w-full h-full object-cover"
-                                            fetchPriority="auto"
                                             loading="lazy"
                                         />
                                     </div>
@@ -377,7 +374,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                                         fill
                                         sizes="(max-width: 1024px) 100vw, 66vw"
                                         className="object-cover"
-                                        fetchPriority="auto"
                                         loading="lazy"
                                     />
                                 ) : (
@@ -407,7 +403,6 @@ export default function HomeClient({ initialProducts }: { initialProducts: Produ
                                                     fill
                                                     sizes="96px"
                                                     className="object-cover"
-                                                    fetchPriority="auto"
                                                     loading="lazy"
                                                 />
                                             ) : (

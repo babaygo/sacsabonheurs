@@ -90,7 +90,7 @@ export default function CartDrawer() {
                                     width={64}
                                     height={64}
                                     className="w-16 h-16 object-cover rounded"
-                                    fetchPriority={i === 0 ? "high" : "auto"}
+                                    loading="lazy"
                                 />
                                 <div className="flex-1">
                                     <p className="font-medium">{item.name}</p>

@@ -23,7 +23,7 @@ export default function ZoomableImage({ images, index, alt }: Props) {
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         width={800}
         height={800}
-        fetchPriority={index === 0 ? "high" : "auto"}
+        priority={index === 0}
       />
       {open && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm flex items-center justify-center">

@@ -48,7 +48,7 @@ export default function ZoomableCarousel({
                                 sizes="(max-width: 768px) 100vw, 33vw"
                                 width={800}
                                 height={800}
-                                fetchPriority={i === selectedIndex ? "high" : "auto"}
+                                loading="lazy"
                             />
                         </div>
                     ))}

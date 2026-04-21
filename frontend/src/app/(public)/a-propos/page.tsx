@@ -122,8 +122,8 @@ export default function AProposPage() {
                                 alt="Sophie, créatrice de Sacs à Bonheurs"
                                 width={320}
                                 height={480}
-                                fetchPriority="high"
-                                loading="lazy"
+                                priority
+                                sizes="(max-width: 640px) 80vw, (max-width: 1024px) 384px, 320px"
                                 className="object-contain rounded-lg w-full h-auto"
                             />
                         </div>
@@ -197,8 +197,8 @@ export default function AProposPage() {
                                     src={image.src}
                                     alt={image.alt}
                                     fill
-                                    fetchPriority="high"
                                     loading="lazy"
+                                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 33vw"
                                     className="object-cover hover:scale-105 transition-transform duration-300"
                                 />
                             </div>

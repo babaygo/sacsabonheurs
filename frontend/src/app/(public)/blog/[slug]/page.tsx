@@ -146,7 +146,7 @@ export default async function ArticlePage({
                                     fill
                                     sizes="(max-width: 1024px) 100vw, 40vw"
                                     className="object-cover"
-                                    fetchPriority="high"
+                                    priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
                             </div>
