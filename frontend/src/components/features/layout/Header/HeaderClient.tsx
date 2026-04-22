@@ -81,8 +81,22 @@ export default function HeaderClient() {
                                                 </div>
                                                 <Separator />
                                                 <div className="flex flex-col space-y-4 px-3">
+                                                    <div>
+                                                        <div className="flex items-center">
+                                                            <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
+                                                            <Button variant="link" onClick={toggleCategories} className="py-0 h-auto pl-2">
+                                                                {showCategoryList && !error ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                                                            </Button>
+                                                        </div>
+                                                        <div className={`pl-4 pt-2 space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${showCategoryList && !error ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+                                                            {categories.map((category) => (
+                                                                <Link key={category.id} href={`/category/${category.slug}`} onClick={() => setOpenSheetMobile(false)} className="block text-sm hover:text-primary">
+                                                                    {category.name}
+                                                                </Link>
+                                                            ))}
+                                                        </div>
+                                                    </div>
                                                     <Link href="/orders" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Mes commandes</Link>
-                                                    <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
                                                     <Link href="/blog" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Blog</Link>
                                                     <Link href="/a-propos" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">À propos</Link>
                                                     {isAdmin && (
@@ -94,7 +108,21 @@ export default function HeaderClient() {
                                             <div className="flex flex-col space-y-4 px-3">
                                                 <Link href="/login" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Se connecter</Link>
                                                 <Separator />
-                                                <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
+                                                <div>
+                                                    <div className="flex items-center">
+                                                        <Link href="/boutique" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Boutique</Link>
+                                                        <Button variant="link" onClick={toggleCategories} className="py-0 h-auto pl-2">
+                                                            {showCategoryList && !error ? <Minus className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
+                                                        </Button>
+                                                    </div>
+                                                    <div className={`pl-4 pt-2 space-y-2 overflow-hidden transition-all duration-300 ease-in-out ${showCategoryList && !error ? "max-h-96 opacity-100" : "max-h-0 opacity-0"}`}>
+                                                        {categories.map((category) => (
+                                                            <Link key={category.id} href={`/category/${category.slug}`} onClick={() => setOpenSheetMobile(false)} className="block text-sm hover:text-primary">
+                                                                {category.name}
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
                                                 <Link href="/blog" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">Blog</Link>
                                                 <Link href="/a-propos" onClick={() => setOpenSheetMobile(false)} className="text-sm hover:underline">À propos</Link>
                                             </div>
