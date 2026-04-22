@@ -1,5 +1,6 @@
 import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api/product";
+import { getCategories } from "@/lib/api/category";
 import { getAllArticles } from "@/lib/api/article";
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL_FRONT!;
@@ -83,5 +84,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             priority: 0.6,
         }));
 
-    return [...staticPages, ...productPages, ...articlePages];
+    // Pages catégories dynamiques
+    const categories = await getCategories();
+    const categoryPages: MetadataRoute.Sitemap = categories.map((category) => ({
+        url: `${SITE_URL}/category/${category.slug}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly",
+        priority: 0.85,
+    }));
+
+    return [...staticPages, ...categoryPages, ...productPages, ...articlePages];
 }
