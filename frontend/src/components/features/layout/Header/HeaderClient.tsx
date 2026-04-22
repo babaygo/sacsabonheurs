@@ -169,8 +169,8 @@ export default function HeaderClient() {
                         </div>
                     </div>
 
-                    <div className="flex flex-col items-center justify-center space-y-1 shrink-0">
-                        <div className="flex items-center space-x-3">
+                    <div className="flex flex-col items-center justify-center space-y-0.5 sm:space-y-1 shrink-0">
+                        <div className="flex items-center space-x-2 sm:space-x-3">
                             <Link href="/">
                                 <Image
                                     src="/assets/sacs-a-bonheurs-logo.png"
@@ -178,14 +178,14 @@ export default function HeaderClient() {
                                     loading="eager"
                                     width={48}
                                     height={48}
-                                    className="h-12 w-auto object-contain"
+                                    className="h-8 sm:h-10 md:h-12 w-auto object-contain"
                                 />
                             </Link>
-                            <Link href="/" className="hidden md:flex text-3xl lg:text-4xl font-playfair-display font-bold whitespace-nowrap">
+                            <Link href="/" className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-playfair-display font-bold">
                                 Sacs à Bonheurs
                             </Link>
                         </div>
-                        <p className="text-xs sm:text-sm font-medium text-center whitespace-nowrap">
+                        <p className="text-xs sm:text-sm font-medium text-center whitespace-nowrap italic">
                             Fabriqué à la main, en France
                         </p>
                     </div>
