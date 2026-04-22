@@ -22,7 +22,7 @@ import { useCategories } from "@/hooks/useCategories";
 export default function HeaderClient() {
     const { user, loadingUser, refreshSession } = useSessionContext();
     const { categories, loading, error } = useCategories();
-    const [showCategoryList, setShowCategoryList] = useState(false);
+    const [showCategoryList, setShowCategoryList] = useState(true);
     const router = useRouter();
     const { setOpen, count } = useCart();
     const [openSheet, setOpenSheet] = useState(false);
