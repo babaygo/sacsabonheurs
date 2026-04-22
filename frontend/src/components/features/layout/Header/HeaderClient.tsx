@@ -178,7 +178,7 @@ export default function HeaderClient() {
                                                         key={category.id}
                                                         href={"/category/" + category.slug}
                                                         onClick={() => setOpenSheet(false)}
-                                                        className="block text-sm hover:text-primary"
+                                                        className="block hover:text-accent"
                                                     >
                                                         {category.name}
                                                     </Link>

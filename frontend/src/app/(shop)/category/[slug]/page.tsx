@@ -43,8 +43,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     return {
-        title: `${category.name} - Sacs à Bonheur`,
-        description: `Découvrez notre collection de ${category.name.toLowerCase()} artisanaux, fabriqués à la main en France.`,
+        title: `${category.name} artisanaux faits main - Sacs à Bonheur`,
+        description: `Découvrez notre collection de ${category.name.toLowerCase()} cousus à la main à Saint-Nazaire. Élégants, durables, uniques. Livraison rapide en France.`,
     };
 }
 
