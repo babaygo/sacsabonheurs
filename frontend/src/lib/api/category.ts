@@ -1,6 +1,15 @@
 import { Category } from "@/types/Category";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
+export async function getCategoryBySlug(slug: string): Promise<Category | null> {
+    try {
+        const categories = await getCategories();
+        return categories.find((c) => c.slug === slug) ?? null;
+    } catch {
+        return null;
+    }
+}
+
 export async function getCategories(): Promise<Category[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/categories`, {

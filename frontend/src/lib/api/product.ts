@@ -43,6 +43,26 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     }
 }
 
+export async function getProductsByCategorySlug(slug: string, limit = 24): Promise<Product[]> {
+    try {
+        const params = new URLSearchParams();
+        params.append("limit", String(limit));
+        params.append("visibleOnly", "true");
+        params.append("category", slug);
+
+        const res = await fetch(`${getBaseUrl()}/api/products?${params.toString()}`, {
+            next: { revalidate: 3600 },
+        });
+
+        if (!res.ok) return [];
+
+        const data = await res.json();
+        return data.products || [];
+    } catch {
+        return [];
+    }
+}
+
 export async function getProductsByCategory(categoryId: number): Promise<Product[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products/category/${categoryId}`, {

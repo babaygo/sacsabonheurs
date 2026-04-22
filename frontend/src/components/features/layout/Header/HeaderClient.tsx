@@ -147,7 +147,7 @@ export default function HeaderClient() {
                                                 {categories.map((category) => (
                                                     <Link
                                                         key={category.id}
-                                                        href={"/boutique?category=" + category.slug}
+                                                        href={"/category/" + category.slug}
                                                         onClick={() => setOpenSheet(false)}
                                                         className="block text-sm hover:text-primary"
                                                     >
