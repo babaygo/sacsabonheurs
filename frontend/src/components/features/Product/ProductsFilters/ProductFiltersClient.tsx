@@ -28,13 +28,14 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
     }, [searchParams]);
 
     useEffect(() => {
-        fetchProducts(24, true, 0);
-    }, [fetchProducts]);
+        setPage(0);
+        fetchProducts(24, true, 0, undefined, selectedCategory || undefined);
+    }, [selectedCategory, fetchProducts]);
 
     useEffect(() => {
         if (page === 0) return;
         const skip = page * 24;
-        fetchProducts(24, true, skip);
+        fetchProducts(24, true, skip, undefined, selectedCategory || undefined);
     }, [page, fetchProducts]);
 
     useEffect(() => {

@@ -9,7 +9,12 @@ export async function getProducts(req: Request, res: Response) {
         const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 24;
         const skip = req.query.skip ? parseInt(req.query.skip as string, 10) : 0;
         const visibleOnly = req.query.visibleOnly === 'true';
-        const where = isAdmin && !visibleOnly ? {} : { hidden: false };
+        const categorySlug = req.query.category as string | undefined;
+
+        const baseWhere = isAdmin && !visibleOnly ? {} : { hidden: false };
+        const where = categorySlug && categorySlug !== 'all'
+            ? { ...baseWhere, category: { slug: categorySlug } }
+            : baseWhere;
 
         const products = await prisma.product.findMany({
             where,

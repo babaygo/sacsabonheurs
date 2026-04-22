@@ -9,7 +9,7 @@ type ProductsContextType = {
     loading: boolean;
     error: string | null;
     hasMore: boolean;
-    fetchProducts: (limit?: number, visibleOnly?: boolean, skip?: number, sort?: string) => Promise<void>;
+    fetchProducts: (limit?: number, visibleOnly?: boolean, skip?: number, sort?: string, category?: string) => Promise<void>;
 };
 
 const ProductsContext = createContext<ProductsContextType | undefined>(undefined);
@@ -21,7 +21,7 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
     const [hasMore, setHasMore] = useState(false);
 
     const fetchProducts = useCallback(
-        async (limit?: number, visibleOnly?: boolean, skip?: number, sort?: string) => {
+        async (limit?: number, visibleOnly?: boolean, skip?: number, sort?: string, category?: string) => {
             setLoading(true);
             setError(null);
             try {
@@ -30,6 +30,7 @@ export function ProductsProvider({ children }: { children: React.ReactNode }) {
                 if (visibleOnly) params.append("visibleOnly", "true");
                 if (skip) params.append("skip", String(skip));
                 if (sort) params.append("sort", sort);
+                if (category && category !== "all") params.append("category", category);
 
                 const res = await fetch(`${getBaseUrl()}/api/products?${params.toString()}`, {
                     cache: "no-store",
