@@ -8,17 +8,19 @@ import { SlidersHorizontal, X } from "lucide-react";
 import { useCategories } from "@/hooks/useCategories";
 import { Category } from "@/types/Category";
 import { SortOption } from "@/lib/constants/SortOptions";
-import { useProductsContext } from "@/contexts/ProductsContext";
+import { useEffect, useState } from "react";
+import { getCollections } from "@/lib/api/collection";
+import { Collection } from "@/types/Collection";
 
 interface ProductFiltersProps {
     selectedCategory: string | null;
-    selectedMaterial: string | null;
+    selectedCollection: string | null;
     sortOption: SortOption | null;
     onCategoryChange: (value: string) => void;
-    onMaterialChange: (value: string) => void;
+    onCollectionChange: (value: string) => void;
     onSortChange: (value: SortOption | null) => void;
     showCategoryFilter?: boolean;
-    showMaterialFilter?: boolean;
+    showCollectionFilter?: boolean;
 }
 
 const sortLabels: Record<SortOption, string> = {
@@ -32,19 +34,20 @@ const sortLabels: Record<SortOption, string> = {
 
 export default function ProductFilters({
     selectedCategory,
-    selectedMaterial,
+    selectedCollection,
     sortOption,
     onCategoryChange,
-    onMaterialChange,
+    onCollectionChange,
     onSortChange,
     showCategoryFilter = true,
-    showMaterialFilter = true
+    showCollectionFilter = true,
 }: ProductFiltersProps) {
     const { categories, loading, error } = useCategories();
-    const productsContext = useProductsContext()
-    const materials = ["all", ...Array.from(
-        new Set(productsContext.products.map(p => p.material.toLowerCase()))
-    ).sort()];
+    const [collections, setCollections] = useState<Collection[]>([]);
+
+    useEffect(() => {
+        getCollections().then(setCollections);
+    }, []);
 
     if (error) return error;
     if (loading) return null;
@@ -69,20 +72,21 @@ export default function ProductFilters({
         </Select>
     );
 
-    const MaterialFilter = ({ className = "" }: { className?: string }) => (
-        <Select value={selectedMaterial ?? undefined} onValueChange={onMaterialChange}>
-            <SelectTrigger className={className} aria-label="Filtrer par matière">
-                <SelectValue placeholder="Matières" />
+    const CollectionFilter = ({ className = "" }: { className?: string }) => (
+        <Select value={selectedCollection ?? undefined} onValueChange={onCollectionChange}>
+            <SelectTrigger className={className} aria-label="Filtrer par collection">
+                <SelectValue placeholder="Collections" />
             </SelectTrigger>
             <SelectContent>
-                {materials.length > 1 ? (
-                    materials.map((material: string, i) => (
-                        <SelectItem className={material === "all" ? "normal-case" : "capitalize"} key={i} value={material}>
-                            {material === "all" ? "Toutes les matières" : material}
+                <SelectItem value="all">Toutes les collections</SelectItem>
+                {collections.length > 0 ? (
+                    collections.map((col: Collection) => (
+                        <SelectItem key={col.id} value={String(col.id)}>
+                            {col.title}
                         </SelectItem>
                     ))
                 ) : (
-                    <SelectItem value="all" disabled>Aucune matière</SelectItem>
+                    <SelectItem value="all" disabled>Aucune collection</SelectItem>
                 )}
             </SelectContent>
         </Select>
@@ -120,7 +124,7 @@ export default function ProductFilters({
         <div className="mb-2">
             <div className="hidden md:flex gap-4">
                 {showCategoryFilter && <CategoryFilter className="w-[200px]" />}
-                {showMaterialFilter && <MaterialFilter className="w-[200px] capitalize" />}
+                {showCollectionFilter && <CollectionFilter className="w-[200px]" />}
                 <SortFilter className="w-[200px]" showReset />
             </div>
 
@@ -145,10 +149,10 @@ export default function ProductFilters({
                                     <CategoryFilter className="w-full" />
                                 </div>
                             )}
-                            {showMaterialFilter && (
+                            {showCollectionFilter && (
                                 <div className="space-y-2">
-                                    <label className="text-sm font-medium">Filtrer par matière</label>
-                                    <MaterialFilter className="w-full capitalize" />
+                                    <label className="text-sm font-medium">Filtrer par collection</label>
+                                    <CollectionFilter className="w-full" />
                                 </div>
                             )}
                             <div className="space-y-2">

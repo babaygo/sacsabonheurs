@@ -5,7 +5,6 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import PreviewProduct from "@/components/features/Product/PreviewProduct";
-import { Product } from "@/types/Product";
 import { Collection } from "@/types/Collection";
 import {
     Carousel,
@@ -17,18 +16,12 @@ import {
 
 interface CollectionClientProps {
     collection: Collection;
-    products: Product[];
 }
 
 export default function CollectionClient({
     collection,
-    products,
 }: CollectionClientProps) {
-    const filteredProducts = products.filter(
-        (p) =>
-            p.material?.toLowerCase().includes(collection.material.toLowerCase()) &&
-            !p.hidden
-    );
+    const collectionProducts = collection.products ?? [];
 
     return (
         <div className="min-h-screen pt-4">
@@ -95,8 +88,8 @@ export default function CollectionClient({
                         <span className="section-label">La collection</span>
                         <h2>Pièces disponibles</h2>
                         <p className="text-muted-foreground text-body">
-                            {filteredProducts.length > 0
-                                ? `${filteredProducts.length} création${filteredProducts.length > 1 ? "s" : ""} unique${filteredProducts.length > 1 ? "s" : ""} disponible${filteredProducts.length > 1 ? "s" : ""}.`
+                            {collectionProducts.length > 0
+                                ? `${collectionProducts.length} création${collectionProducts.length > 1 ? "s" : ""} unique${collectionProducts.length > 1 ? "s" : ""} disponible${collectionProducts.length > 1 ? "s" : ""}.`
                                 : "De nouvelles pièces arrivent bientôt — revenez nous rendre visite."}
                         </p>
                     </div>
@@ -106,10 +99,10 @@ export default function CollectionClient({
                     </Link>
                 </div>
 
-                {filteredProducts.length > 0 ? (
+                {collectionProducts.length > 0 ? (
                     <>
                         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
-                            {filteredProducts.map((product) => (
+                            {collectionProducts.map((product) => (
                                 <PreviewProduct key={product.id} product={product} />
                             ))}
                         </div>
@@ -117,7 +110,7 @@ export default function CollectionClient({
                         <div className="md:hidden">
                             <Carousel opts={{ align: "center", loop: true, watchDrag: false }}>
                                 <CarouselContent className="m-0">
-                                    {filteredProducts.map((product) => (
+                                    {collectionProducts.map((product) => (
                                         <CarouselItem key={product.id} className="basis-full px-6">
                                             <PreviewProduct product={product} />
                                         </CarouselItem>

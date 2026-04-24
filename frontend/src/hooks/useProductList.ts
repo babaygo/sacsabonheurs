@@ -6,14 +6,14 @@ import { useProductsContext } from "@/contexts/ProductsContext";
 interface UseProductListOptions {
     initialProducts: Product[];
     categorySlug?: string | null;
-    selectedMaterial: string | null;
+    selectedCollection: string | null;
     sortOption: SortOption | null;
 }
 
 export function useProductList({
     initialProducts,
     categorySlug,
-    selectedMaterial,
+    selectedCollection,
     sortOption,
 }: UseProductListOptions) {
     const { products: liveProducts, hasMore, fetchProducts } = useProductsContext();
@@ -51,10 +51,9 @@ export function useProductList({
             result = result.filter((p) => p.category?.slug === categorySlug);
         }
 
-        if (selectedMaterial && selectedMaterial !== "all") {
-            result = result.filter(
-                (p) => p.material.toLowerCase() === selectedMaterial.toLowerCase()
-            );
+        if (selectedCollection && selectedCollection !== "all") {
+            const colId = parseInt(selectedCollection);
+            result = result.filter((p) => p.collectionId === colId);
         }
 
         if (!sortOption) return result;
@@ -70,7 +69,7 @@ export function useProductList({
                 default: return 0;
             }
         });
-    }, [products, categorySlug, selectedMaterial, sortOption]);
+    }, [products, categorySlug, selectedCollection, sortOption]);
 
     return { sorted, page, setPage, hasMore };
 }

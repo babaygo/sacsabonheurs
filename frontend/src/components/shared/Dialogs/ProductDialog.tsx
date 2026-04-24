@@ -17,12 +17,14 @@ import { validateSalePrice, calculateComplementaryValue } from "@/lib/utils/pric
 import { AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { createProduct, updateProduct } from "@/lib/api/product";
+import { Collection } from "@/types/Collection";
 
 interface ProductDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     product?: Product | null;
     categories: Category[];
+    collections?: Collection[];
     onSave: () => void;
 }
 
@@ -39,6 +41,7 @@ const emptyProduct = {
     lenght: 0,
     width: 0,
     categoryId: 0,
+    collectionId: null as number | null,
     color: "",
     material: "",
     isOnSale: false,
@@ -51,6 +54,7 @@ export function ProductDialog({
     onOpenChange,
     product,
     categories,
+    collections = [],
     onSave,
 }: ProductDialogProps) {
     const [form, setForm] = useState<Partial<Product>>(emptyProduct);
@@ -64,6 +68,10 @@ export function ProductDialog({
 
     const selectedCategory = categories.find(
         (cat) => cat.id === form.categoryId
+    );
+
+    const selectedCollection = collections.find(
+        (col) => col.id === form.collectionId
     );
 
     useEffect(() => {
@@ -462,6 +470,33 @@ export function ProductDialog({
                                 </SelectContent>
                             </Select>
                         </Field>
+
+                        {collections.length > 0 && (
+                            <Field>
+                                <FieldLabel>Collection</FieldLabel>
+                                <Select
+                                    disabled={isLoading}
+                                    onValueChange={(value) =>
+                                        handleChange("collectionId", value === "none" ? null : parseInt(value))
+                                    }
+                                    value={form.collectionId != null ? String(form.collectionId) : "none"}
+                                >
+                                    <SelectTrigger>
+                                        {selectedCollection
+                                            ? selectedCollection.title
+                                            : "Aucune collection"}
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="none">Aucune collection</SelectItem>
+                                        {collections.map((col) => (
+                                            <SelectItem key={col.id} value={String(col.id)}>
+                                                {col.title}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </Field>
+                        )}
 
                         <Field>
                             <FieldLabel>Photos</FieldLabel>

@@ -10,13 +10,13 @@ import { useProductList } from "@/hooks/useProductList";
 
 export default function ProductFiltersClient({ initialProducts }: { initialProducts: Product[] }) {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
+    const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
     const { sorted, page, setPage, hasMore } = useProductList({
         initialProducts,
         categorySlug: selectedCategory,
-        selectedMaterial,
+        selectedCollection,
         sortOption,
     });
 
@@ -24,13 +24,13 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
         <div className="pt-4">
             <ProductFilters
                 selectedCategory={selectedCategory}
-                selectedMaterial={selectedMaterial}
+                selectedCollection={selectedCollection}
                 sortOption={sortOption}
                 onCategoryChange={setSelectedCategory}
-                onMaterialChange={setSelectedMaterial}
+                onCollectionChange={setSelectedCollection}
                 onSortChange={setSortOption}
                 showCategoryFilter={true}
-                showMaterialFilter={false}
+                showCollectionFilter={true}
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">

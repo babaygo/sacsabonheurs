@@ -18,13 +18,13 @@ export default function CategoryPageClient({
     initialProducts: Product[];
     categorySlug: string;
 }) {
-    const [selectedMaterial, setSelectedMaterial] = useState<string | null>(null);
+    const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
     const { sorted, page, setPage, hasMore } = useProductList({
         initialProducts,
         categorySlug,
-        selectedMaterial,
+        selectedCollection,
         sortOption,
     });
 
@@ -40,13 +40,13 @@ export default function CategoryPageClient({
             <h1>{category.name}</h1>
             <ProductFilters
                 selectedCategory={null}
-                selectedMaterial={selectedMaterial}
+                selectedCollection={selectedCollection}
                 sortOption={sortOption}
                 onCategoryChange={() => {}}
-                onMaterialChange={setSelectedMaterial}
+                onCollectionChange={setSelectedCollection}
                 onSortChange={setSortOption}
                 showCategoryFilter={false}
-                showMaterialFilter={false}
+                showCollectionFilter={true}
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
