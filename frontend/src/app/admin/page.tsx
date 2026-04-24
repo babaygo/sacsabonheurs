@@ -134,7 +134,7 @@ export default function AdminHomePage() {
                         </CardHeader>
                         <CardContent>
                             <p className="text-sm text-muted-foreground">
-                                Gérer les collections (liège, jacquard, suédine…).
+                                Gérer les collections.
                             </p>
                         </CardContent>
                     </Card>
