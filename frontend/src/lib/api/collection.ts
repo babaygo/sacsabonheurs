@@ -96,3 +96,16 @@ export async function deleteCollection(id: number, slug?: string): Promise<any> 
     if (slug) await revalidateCache(["/collections", `/collections/${slug}`, "/"]);
     return result;
 }
+
+export async function setCollectionProducts(id: number, productIds: number[]): Promise<void> {
+    const res = await fetch(`${getBaseUrl()}/api/admin/collections/${id}/products`, {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ productIds }),
+    });
+    if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.error || "Erreur mise à jour produits collection");
+    }
+}

@@ -7,6 +7,8 @@ import { ProductDialog } from "@/components/shared/Dialogs/ProductDialog";
 import { DeleteProductDialog } from "@/components/shared/Dialogs/ProductDeleteDialog";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useCategories } from "@/hooks/useCategories";
+import { getCollections } from "@/lib/api/collection";
+import { Collection } from "@/types/Collection";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -17,6 +19,7 @@ export default function AdminProducts() {
     const router = useRouter();
     const { products: liveProducts, hasMore, fetchProducts } = useProductsContext();
     const { categories } = useCategories();
+    const [collections, setCollections] = useState<Collection[]>([]);
 
     const [filter, setFilter] = useState("all");
     const [products, setProducts] = useState<any[]>([]);
@@ -32,6 +35,7 @@ export default function AdminProducts() {
 
     useEffect(() => {
         fetchProducts(24, false, 0);
+        getCollections().then(setCollections);
     }, [fetchProducts]);
 
     useEffect(() => {
@@ -91,6 +95,7 @@ export default function AdminProducts() {
                 onOpenChange={setOpenDialog}
                 product={selectedProduct}
                 categories={categories}
+                collections={collections}
                 onSave={handleRefresh}
             />
 

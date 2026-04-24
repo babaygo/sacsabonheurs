@@ -25,4 +25,5 @@ export interface Product {
     hidden: boolean;
     color: string;
     material: string;
+    collectionId?: number | null;
 }

@@ -4,7 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { Collection } from "@/types/Collection";
-import { getCollections, createCollection, updateCollection } from "@/lib/api/collection";
+import { getCollections, createCollection, updateCollection, setCollectionProducts } from "@/lib/api/collection";
+import { getProducts } from "@/lib/api/product";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertCircle, Plus, Star } from "lucide-react";
@@ -23,6 +24,7 @@ export default function AdminCollectionsClient() {
     const { user, loadingUser } = useSessionContext();
     const router = useRouter();
     const [collections, setCollections] = useState<Collection[]>([]);
+    const [allProducts, setAllProducts] = useState<{ id: number; name: string; hidden: boolean; collectionId?: number | null }[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [openDialog, setOpenDialog] = useState(false);
@@ -36,6 +38,7 @@ export default function AdminCollectionsClient() {
 
     useEffect(() => {
         loadCollections();
+        getProducts().then(setAllProducts);
     }, []);
 
     const loadCollections = async () => {
@@ -56,13 +59,16 @@ export default function AdminCollectionsClient() {
         setOpenDialog(true);
     };
 
-    const handleSaveCollection = async (data: FormData) => {
+    const handleSaveCollection = async (data: FormData, productIds: number[]) => {
+        let saved;
         if (editingCollection) {
-            await updateCollection(editingCollection.id, data, editingCollection.slug);
+            saved = await updateCollection(editingCollection.id, data, editingCollection.slug);
         } else {
-            await createCollection(data);
+            saved = await createCollection(data);
         }
+        await setCollectionProducts(saved.id, productIds);
         await loadCollections();
+        getProducts().then(setAllProducts);
     };
 
     if (loading) {
@@ -144,6 +150,7 @@ export default function AdminCollectionsClient() {
                 open={openDialog}
                 onOpenChange={setOpenDialog}
                 collection={editingCollection}
+                allProducts={allProducts}
                 onSave={handleSaveCollection}
             />
         </div>

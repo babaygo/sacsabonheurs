@@ -1,3 +1,5 @@
+import { Product } from "./Product";
+
 export interface Collection {
     id: number;
     slug: string;
@@ -14,4 +16,5 @@ export interface Collection {
     order: number;
     createdAt: Date;
     updatedAt: Date;
+    products?: Product[];
 }

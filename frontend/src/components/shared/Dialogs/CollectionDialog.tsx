@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { AlertCircle, Plus, Trash2 } from "lucide-react";
+import { AlertCircle, ChevronDown, ChevronUp, Plus, Trash2 } from "lucide-react";
 import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { ImageUploader } from "../ImageUploader";
 
@@ -21,12 +21,13 @@ interface CollectionDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     collection?: Collection | null;
-    onSave: (data: FormData) => Promise<void>;
+    allProducts?: { id: number; name: string; hidden: boolean; collectionId?: number | null }[];
+    onSave: (data: FormData, productIds: number[]) => Promise<void>;
 }
 
 const emptyChar = { label: "", value: "" };
 
-export function CollectionDialog({ open, onOpenChange, collection, onSave }: CollectionDialogProps) {
+export function CollectionDialog({ open, onOpenChange, collection, allProducts = [], onSave }: CollectionDialogProps) {
     const [formData, setFormData] = useState({
         title: "",
         slug: "",
@@ -52,6 +53,8 @@ export function CollectionDialog({ open, onOpenChange, collection, onSave }: Col
     const [removeHeroImage, setRemoveHeroImage] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [selectedProductIds, setSelectedProductIds] = useState<number[]>([]);
+    const [showProductPicker, setShowProductPicker] = useState(false);
 
     useEffect(() => {
         if (collection) {
@@ -93,9 +96,15 @@ export function CollectionDialog({ open, onOpenChange, collection, onSave }: Col
             setCharacteristics([{ ...emptyChar }, { ...emptyChar }, { ...emptyChar }, { ...emptyChar }]);
             setExistingHeroImage(null);
         }
+        // Init selected products: those already in this collection
+        setSelectedProductIds(
+            collection?.products?.map((p) => p.id) ??
+            allProducts.filter((p) => p.collectionId === collection?.id).map((p) => p.id)
+        );
         setHeroImageFile(null);
         setRemoveHeroImage(false);
         setError(null);
+        setShowProductPicker(false);
     }, [collection, open]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -166,7 +175,7 @@ export function CollectionDialog({ open, onOpenChange, collection, onSave }: Col
                 data.append("heroImage", heroImageFile);
             }
 
-            await onSave(data);
+            await onSave(data, selectedProductIds);
             onOpenChange(false);
         } catch (err: any) {
             setError(err.message);
@@ -204,10 +213,9 @@ export function CollectionDialog({ open, onOpenChange, collection, onSave }: Col
                                 <Input
                                     name="slug"
                                     value={formData.slug}
-                                    onChange={handleInputChange}
                                     placeholder="ex. liege"
                                     required
-                                    disabled={isLoading}
+                                    disabled
                                 />
                             </Field>
                         </div>
@@ -419,6 +427,62 @@ export function CollectionDialog({ open, onOpenChange, collection, onSave }: Col
                                 </div>
                             </Field>
                         </div>
+
+                        {/* Product picker */}
+                        {allProducts.length > 0 && (() => {
+                            // Available = not hidden + (no collection OR already in this collection)
+                            const available = allProducts.filter(
+                                (p) => !p.hidden && (p.collectionId == null || p.collectionId === collection?.id)
+                            );
+                            return (
+                                <Field>
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowProductPicker((v) => !v)}
+                                        className="flex items-center justify-between w-full text-sm font-medium py-1"
+                                        disabled={isLoading}
+                                    >
+                                        <FieldLabel className="cursor-pointer mb-0">
+                                            Produits rattachés
+                                            <span className="ml-2 text-xs text-muted-foreground font-normal">
+                                                ({selectedProductIds.length} sélectionné{selectedProductIds.length > 1 ? "s" : ""})
+                                            </span>
+                                        </FieldLabel>
+                                        {showProductPicker ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                    </button>
+
+                                    {showProductPicker && (
+                                        <div className="border rounded-md max-h-56 overflow-y-auto divide-y mt-1">
+                                            {available.length === 0 ? (
+                                                <p className="text-sm text-muted-foreground p-3">
+                                                    Aucun produit disponible sans collection.
+                                                </p>
+                                            ) : (
+                                                available.map((p) => (
+                                                    <label
+                                                        key={p.id}
+                                                        className="flex items-center gap-3 px-3 py-2 hover:bg-muted cursor-pointer"
+                                                    >
+                                                        <Checkbox
+                                                            checked={selectedProductIds.includes(p.id)}
+                                                            disabled={isLoading}
+                                                            onCheckedChange={(checked) =>
+                                                                setSelectedProductIds((prev) =>
+                                                                    checked
+                                                                        ? [...prev, p.id]
+                                                                        : prev.filter((id) => id !== p.id)
+                                                                )
+                                                            }
+                                                        />
+                                                        <span className="text-sm">{p.name}</span>
+                                                    </label>
+                                                ))
+                                            )}
+                                        </div>
+                                    )}
+                                </Field>
+                            );
+                        })()}
 
                         {/* Error */}
                         {error && (
