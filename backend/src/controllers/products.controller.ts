@@ -78,6 +78,9 @@ export async function createProduct(req: Request, res: Response) {
             stock, weight, height, lenght, width, hidden, color, material
         } = req.body;
 
+        const existingSlug = await prisma.product.findUnique({ where: { slug } });
+        if (existingSlug) return res.status(400).json({ error: 'Ce slug existe déjà' });
+
         const files = req.files as Express.Multer.File[];
         if (!files || files.length === 0) {
             return res.status(400).json({ error: 'Aucune image reçue.' });
@@ -113,7 +116,7 @@ export async function createProduct(req: Request, res: Response) {
     } catch (error: any) {
         console.error('Erreur création produit :', error);
         if (error.code === 'P2002') {
-            return res.status(400).json({ error: "Le nom du produit est déjà utilisé." });
+            return res.status(400).json({ error: 'Ce slug existe déjà' });
         }
         res.status(500).json({ error: 'Erreur serveur' });
     }
@@ -128,6 +131,11 @@ export async function updateProduct(req: Request, res: Response) {
     } = req.body;
 
     try {
+        const existingSlug = await prisma.product.findUnique({ where: { slug } });
+        if (existingSlug && existingSlug.id !== parseInt(id)) {
+            return res.status(400).json({ error: 'Ce slug existe déjà' });
+        }
+
         if (req.body.removedImages) {
             Array.isArray(req.body.removedImages)
                 ? await deleteImagesFromR2(req.body.removedImages)
@@ -174,8 +182,11 @@ export async function updateProduct(req: Request, res: Response) {
         });
 
         res.json({ success: true, product });
-    } catch (error) {
+    } catch (error: any) {
         console.error('Erreur mise à jour produit :', error);
+        if (error.code === 'P2002') {
+            return res.status(400).json({ error: 'Ce slug existe déjà' });
+        }
         res.status(500).json({ error: 'Erreur serveur' });
     }
 }
