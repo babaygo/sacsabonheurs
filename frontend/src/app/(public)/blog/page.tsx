@@ -57,7 +57,7 @@ export default async function BlogPage({
                             </div>
 
                             <div className="flex flex-col justify-center lg:pl-10">
-                                <h2 className="text-2xl sm:text-3xl font-playfair-display font-bold mb-6 leading-tight group-hover:text-accent transition-colors">
+                                <h2 className="text-2xl sm:text-3xl font-bold mb-6 leading-tight group-hover:text-accent transition-colors">
                                     {featuredArticle.title}
                                 </h2>
 
