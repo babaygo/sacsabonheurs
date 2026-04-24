@@ -110,7 +110,7 @@ export default function HomeClient({
     const collections = featuredCollections.map((c) => ({
         title: c.title,
         subtitle: c.subtitle,
-        image: c.heroImage ?? "/assets/liege.webp",
+        image: c.heroImage,
         href: `/collections/${c.slug}`,
     }));
 
