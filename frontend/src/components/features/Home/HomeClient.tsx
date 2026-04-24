@@ -110,7 +110,7 @@ export default function HomeClient({
     const collections = featuredCollections.map((c) => ({
         title: c.title,
         subtitle: c.subtitle,
-        image: c.heroImage,
+        heroImage: c.heroImage,
         href: `/collections/${c.slug}`,
     }));
 
@@ -300,7 +300,7 @@ export default function HomeClient({
                                         className="relative aspect-[3/4] block rounded-2xl overflow-hidden"
                                     >
                                         <Image
-                                            src={collection.image}
+                                            src={collection.heroImage}
                                             alt={collection.title}
                                             sizes="85vw"
                                             fill
