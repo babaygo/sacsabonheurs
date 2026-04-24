@@ -14,6 +14,8 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { AlertCircle } from "lucide-react";
 import { createBanner, updateBanner } from "@/lib/api/banner";
 import toast from "react-hot-toast";
@@ -31,7 +33,6 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
         variant: "primary",
         ctaLabel: "",
         ctaHref: "",
-        dismissible: true,
         active: false,
     });
     const [loading, setLoading] = useState(false);
@@ -44,7 +45,6 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                 variant: banner.variant,
                 ctaLabel: banner.ctaLabel || "",
                 ctaHref: banner.ctaHref || "",
-                dismissible: banner.dismissible,
                 active: banner.active,
             });
         } else {
@@ -53,7 +53,6 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                 variant: "primary",
                 ctaLabel: "",
                 ctaHref: "",
-                dismissible: true,
                 active: false,
             });
         }
@@ -75,7 +74,7 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
 
         try {
             setLoading(true);
-            
+
             if (banner) {
                 // UPDATE
                 await updateBanner(banner.id, {
@@ -83,7 +82,6 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                     variant: form.variant,
                     ctaLabel: form.ctaLabel,
                     ctaHref: form.ctaHref,
-                    dismissible: form.dismissible,
                     active: form.active,
                 });
                 toast.success("Bannière modifiée avec succès !");
@@ -94,7 +92,6 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                     variant: form.variant,
                     ctaLabel: form.ctaLabel,
                     ctaHref: form.ctaHref,
-                    dismissible: form.dismissible,
                     active: form.active,
                 });
                 toast.success("Bannière ajoutée avec succès !");
@@ -142,7 +139,8 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                             />
                         </Field>
 
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
+
                             <Field>
                                 <FieldLabel>Style</FieldLabel>
                                 <Select
@@ -158,7 +156,18 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                                     </SelectContent>
                                 </Select>
                             </Field>
+                        </div>
 
+                        <div className="grid grid-cols-2 gap-4">
+                            <Field>
+                                <FieldLabel>Lien</FieldLabel>
+                                <Input
+                                    value={form.ctaHref}
+                                    onChange={(e) => handleChange("ctaHref", e.target.value)}
+                                    disabled={loading}
+                                    placeholder="https://"
+                                />
+                            </Field>
                             <Field>
                                 <FieldLabel>Nom du lien</FieldLabel>
                                 <Input
@@ -170,45 +179,16 @@ export function BannerDialog({ open, onOpenChange, banner, onSave }: BannerDialo
                         </div>
 
                         <Field>
-                            <FieldLabel>Lien</FieldLabel>
-                            <Input
-                                value={form.ctaHref}
-                                onChange={(e) => handleChange("ctaHref", e.target.value)}
-                                disabled={loading}
-                            />
+                            <div className="flex items-center gap-2 pb-1">
+                                <Label htmlFor="active" className="cursor-pointer">Active</Label>
+                                <Checkbox
+                                    id="active"
+                                    checked={form.active}
+                                    onCheckedChange={(checked) => handleChange("active", !!checked)}
+                                    disabled={loading}
+                                />
+                            </div>
                         </Field>
-
-                        <div className="grid grid-cols-2 gap-4">
-                            <Field>
-                                <FieldLabel>Faire disparaître</FieldLabel>
-                                <Select
-                                    value={String(form.dismissible)}
-                                    onValueChange={(v) => handleChange("dismissible", v === "true")}
-                                    disabled={loading}
-                                >
-                                    <SelectTrigger>{form.dismissible ? "Oui" : "Non"}</SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="true">Oui</SelectItem>
-                                        <SelectItem value="false">Non</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </Field>
-
-                            <Field>
-                                <FieldLabel>Active</FieldLabel>
-                                <Select
-                                    value={String(form.active)}
-                                    onValueChange={(v) => handleChange("active", v === "true")}
-                                    disabled={loading}
-                                >
-                                    <SelectTrigger>{form.active ? "Oui" : "Non"}</SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="true">Oui</SelectItem>
-                                        <SelectItem value="false">Non</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </Field>
-                        </div>
 
                         <div className="flex gap-2 justify-end">
                             <Button

@@ -10,15 +10,14 @@ export default async function DynamicBanner() {
         return null;
     }
 
-    return (
-        banners[0] ? (
-            <Banner
-                key={banners[0].id}
-                message={banners[0].message}
-                variant={banners[0].variant as any}
-                dismissible={banners[0].dismissible}
-                cta={banners[0].ctaLabel ? { label: banners[0].ctaLabel, href: banners[0].ctaHref || "#" } : null}
-            />
-        ) : null
-    );
+    const activeBanners = banners.filter((b) => b.active);
+
+    if (activeBanners.length === 0) return null;
+
+    const items = activeBanners.map((b) => ({
+        message: b.message,
+        cta: b.ctaLabel ? { label: b.ctaLabel, href: b.ctaHref || "#" } : null,
+    }));
+
+    return <Banner items={items} variant={activeBanners[0].variant as any} />;
 }

@@ -77,7 +77,7 @@ export default function AdminBannersClient() {
                                 <TableHead>Message</TableHead>
                                 <TableHead>Variant</TableHead>
                                 <TableHead>Lien</TableHead>
-                                <TableHead>Active (une seule bannière peut être active)</TableHead>
+                                <TableHead>Active</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>

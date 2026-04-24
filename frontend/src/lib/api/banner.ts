@@ -36,7 +36,6 @@ export async function createBanner(data: {
     variant: string;
     ctaLabel: string;
     ctaHref: string;
-    dismissible: boolean;
     active: boolean;
 }): Promise<Banner> {
     const res = await fetch(`${getBaseUrl()}/api/admin/banners`, {
@@ -59,7 +58,6 @@ export async function updateBanner(id: number, data: {
     variant: string;
     ctaLabel: string;
     ctaHref: string;
-    dismissible: boolean;
     active: boolean;
 }): Promise<Banner> {
     const res = await fetch(`${getBaseUrl()}/api/admin/banners/${id}`, {

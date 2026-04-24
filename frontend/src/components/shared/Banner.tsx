@@ -1,17 +1,16 @@
-"use client";
-
-import React, { useState } from "react";
-import { Info, AlertTriangle, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import React from "react";
+import { Info, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import { BannerVariant } from "@/lib/constants/BannerVariants";
 
-export type BannerProps = {
-    message: React.ReactNode;
-    variant?: BannerVariant;
-    dismissible?: boolean;
-    autoDismiss?: number | null;
+export type BannerItem = {
+    message: string;
     cta?: { label: string; href: string } | null;
+};
+
+export type BannerProps = {
+    items: BannerItem[];
+    variant?: BannerVariant;
     className?: string;
 };
 
@@ -32,34 +31,41 @@ const VARIANT_STYLES: Record<BannerVariant, { bg: string; text: string; icon?: R
     },
 };
 
-const REPEATS = 6;
-
-function BannerContent({ message, cta, textClass }: { message: React.ReactNode; cta: { label: string; href: string } | null; textClass: string }) {
-    const href = cta?.href.startsWith("http") ? cta.href : `https://${cta?.href}`;
-    return (
-        <span className={`${textClass} text-sm font-medium inline-flex items-center px-10`}>
-            {message}
-            {cta ? (
-                <Link className="ml-4 underline hover:opacity-80" href={new URL(href)} target="_blank" rel="noopener noreferrer">
-                    {cta.label}
-                </Link>
-            ) : null}
-        </span>
-    );
-}
+const REPEATS = 4;
 
 export default function Banner({
-    message,
+    items,
     variant = "primary",
-    dismissible = true,
-    cta = null,
     className = "",
 }: BannerProps) {
-    const [visible, setVisible] = useState(true);
-
-    if (!visible) return null;
+    if (!items.length) return null;
 
     const styles = VARIANT_STYLES[variant];
+
+    const track = items.map((item, i) => {
+        const href = item.cta?.href
+            ? item.cta.href.startsWith("http")
+                ? item.cta.href
+                : `https://${item.cta.href}`
+            : undefined;
+        return (
+            <React.Fragment key={i}>
+                <span className={`${styles.text} text-sm font-medium inline-flex items-center`}>
+                    {item.message}
+                    {item.cta && href ? (
+                        <Link
+                            className="ml-3 pr-20 text-white underline hover:opacity-80"
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            {item.cta.label}
+                        </Link>
+                    ) : null}
+                </span>
+            </React.Fragment>
+        );
+    });
 
     return (
         <div className={`${styles.bg} ${className} w-full flex items-center p-2 overflow-hidden`}>
@@ -70,25 +76,17 @@ export default function Banner({
             <div className="flex-1 overflow-hidden marquee-container">
                 <div className="animate-marquee inline-flex whitespace-nowrap w-max">
                     {Array.from({ length: REPEATS }).map((_, i) => (
-                        <BannerContent key={`a-${i}`} message={message} cta={cta} textClass={styles.text} />
+                        <span key={`a-${i}`} className="inline-flex items-center pr-20">
+                            {track}
+                        </span>
                     ))}
                     {Array.from({ length: REPEATS }).map((_, i) => (
-                        <BannerContent key={`b-${i}`} message={message} cta={cta} textClass={styles.text} />
+                        <span key={`b-${i}`} className="inline-flex items-center pr-20">
+                            {track}
+                        </span>
                     ))}
                 </div>
             </div>
-
-            {dismissible ? (
-                <Button
-                    variant="ghost"
-                    size="icon"
-                    aria-label="Close banner"
-                    onClick={() => setVisible(false)}
-                    className="flex-shrink-0 ml-2 hover:bg-black/10 p-0 h-auto"
-                >
-                    <X className={`h-5 w-5 ${styles.text}`} aria-hidden />
-                </Button>
-            ) : null}
         </div>
     );
 }

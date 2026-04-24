@@ -6,7 +6,6 @@ export type Banner = {
   variant: BannerVariant;
   ctaLabel?: string | null;
   ctaHref?: string | null;
-  dismissible: boolean;
   active: boolean;
   createdAt: Date;
   updatedAt: Date;

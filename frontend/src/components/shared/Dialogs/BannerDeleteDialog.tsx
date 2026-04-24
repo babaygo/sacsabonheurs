@@ -35,7 +35,7 @@ export function DeleteBannerDialog({ banner, onSuccess }: { banner: Banner, onSu
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button onClick={() => setOpen(true)} variant="destructive" disabled={banner.active ? true : false}>
+                <Button onClick={() => setOpen(true)} variant="destructive">
                     <Trash />
                     Supprimer
                 </Button>

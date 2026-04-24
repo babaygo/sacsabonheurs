@@ -23,17 +23,14 @@ export async function getAdminBanners(req: Request, res: Response) {
 
 export async function createBanner(req: Request, res: Response) {
     try {
-        const { message, variant, ctaLabel, ctaHref, dismissible, active } = req.body;
+        const { message, variant, ctaLabel, ctaHref, active } = req.body;
         if (!message) return res.status(400).json({ error: "Le champ 'message' est requis." });
-        const isActive = active === 'true' || active === true;
-        if (isActive) await prisma.banner.updateMany({ where: { active: true }, data: { active: false } });
         const banner = await prisma.banner.create({ data: {
             message,
             variant: variant || undefined,
             ctaLabel: ctaLabel || null,
             ctaHref: ctaHref || null,
-            dismissible: dismissible === 'true' || dismissible === true,
-            active: isActive,
+            active: active === 'true' || active === true,
         }});
         res.status(201).json(banner);
     } catch (error) {
@@ -46,17 +43,13 @@ export async function updateBanner(req: Request, res: Response) {
     const id = Number(req.params.id);
     if (isNaN(id)) return res.status(400).json({ error: 'ID invalide' });
     try {
-        const { message, variant, ctaLabel, ctaHref, dismissible, active } = req.body;
-        const isActiveProvided = typeof active !== 'undefined';
-        const isActive = isActiveProvided ? (active === 'true' || active === true) : undefined;
-        if (isActive) await prisma.banner.updateMany({ where: { active: true, NOT: { id } }, data: { active: false } });
+        const { message, variant, ctaLabel, ctaHref, active } = req.body;
         const banner = await prisma.banner.update({ where: { id }, data: {
             message,
             variant: variant || undefined,
             ctaLabel: ctaLabel || null,
             ctaHref: ctaHref || null,
-            dismissible: typeof dismissible !== 'undefined' ? (dismissible === 'true' || dismissible === true) : undefined,
-            active: typeof isActive !== 'undefined' ? isActive : undefined,
+            active: typeof active !== 'undefined' ? (active === 'true' || active === true) : undefined,
         }});
         res.json({ success: true, banner });
     } catch (error: any) {
