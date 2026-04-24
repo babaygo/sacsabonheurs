@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/carousel";
 import { getArticles } from "@/lib/api/article";
 import { Article } from "@/types/Article";
+import { Collection } from "@/types/Collection";
 import { Separator } from "@/components/ui/separator";
 
 
@@ -60,8 +61,10 @@ function useReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.15) {
 
 export default function HomeClient({
     initialProducts,
+    featuredCollections,
 }: {
     initialProducts: Product[];
+    featuredCollections: Collection[];
 }) {
     const { products: liveProducts, fetchProducts } = useProductsContext();
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -104,23 +107,12 @@ export default function HomeClient({
         },
     ];
 
-    const collections = [
-        {
-            title: "Le Liège",
-            subtitle: "Naturel & Vegan",
-            image: "/assets/liege.webp",
-        },
-        {
-            title: "Le Jacquard",
-            subtitle: "Élégance Tissée",
-            image: "/assets/jacquard.webp",
-        },
-        {
-            title: "La Suédine",
-            subtitle: "Douceur & Caractère",
-            image: "/assets/suedine.webp",
-        },
-    ];
+    const collections = featuredCollections.map((c) => ({
+        title: c.title,
+        subtitle: c.subtitle,
+        image: c.heroImage ?? "/assets/liege.webp",
+        href: `/collections/${c.slug}`,
+    }));
 
     useEffect(() => {
         fetchProducts(4, true);
@@ -269,7 +261,7 @@ export default function HomeClient({
                     {collections.map((collection, idx) => (
                         <Link
                             key={idx}
-                            href="/boutique"
+                            href={collection.href}
                             className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer"
                         >
                             <Image
@@ -304,7 +296,7 @@ export default function HomeClient({
                             {collections.map((collection, idx) => (
                                 <CarouselItem key={idx} className="basis-[85%] px-2">
                                     <Link
-                                        href="/boutique"
+                                        href={collection.href}
                                         className="relative aspect-[3/4] block rounded-2xl overflow-hidden"
                                     >
                                         <Image
@@ -353,7 +345,7 @@ export default function HomeClient({
                         href="/boutique"
                         className="link-section"
                     >
-                        Toute la collection
+                        Toute la boutique
                         <ArrowRight className="w-4 h-4" />
                     </Link>
                 </div>

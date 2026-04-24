@@ -1,4 +1,5 @@
 import { getProducts } from "@/lib/api/product";
+import { getFeaturedCollections } from "@/lib/api/collection";
 import HomeClient from "@/components/features/Home/HomeClient";
 
 export const metadata = {
@@ -8,7 +9,10 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const products = await getProducts(4, true);
+  const [products, featuredCollections] = await Promise.all([
+    getProducts(4, true),
+    getFeaturedCollections(),
+  ]);
 
-  return <HomeClient initialProducts={products} />;
+  return <HomeClient initialProducts={products} featuredCollections={featuredCollections} />;
 }

@@ -15,6 +15,82 @@ async function main() {
     await prisma.product.deleteMany();
     await prisma.category.deleteMany();
     await prisma.article.deleteMany();
+    await prisma.collection.deleteMany();
+
+    // --- Collections ---
+    await prisma.collection.createMany({
+        data: [
+            {
+                slug: 'liege',
+                title: 'Le Liège',
+                subtitle: 'Naturel & Vegan',
+                heroImage: "https://media.sacsabonheurs.fr/images-collections/liege.webp",
+                material: 'liège',
+                excerpt: 'Une matière d\'exception récoltée sur l\'écorce du chêne-liège. Légère, imperméable et 100 % vegan, elle incarne une mode responsable et intemporelle.',
+                description: JSON.stringify([
+                    "Le liège est l'une des matières les plus fascinantes qui soit : récoltée sur l'écorce du chêne-liège sans abattre l'arbre, c'est une ressource renouvelable, 100 % naturelle et entièrement vegan. Sa texture chaleureuse et ses reflets dorés en font une matière d'exception, idéale pour confectionner des sacs à la fois beaux et responsables.",
+                    "Dans mon atelier à Saint-Nazaire, je travaille le liège avec soin, en valorisant ses nuances naturelles. Chaque pièce est unique : les légères variations de grain et de couleur sont la signature de la matière et de la main qui la façonne.",
+                    "Léger, imperméable et résistant, le liège vieillit avec élégance et développe une belle patine au fil du temps. C'est une matière qui raconte une histoire — celle d'une mode plus responsable, enracinée dans la nature."
+                ]),
+                characteristics: JSON.stringify([
+                    { label: 'Origine', value: 'Portugal & France' },
+                    { label: 'Engagement', value: '100 % Vegan' },
+                    { label: 'Entretien', value: 'Chiffon humide' },
+                    { label: 'Fabrication', value: 'Faite main en Loire-Atlantique' }
+                ]),
+                metaTitle: 'Collection Liège — Sacs artisanaux naturels & vegan | Sacs à Bonheurs',
+                metaDescription: 'Découvrez la collection Liège de Sacs à Bonheurs : des sacs artisanaux fabriqués en France avec du liège naturel, matière écologique, vegan et durable.',
+                featured: true,
+                order: 1,
+            },
+            {
+                slug: 'jacquard',
+                title: 'Le Jacquard',
+                subtitle: 'Élégance Tissée',
+                heroImage: "https://media.sacsabonheurs.fr/images-collections/jacquard.webp",
+                material: 'jacquard',
+                excerpt: 'Des motifs tissés au cœur de la matière, une densité luxueuse et une élégance qui traverse les saisons. Le jacquard est le tissu des pièces qui durent.',
+                description: JSON.stringify([
+                    "Le jacquard est un tissu d'exception, né d'une technique de tissage inventée au XIXe siècle. Ses motifs — floraux, géométriques ou abstraits — sont directement intégrés à la structure même du tissu, et non imprimés en surface. Le résultat : une matière dense, structurée, au rendu luxueux qui ne se démode jamais.",
+                    "Je sélectionne mes jacquards auprès de tisserands français et européens, en privilégiant des compositions nobles : coton, lin, laine. Chaque rouleau de tissu est unique, et je ne propose jamais deux fois exactement le même modèle.",
+                    "Porter un sac en jacquard, c'est choisir une pièce qui traverse les saisons avec élégance. Le tissu se bonifie avec le temps, les fils acquièrent du caractère, et chaque sac devient un objet de collection à part entière."
+                ]),
+                characteristics: JSON.stringify([
+                    { label: 'Tissage', value: 'Jacquard traditionnel' },
+                    { label: 'Composition', value: 'Coton, lin ou laine' },
+                    { label: 'Entretien', value: 'Lavage à 30°C délicat' },
+                    { label: 'Fabrication', value: 'Faite main en Loire-Atlantique' }
+                ]),
+                metaTitle: 'Collection Jacquard — Sacs artisanaux élégants & tissés | Sacs à Bonheurs',
+                metaDescription: 'Explorez la collection Jacquard de Sacs à Bonheurs : des sacs artisanaux fabriqués à la main en France avec des tissus jacquard d\'excellence.',
+                featured: true,
+                order: 2,
+            },
+            {
+                slug: 'suedine',
+                title: 'La Suédine',
+                subtitle: 'Douceur & Caractère',
+                heroImage: "https://media.sacsabonheurs.fr/images-collections/suedine.webp",
+                material: 'suédine',
+                excerpt: 'Veloutée, souple et résolument moderne. La suédine séduit par son toucher chaleureux et ses tons profonds, parfaits pour un usage quotidien.',
+                description: JSON.stringify([
+                    "La suédine séduit immédiatement par son toucher doux et velouté. Inspirée du suède naturel mais fabriquée à partir de fibres synthétiques ou de microfibres, elle allie la douceur d'un cuir retourné à la légèreté d'un textile moderne. Son aspect mat et chaleureux lui confère une élégance décontractée très actuelle.",
+                    "Je travaille la suédine dans des teintes soigneusement sélectionnées — des tons neutres et profonds qui s'accordent à toutes les tenues. La matière est suffisamment souple pour dessiner des formes généreuses, et suffisamment structurée pour conserver le galbe d'un beau sac.",
+                    "Facile d'entretien et remarquablement résistante, la suédine est idéale pour un usage quotidien. Chaque sac de cette collection est une invitation à la douceur, du matin au soir."
+                ]),
+                characteristics: JSON.stringify([
+                    { label: 'Matière', value: 'Suédine microfibre' },
+                    { label: 'Toucher', value: 'Velouté & souple' },
+                    { label: 'Entretien', value: 'Brosse douce à sec' },
+                    { label: 'Fabrication', value: 'Faite main en Loire-Atlantique' }
+                ]),
+                metaTitle: 'Collection Suédine — Sacs artisanaux doux & caractère | Sacs à Bonheurs',
+                metaDescription: 'Découvrez la collection Suédine de Sacs à Bonheurs : des sacs artisanaux fabriqués à la main en France avec de la suédine souple et douce.',
+                featured: true,
+                order: 3,
+            },
+        ]
+    });
 
     // --- Catégories ---
     const pochetteBandoulière = await prisma.category.create({
