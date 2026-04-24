@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Montserrat, Playfair_Display } from "next/font/google";
+import { Montserrat, Fraunces } from "next/font/google";
 import "./globals.css";
 import { SessionProvider } from "@/components/shared/SessionProvider";
 import { Toaster } from "react-hot-toast";
@@ -17,9 +17,10 @@ const montserrat = Montserrat({
   subsets: ["latin"],
 });
 
-const playfairDisplay = Playfair_Display({
-  variable: "--font-playfair-display",
+const fraunces = Fraunces({
+  variable: "--font-fraunces",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700", "900"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +36,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${montserrat.variable} ${playfairDisplay.variable}`}>
+    <html lang="fr" className={`${montserrat.variable} ${fraunces.variable}`}>
       <head>
         <link rel="icon" href="/favicon.ico" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{

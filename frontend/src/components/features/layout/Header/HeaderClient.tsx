@@ -212,7 +212,7 @@ export default function HeaderClient() {
                                     className="h-8 sm:h-10 md:h-12 w-auto object-contain"
                                 />
                             </Link>
-                            <Link href="/" className="text-lg sm:text-2xl md:text-3xl lg:text-4xl font-playfair-display font-bold">
+                            <Link href="/" className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-fraunces font-semibold">
                                 Sacs à Bonheurs
                             </Link>
                         </div>

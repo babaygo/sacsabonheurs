@@ -230,7 +230,7 @@ export default function HomeClient({
                     </div>
 
                     <div className="absolute -bottom-5 left-8 bg-background rounded-2xl p-5 shadow-xl border border-border/50 backdrop-blur-sm">
-                        <p className="font-playfair-display font-bold text-2xl md:text-3xl text-primary">
+                        <p className="font-fraunces font-bold text-2xl md:text-3xl text-primary">
                             100%
                         </p>
                         <p className="text-sm text-muted-foreground leading-tight mt-0.5">
@@ -309,7 +309,7 @@ export default function HomeClient({
                                         />
                                         <div className="absolute inset-0 overlay-gradient" />
                                         <div className="absolute inset-x-0 bottom-0 p-5">
-                                            <h3 className="text-lg font-playfair-display font-bold text-white mb-0.5">
+                                            <h3 className="text-lg font-fraunces font-bold text-white mb-0.5">
                                                 {collection.title}
                                             </h3>
                                             <p className="text-sm text-white/80 font-light italic">
@@ -562,7 +562,7 @@ export default function HomeClient({
 
                         {blogPosts.length >= 2 && (
                             <div className="flex flex-col gap-4">
-                                <h3 className="font-playfair-display font-semibold text-base md:text-lg">
+                                <h3 className="font-fraunces font-semibold text-base md:text-lg">
                                     Plus d'articles
                                 </h3>
                                 {blogPosts.slice(1, 4).map((post) => (
