@@ -2,6 +2,7 @@ import { MetadataRoute } from "next";
 import { getProducts } from "@/lib/api/product";
 import { getCategories } from "@/lib/api/category";
 import { getAllArticles } from "@/lib/api/article";
+import { getCollections } from "@/lib/api/collection";
 
 const SITE_URL = process.env.NEXT_PUBLIC_URL_FRONT!;
 
@@ -25,6 +26,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
             lastModified: new Date(),
             changeFrequency: "weekly",
             priority: 0.8,
+        },
+        {
+            url: `${SITE_URL}/collections`,
+            lastModified: new Date(),
+            changeFrequency: "weekly",
+            priority: 0.85,
         },
         {
             url: `${SITE_URL}/a-propos`,
@@ -93,5 +100,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         priority: 0.85,
     }));
 
-    return [...staticPages, ...categoryPages, ...productPages, ...articlePages];
+    // Pages collections dynamiques
+    const collections = await getCollections();
+    const collectionPages: MetadataRoute.Sitemap = collections.map((collection) => ({
+        url: `${SITE_URL}/collections/${collection.slug}`,
+        lastModified: new Date(collection.updatedAt),
+        changeFrequency: "weekly",
+        priority: 0.85,
+    }));
+
+    return [...staticPages, ...categoryPages, ...collectionPages, ...productPages, ...articlePages];
 }
