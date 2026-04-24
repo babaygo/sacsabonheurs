@@ -44,6 +44,8 @@ model Product {
   hidden         Boolean     @default(false)
   color          String?
   material       String?
+  collectionId   Int?
+  collection     Collection? @relation(fields: [collectionId], references: [id])
 }
 
 model User {
@@ -171,6 +173,7 @@ model Collection {
   order           Int      @default(0)
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+  products        Product[]
 }
 
 model Article {

@@ -7,6 +7,7 @@ import {
     createCollection,
     updateCollection,
     deleteCollection,
+    setCollectionProducts,
 } from '../controllers/collections.controller.js';
 import { requireAuth, requireAdmin } from '../middleware/middleware.js';
 
@@ -19,6 +20,7 @@ router.get('/collections/:slug', getCollectionBySlug);
 
 router.post('/admin/collections', requireAuth, requireAdmin, upload.single('heroImage'), createCollection);
 router.put('/admin/collections/:id', requireAuth, requireAdmin, upload.single('heroImage'), updateCollection);
+router.put('/admin/collections/:id/products', requireAuth, requireAdmin, setCollectionProducts);
 router.delete('/admin/collections/:id', requireAuth, requireAdmin, deleteCollection);
 
 export default router;

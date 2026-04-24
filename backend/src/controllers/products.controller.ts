@@ -75,7 +75,8 @@ export async function createProduct(req: Request, res: Response) {
     try {
         const {
             name, slug, description, metaDescription, price, categoryId,
-            stock, weight, height, lenght, width, hidden, color, material
+            stock, weight, height, lenght, width, hidden, color, material,
+            collectionId,
         } = req.body;
 
         const existingSlug = await prisma.product.findUnique({ where: { slug } });
@@ -106,6 +107,7 @@ export async function createProduct(req: Request, res: Response) {
                 hidden: hidden === 'true',
                 color,
                 material,
+                collectionId: collectionId && collectionId !== 'null' && collectionId !== '' ? parseInt(collectionId) : null,
                 isOnSale: false,
                 salePrice: null,
                 salePercentage: null
@@ -127,7 +129,7 @@ export async function updateProduct(req: Request, res: Response) {
     const {
         name, slug, description, metaDescription, price, stock,
         weight, height, lenght, width, categoryId, hidden, color, material,
-        isOnSale, salePrice, salePercentage
+        isOnSale, salePrice, salePercentage, collectionId,
     } = req.body;
 
     try {
@@ -177,7 +179,8 @@ export async function updateProduct(req: Request, res: Response) {
                 material,
                 isOnSale: isOnSale === 'true',
                 salePrice: salePrice ? parseFloat(salePrice) : null,
-                salePercentage: salePercentage ? parseFloat(salePercentage) : null
+                salePercentage: salePercentage ? parseFloat(salePercentage) : null,
+                collectionId: collectionId && collectionId !== 'null' && collectionId !== '' ? parseInt(collectionId) : null,
             },
         });
 

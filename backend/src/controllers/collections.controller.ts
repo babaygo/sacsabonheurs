@@ -32,6 +32,7 @@ export async function getCollectionBySlug(req: Request, res: Response) {
     try {
         const collection = await prisma.collection.findUnique({
             where: { slug: req.params.slug },
+            include: { products: { where: { hidden: false }, orderBy: { createdAt: 'desc' } } },
         });
         if (!collection) return res.status(404).json({ error: 'Collection non trouvée' });
         res.json(collection);
@@ -143,6 +144,44 @@ export async function updateCollection(req: Request, res: Response) {
         res.json(collection);
     } catch (error) {
         console.error('Erreur modification collection:', error);
+        res.status(500).json({ error: 'Erreur serveur' });
+    }
+}
+
+export async function setCollectionProducts(req: Request, res: Response) {
+    try {
+        const id = parseInt(req.params.id);
+        const productIds: number[] = req.body.productIds ?? [];
+
+        if (!Array.isArray(productIds) || productIds.some((p) => typeof p !== 'number')) {
+            return res.status(400).json({ error: 'productIds doit être un tableau de nombres' });
+        }
+
+        const collection = await prisma.collection.findUnique({ where: { id } });
+        if (!collection) return res.status(404).json({ error: 'Collection non trouvée' });
+
+        // Retirer les produits qui ne sont plus dans la liste
+        await prisma.product.updateMany({
+            where: { collectionId: id, id: { notIn: productIds } },
+            data: { collectionId: null },
+        });
+
+        // Assigner les nouveaux produits
+        if (productIds.length > 0) {
+            await prisma.product.updateMany({
+                where: { id: { in: productIds } },
+                data: { collectionId: id },
+            });
+        }
+
+        const updated = await prisma.collection.findUnique({
+            where: { id },
+            include: { products: { orderBy: { createdAt: 'desc' } } },
+        });
+
+        res.json(updated);
+    } catch (error) {
+        console.error('Erreur mise à jour produits collection:', error);
         res.status(500).json({ error: 'Erreur serveur' });
     }
 }
