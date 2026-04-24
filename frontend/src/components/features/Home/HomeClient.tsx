@@ -300,7 +300,7 @@ export default function HomeClient({
                                         className="relative aspect-[3/4] block rounded-2xl overflow-hidden"
                                     >
                                         <Image
-                                            src={collection.heroImage}
+                                            src={collection.heroImage ?? ""}
                                             alt={collection.title}
                                             sizes="85vw"
                                             fill
