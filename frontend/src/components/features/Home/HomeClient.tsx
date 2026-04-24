@@ -265,7 +265,7 @@ export default function HomeClient({
                             className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer"
                         >
                             <Image
-                                src={collection.image}
+                                src={collection.heroImage}
                                 alt={collection.title}
                                 width={832}
                                 height={1248}
