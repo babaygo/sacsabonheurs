@@ -201,6 +201,19 @@
     animation: typewriter 1.1s steps(16, end) 1.4s forwards;
   }
 
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .animate-marquee {
+    animation: marquee 25s linear infinite;
+  }
+
+  .marquee-container:hover .animate-marquee {
+    animation-play-state: paused;
+  }
+
   .scrollbar-none {
     -ms-overflow-style: none;
     scrollbar-width: none;
