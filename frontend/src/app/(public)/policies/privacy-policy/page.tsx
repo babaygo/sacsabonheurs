@@ -6,6 +6,7 @@ export const metadata = {
     title: "Politique de confidentialité - Sacs à Bonheur",
     description:
         "Découvrez comment nous protégeons vos données personnelles sur sacsabonheur.fr. Transparence et respect de votre vie privée.",
+    robots: { index: false, follow: false },
 };
 
 export default async function PrivacyPolicyPage() {

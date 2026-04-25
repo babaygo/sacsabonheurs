@@ -5,6 +5,7 @@ import { normalizeRichTextContent } from "@/lib/utils/richText";
 export const metadata = {
     title: "Conditions générales de vente - Sacs à Bonheur",
     description: "Consultez nos conditions générales de vente pour mieux comprendre vos droits et obligations.",
+    robots: { index: false, follow: false },
 };
 
 export default async function CGVPage() {
