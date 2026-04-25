@@ -50,9 +50,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     const { slug } = await params;
     const product = await getProductBySlug(slug);
 
+    const fallbackDescription = product
+        ? `Découvrez ${product.name}, pièce unique artisanale fabriquée à la main. ${product.category?.name ? `Retrouvez nos ${product.category.name} dans notre boutique.` : "Livraison soignée depuis notre boutique en ligne."}`
+        : undefined;
+
     return {
         title: product ? `${product.name} — pièce unique artisanale` : "Produit introuvable - Sacs à Bonheurs",
-        description: product?.metaDescription,
+        description: product?.metaDescription || fallbackDescription,
     };
 }
 
