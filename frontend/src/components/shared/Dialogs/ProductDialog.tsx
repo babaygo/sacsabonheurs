@@ -35,7 +35,7 @@ const emptyProduct = {
     metaDescription: "",
     hidden: false,
     price: 0,
-    stock: 1,
+    stock: 0,
     weight: 0,
     height: 0,
     lenght: 0,
