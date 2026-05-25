@@ -35,7 +35,7 @@ const emptyProduct = {
     metaDescription: "",
     hidden: false,
     price: 0,
-    stock: 1,
+    stock: 0,
     weight: 0,
     height: 0,
     lenght: 0,
@@ -281,8 +281,7 @@ export function ProductDialog({
                                 <FieldLabel>Prix (€)</FieldLabel>
                                 <Input
                                     type="number"
-                                    step="any"
-                                    min={0}
+                                    min="0"
                                     disabled={isLoading}
                                     value={form.price || ""}
                                     required
@@ -296,10 +295,9 @@ export function ProductDialog({
                                 <FieldLabel>Quantité</FieldLabel>
                                 <Input
                                     type="number"
-                                    step="any"
-                                    min={0}
+                                    min="0"
                                     disabled={isLoading}
-                                    value={form.stock || ""}
+                                    value={form.stock ?? ""}
                                     required
                                     onChange={(e) => {
                                         const value = e.target.value;
