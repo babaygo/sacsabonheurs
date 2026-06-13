@@ -6,6 +6,13 @@ export const metadata = {
   title: "Sacs à Bonheurs - Boutique artisanale de sacs faits en France",
   description:
     "Découvrez mes sacs artisanaux cousus en France avec passion. Élégance, durabilité et savoir-faire local.",
+  alternates: { canonical: "/" },
+  openGraph: {
+    url: "/",
+    title: "Sacs à Bonheurs - Boutique artisanale de sacs faits en France",
+    description:
+      "Découvrez mes sacs artisanaux cousus en France avec passion. Élégance, durabilité et savoir-faire local.",
+  },
 };
 
 export default async function HomePage() {

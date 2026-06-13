@@ -19,12 +19,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {
         title: collection.metaTitle,
         description: collection.metaDescription,
+        alternates: { canonical: `/collections/${slug}` },
         openGraph: {
+            type: "website",
+            url: `/collections/${slug}`,
             title: collection.metaTitle,
             description: collection.metaDescription,
             images: collection.heroImage
                 ? [{ url: collection.heroImage, width: 1200, height: 630, alt: collection.title }]
                 : [],
+            siteName: "Sacs à Bonheurs",
+            locale: "fr_FR",
         },
     };
 }
