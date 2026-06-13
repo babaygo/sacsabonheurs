@@ -42,3 +42,6 @@ coverage/
 
 # Datas folders
 backend/public/uploads/
+
+#SEO reports
+seo-reports/
