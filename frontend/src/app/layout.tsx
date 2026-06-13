@@ -11,6 +11,7 @@ import { ProductsProvider } from "@/contexts/ProductsContext";
 import DynamicBanner from "@/components/features/layout/DynamicBanner";
 import { AppProvider } from "@/components/shared/AppProvider";
 import Header from "@/components/features/layout/Header";
+import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -24,9 +25,21 @@ const fraunces = Fraunces({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Sacs à Bonheurs",
   description:
-    "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable."
+    "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
+  // Open Graph defaults — pages override title/url/images/type per page via generateMetadata.
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    title: "Sacs à Bonheurs – Élégance artisanale",
+    description:
+      "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
+    images: [{ url: "/assets/og_image.png", width: 1200, height: 630, alt: BRAND_NAME }],
+    siteName: BRAND_NAME,
+    locale: "fr_FR",
+  },
 };
 
 
@@ -48,14 +61,6 @@ export default async function RootLayout({
             "name": "Sacs à Bonheurs"
           })
         }} />
-        {/* Balises Open Graph */}
-        <meta property="og:type" content="website" />
-        <meta property="og:url" content={process.env.NEXT_PUBLIC_URL_FRONT} />
-        <meta property="og:title" content="Sacs à Bonheurs – Élégance artisanale" />
-        <meta property="og:description" content="Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable." />
-        <meta property="og:image" content={`${process.env.NEXT_PUBLIC_URL_FRONT}/assets/og_image.png`} />
-        <meta property="og:site_name" content="Sacs à Bonheurs" />
-        <meta property="og:locale" content="fr_FR" />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 

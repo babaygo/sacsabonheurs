@@ -6,6 +6,18 @@ import {
     AccordionContent,
 } from "@/components/ui/accordion";
 import Link from "next/link";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "FAQ - Sacs à Bonheurs",
+    description: "Questions fréquentes sur les sacs artisanaux Sacs à Bonheurs : disponibilité, commandes, livraison et entretien.",
+    alternates: { canonical: "/faq" },
+    openGraph: {
+        url: "/faq",
+        title: "FAQ - Sacs à Bonheurs",
+        description: "Questions fréquentes sur les sacs artisanaux Sacs à Bonheurs : disponibilité, commandes, livraison et entretien.",
+    },
+};
 
 export default function FAQPage() {
     return (

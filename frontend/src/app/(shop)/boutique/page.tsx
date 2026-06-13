@@ -6,6 +6,13 @@ export const metadata = {
     title: "Boutique - Sacs à Bonheur",
     description:
         "Découvrez notre boutique de sacs artisanaux, alliant style et durabilité pour toutes les occasions.",
+    alternates: { canonical: "/boutique" },
+    openGraph: {
+        url: "/boutique",
+        title: "Boutique - Sacs à Bonheur",
+        description:
+            "Découvrez notre boutique de sacs artisanaux, alliant style et durabilité pour toutes les occasions.",
+    },
 };
 
 export default async function BoutiquePage() {

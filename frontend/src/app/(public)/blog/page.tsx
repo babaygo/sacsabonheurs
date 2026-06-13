@@ -13,6 +13,12 @@ export const metadata: Metadata = {
     title: "Blog - Sacs à Bonheurs",
     description: "Plongez dans l'univers de la maroquinerie durable. Tendances, coulisses de l'atelier et conseils pour adopter une consommation responsable.",
     keywords: "blog sacs, conseils mode, sacs artisanaux, tendances mode, matériaux durables, entretien sacs, histoire de la maroquinerie, interviews artisans, nouveautés sacs à bonheurs",
+    alternates: { canonical: "/blog" },
+    openGraph: {
+        url: "/blog",
+        title: "Blog - Sacs à Bonheurs",
+        description: "Plongez dans l'univers de la maroquinerie durable. Tendances, coulisses de l'atelier et conseils pour adopter une consommation responsable.",
+    },
 };
 
 export default async function BlogPage({

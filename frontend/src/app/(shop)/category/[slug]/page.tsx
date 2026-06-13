@@ -4,6 +4,7 @@ import { getCategoryBySlug } from "@/lib/api/category";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Category } from "@/types/Category";
+import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -22,13 +23,14 @@ function buildCategorySchema(category: Category) {
             image: Array.isArray(product.images) ? product.images : [],
             sku: product.id ? String(product.id) : undefined,
             category: category.name,
-            brand: category.name ? { "@type": "Brand", name: category.name } : undefined,
+            brand: { "@type": "Brand", name: BRAND_NAME },
             offers: {
                 "@type": "Offer",
-                url: `/products/${product.slug}`,
+                url: `${SITE_URL}/products/${product.slug}`,
                 priceCurrency: "EUR",
                 price: product.isOnSale && product.salePrice ? String(product.salePrice) : String(product.price),
                 availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                seller: { "@type": "Organization", name: BRAND_NAME },
             },
         })),
     };
@@ -42,9 +44,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         return { title: "Catégorie - Sacs à Bonheur" };
     }
 
+    const description = `Découvrez notre collection de ${category.name.toLowerCase()} cousus à la main à Saint-Nazaire. Élégants, durables, uniques. Livraison rapide en France.`;
+    const ogImage = category.products?.find((p) => Array.isArray(p.images) && p.images[0])?.images[0];
+
     return {
         title: `${category.name} artisanaux faits main - Sacs à Bonheur`,
-        description: `Découvrez notre collection de ${category.name.toLowerCase()} cousus à la main à Saint-Nazaire. Élégants, durables, uniques. Livraison rapide en France.`,
+        description,
+        alternates: { canonical: `/category/${slug}` },
+        openGraph: {
+            type: "website",
+            url: `/category/${slug}`,
+            title: `${category.name} artisanaux faits main - Sacs à Bonheur`,
+            description,
+            images: ogImage ? [{ url: ogImage, alt: category.name }] : undefined,
+            siteName: BRAND_NAME,
+            locale: "fr_FR",
+        },
     };
 }
 

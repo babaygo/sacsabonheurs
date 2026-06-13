@@ -1,6 +1,8 @@
 import ProductClient from "@/components/features/Product/ProductClient";
 import { getProductBySlug } from "@/lib/api/product";
 import { Product } from "@/types/Product";
+import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
 function sanitizeDescription(html?: string) {
@@ -20,13 +22,14 @@ function buildProductSchema(product: Product) {
         image: images,
         sku: product?.id ? String(product.id) : undefined,
         category: product?.category?.name || undefined,
-        brand: product?.category?.name ? { "@type": "Brand", name: product.category.name } : undefined,
+        brand: { "@type": "Brand", name: BRAND_NAME },
         offers: {
             "@type": "Offer",
-            url: `/products/${product?.slug}`,
+            url: `${SITE_URL}/products/${product?.slug}`,
             priceCurrency: "EUR",
             price: price !== undefined ? String(price) : undefined,
             availability: product?.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            seller: { "@type": "Organization", name: BRAND_NAME },
         },
     };
 
@@ -46,7 +49,7 @@ function buildProductSchema(product: Product) {
     return prune(schema);
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
     const { slug } = await params;
     const product = await getProductBySlug(slug);
 
@@ -54,9 +57,30 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         ? `Découvrez ${product.name}, pièce unique artisanale fabriquée à la main. ${product.category?.name ? `Retrouvez nos ${product.category.name} dans notre boutique.` : "Livraison soignée depuis notre boutique en ligne."}`
         : undefined;
 
+    const title = product ? `${product.name} — pièce unique artisanale` : "Produit introuvable - Sacs à Bonheurs";
+    const description = product?.metaDescription || fallbackDescription || undefined;
+
+    if (!product) {
+        return { title, description };
+    }
+
+    const images = (Array.isArray(product.images) ? product.images : [])
+        .filter(Boolean)
+        .map((url) => ({ url, alt: product.name }));
+
     return {
-        title: product ? `${product.name} — pièce unique artisanale` : "Produit introuvable - Sacs à Bonheurs",
-        description: product?.metaDescription || fallbackDescription,
+        title,
+        description,
+        alternates: { canonical: `/products/${slug}` },
+        openGraph: {
+            type: "product",
+            url: `/products/${slug}`,
+            title: product.name,
+            description: description ?? undefined,
+            images: images.length ? images : undefined,
+            siteName: BRAND_NAME,
+            locale: "fr_FR",
+        } as Metadata["openGraph"],
     };
 }
 

@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 export const metadata = {
     title: "À propos - Sacs à Bonheurs",
     description: "Découvrez Sophie et son atelier de création de sacs artisanaux à Saint-Nazaire. Fabrication française depuis 2021, matériaux de qualité, pièces uniques.",
-    keywords: "sacs artisanaux Saint-Nazaire, maroquinerie française, création artisanale Loire-Atlantique"
+    keywords: "sacs artisanaux Saint-Nazaire, maroquinerie française, création artisanale Loire-Atlantique",
+    alternates: { canonical: "/a-propos" },
+    openGraph: {
+        url: "/a-propos",
+        title: "À propos - Sacs à Bonheurs",
+        description: "Découvrez Sophie et son atelier de création de sacs artisanaux à Saint-Nazaire. Fabrication française depuis 2021, matériaux de qualité, pièces uniques.",
+    },
 }
 
 export default function AProposPage() {

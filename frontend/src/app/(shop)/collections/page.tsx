@@ -9,7 +9,9 @@ export const metadata: Metadata = {
     title: "Collections — Liège, Jacquard, Suédine | Sacs à Bonheurs",
     description:
         "Explorez les collections de Sacs à Bonheurs : des sacs artisanaux faits main en Loire-Atlantique. Liège naturel & vegan, Jacquard élégant, Suédine douce.",
+    alternates: { canonical: "/collections" },
     openGraph: {
+        url: "/collections",
         title: "Nos Collections — Sacs à Bonheurs",
         description:
             "Liège, Jacquard, Suédine : des univers de matières pour des sacs artisanaux uniques, fabriqués à la main en France.",
