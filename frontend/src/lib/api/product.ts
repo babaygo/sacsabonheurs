@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { Product } from "@/types/Product";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
@@ -26,8 +27,7 @@ export async function getProducts(
     }
 }
 
-
-export async function getProductBySlug(slug: string): Promise<Product | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<Product | null> => {
     try {
         const res = await fetch(`${getBaseUrl()}/api/products/${slug}`, {
             next: { revalidate: 3600 }
@@ -41,7 +41,7 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
     } catch (err: any) {
         return null;
     }
-}
+});
 
 export async function getProductsByCategorySlug(slug: string, limit = 24): Promise<Product[]> {
     try {
