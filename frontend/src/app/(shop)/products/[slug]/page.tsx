@@ -106,14 +106,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
         description,
         alternates: { canonical: `/products/${slug}` },
         openGraph: {
-            type: "product",
+            // Next's typed OpenGraph does not allow type: "product" and throws
+            // during metadata resolution at build time. "website" is the valid
+            // value; product-specific data is carried by the JSON-LD Product schema below.
+            type: "website",
             url: `/products/${slug}`,
             title: product.name,
             description: description ?? undefined,
             images: images.length ? images : undefined,
             siteName: BRAND_NAME,
             locale: "fr_FR",
-        } as Metadata["openGraph"],
+        },
     };
 }
 

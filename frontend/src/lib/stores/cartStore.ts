@@ -1,5 +1,11 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
+import { persist, createJSONStorage, type StateStorage } from "zustand/middleware";
+
+const noopStorage: StateStorage = {
+    getItem: () => null,
+    setItem: () => {},
+    removeItem: () => {},
+};
 
 type CartItem = {
     id: number;
@@ -45,6 +51,9 @@ export const useCartStore = create<CartState>()(
         }),
         {
             name: "cart-storage",
+            storage: createJSONStorage(() =>
+                typeof window !== "undefined" ? window.localStorage : noopStorage
+            ),
         }
     )
 );
