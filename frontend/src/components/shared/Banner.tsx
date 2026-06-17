@@ -50,11 +50,11 @@ export default function Banner({
             : undefined;
         return (
             <React.Fragment key={i}>
-                <span className={`${styles.text} text-sm font-medium inline-flex items-center`}>
+                <span className={`${styles.text} text-sm font-medium inline-flex items-center pr-20`}>
                     {item.message}
                     {item.cta && href ? (
                         <Link
-                            className="ml-3 pr-20 text-white underline hover:opacity-80"
+                            className="ml-3 text-white underline hover:opacity-80"
                             href={href}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -76,12 +76,12 @@ export default function Banner({
             <div className="flex-1 overflow-hidden marquee-container">
                 <div className="animate-marquee inline-flex whitespace-nowrap w-max">
                     {Array.from({ length: REPEATS }).map((_, i) => (
-                        <span key={`a-${i}`} className="inline-flex items-center pr-20">
+                        <span key={`a-${i}`} className="inline-flex items-center">
                             {track}
                         </span>
                     ))}
                     {Array.from({ length: REPEATS }).map((_, i) => (
-                        <span key={`b-${i}`} className="inline-flex items-center pr-20">
+                        <span key={`b-${i}`} className="inline-flex items-center">
                             {track}
                         </span>
                     ))}
