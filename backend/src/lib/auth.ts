@@ -37,7 +37,7 @@ export const auth = betterAuth({
                     subject: "Vérifiez votre adresse email",
                     html: `
                     <p>Bonjour ${user.name || ""},</p>
-                    <p>Bienvenue chez Sacs à Bonheur. Cliquez sur le bouton ci-dessous pour vérifier votre adresse email :</p>
+                    <p>Bienvenue chez Sacs à Bonheurs. Cliquez sur le bouton ci-dessous pour vérifier votre adresse email :</p>
                     <p><a href="${url}" style="background:#6b2e1c;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;">Vérifier mon email</a></p><br \>
                     <p>Ce mail expirera dans 15 minutes !</p>
                     <p>Si vous n'êtes pas à l'origine de cette demande, ignorez simplement ce message.</p>

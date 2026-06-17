@@ -3,13 +3,13 @@ import ProductFiltersClient from "@/components/features/Product/ProductsFilters/
 import { getProducts } from "@/lib/api/product";
 
 export const metadata = {
-    title: "Boutique - Sacs à Bonheur",
+    title: "Boutique - Sacs à Bonheurs",
     description:
         "Découvrez notre boutique de sacs artisanaux, alliant style et durabilité pour toutes les occasions.",
     alternates: { canonical: "/boutique" },
     openGraph: {
         url: "/boutique",
-        title: "Boutique - Sacs à Bonheur",
+        title: "Boutique - Sacs à Bonheurs",
         description:
             "Découvrez notre boutique de sacs artisanaux, alliant style et durabilité pour toutes les occasions.",
     },

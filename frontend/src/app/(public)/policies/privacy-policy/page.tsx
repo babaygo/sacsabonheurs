@@ -3,9 +3,9 @@ import BreadCrumb from "@/components/shared/BreadCrumb";
 import { normalizeRichTextContent } from "@/lib/utils/richText";
 
 export const metadata = {
-    title: "Politique de confidentialité - Sacs à Bonheur",
+    title: "Politique de confidentialité - Sacs à Bonheurs",
     description:
-        "Découvrez comment nous protégeons vos données personnelles sur sacsabonheur.fr. Transparence et respect de votre vie privée.",
+        "Découvrez comment nous protégeons vos données personnelles sur sacsabonheurs.fr. Transparence et respect de votre vie privée.",
     robots: { index: false, follow: false },
 };
 

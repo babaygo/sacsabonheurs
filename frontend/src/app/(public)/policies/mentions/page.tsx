@@ -3,8 +3,8 @@ import BreadCrumb from "@/components/shared/BreadCrumb";
 import { normalizeRichTextContent } from "@/lib/utils/richText";
 
 export const metadata = {
-    title: "Mentions légales - Sacs à Bonheur",
-    description: "Consultez les mentions légales du site Sacs à Bonheur : informations légales, hébergeur, propriété intellectuelle.",
+    title: "Mentions légales - Sacs à Bonheurs",
+    description: "Consultez les mentions légales du site Sacs à Bonheurs : informations légales, hébergeur, propriété intellectuelle.",
     robots: { index: false, follow: false },
 };
 
