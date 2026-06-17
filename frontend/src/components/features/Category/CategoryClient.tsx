@@ -8,6 +8,7 @@ import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
 import { useProductList } from "@/hooks/useProductList";
 import BreadCrumb from "@/components/shared/BreadCrumb";
+import { getCategoryContent } from "@/lib/seo/categoryContent";
 
 export default function CategoryPageClient({
     category,
@@ -18,6 +19,7 @@ export default function CategoryPageClient({
     initialProducts: Product[];
     categorySlug: string;
 }) {
+    const { heading, intro } = getCategoryContent(categorySlug, category.name);
     const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
 
@@ -37,7 +39,14 @@ export default function CategoryPageClient({
                     { label: category.name },
                 ]}
             />
-            <h1>{category.name}</h1>
+            <header className="mb-8 max-w-3xl">
+                <h1 className="mb-4">{heading}</h1>
+                <div className="space-y-3 text-body leading-relaxed text-foreground/80">
+                    {intro.map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                    ))}
+                </div>
+            </header>
             <ProductFilters
                 selectedCategory={null}
                 selectedCollection={selectedCollection}

@@ -1,5 +1,6 @@
 import CollectionClient from "@/components/features/Collection/CollectionClient";
 import { getCollectionBySlug, getCollections } from "@/lib/api/collection";
+import { buildFaqSchema, getCollectionFaq } from "@/lib/seo/collectionFaq";
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -40,5 +41,17 @@ export default async function CollectionPage({ params }: Props) {
 
     if (!collection) notFound();
 
-    return <CollectionClient collection={collection} />;
+    const faq = getCollectionFaq(slug);
+
+    return (
+        <>
+            {faq && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(buildFaqSchema(faq)) }}
+                />
+            )}
+            <CollectionClient collection={collection} faq={faq} />
+        </>
+    );
 }

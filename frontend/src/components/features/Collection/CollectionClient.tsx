@@ -13,13 +13,22 @@ import {
     CarouselNext,
     CarouselPrevious,
 } from "@/components/ui/carousel";
+import {
+    Accordion,
+    AccordionItem,
+    AccordionTrigger,
+    AccordionContent,
+} from "@/components/ui/accordion";
+import type { FaqItem } from "@/lib/seo/collectionFaq";
 
 interface CollectionClientProps {
     collection: Collection;
+    faq?: FaqItem[] | null;
 }
 
 export default function CollectionClient({
     collection,
+    faq,
 }: CollectionClientProps) {
     const collectionProducts = collection.products ?? [];
 
@@ -138,6 +147,24 @@ export default function CollectionClient({
                     </div>
                 )}
             </section>
+
+            {/* FAQ */}
+            {faq && faq.length > 0 && (
+                <section className="mb-16 max-w-3xl [&_button]:font-montserrat [&_button]:text-base">
+                    <div className="space-y-2 section-header-mb">
+                        <span className="section-label">Questions fréquentes</span>
+                        <h2>Tout savoir sur la collection {collection.title}</h2>
+                    </div>
+                    <Accordion type="single" collapsible className="w-full">
+                        {faq.map((item, i) => (
+                            <AccordionItem key={i} value={`faq-${i}`}>
+                                <AccordionTrigger>{item.question}</AccordionTrigger>
+                                <AccordionContent>{item.answer}</AccordionContent>
+                            </AccordionItem>
+                        ))}
+                    </Accordion>
+                </section>
+            )}
 
             {/* CTA bottom */}
             <section className="section-padding bg-secondary/30 rounded-3xl mb-16 text-center space-y-4">
