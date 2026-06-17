@@ -29,7 +29,7 @@ export default async function BoutiquePage() {
             />
             <header className="mb-8 max-w-3xl">
                 <h1 className="mb-4">Sacs artisanaux faits main en France</h1>
-                <div className="space-y-3 text-body leading-relaxed text-foreground/80">
+                <div className="space-y-3 text-body leading-relaxed text-foreground/80 text-justify">
                     <p>
                         Découvrez toutes les créations de Sacs à Bonheurs : des sacs, sacoches
                         et pochettes cousus à la main dans mon atelier de Saint-Nazaire, en
