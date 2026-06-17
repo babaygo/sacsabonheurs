@@ -8,6 +8,7 @@ interface UseProductListOptions {
     categorySlug?: string | null;
     selectedCollection: string | null;
     sortOption: SortOption | null;
+    hideOutOfStock?: boolean;
 }
 
 export function useProductList({
@@ -15,6 +16,7 @@ export function useProductList({
     categorySlug,
     selectedCollection,
     sortOption,
+    hideOutOfStock = false,
 }: UseProductListOptions) {
     const { products: liveProducts, hasMore, fetchProducts } = useProductsContext();
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -56,6 +58,10 @@ export function useProductList({
             result = result.filter((p) => p.collectionId === colId);
         }
 
+        if (hideOutOfStock) {
+            result = result.filter((p) => p.stock > 0);
+        }
+
         if (!sortOption) return result;
 
         return [...result].sort((a, b) => {
@@ -69,7 +75,7 @@ export function useProductList({
                 default: return 0;
             }
         });
-    }, [products, categorySlug, selectedCollection, sortOption]);
+    }, [products, categorySlug, selectedCollection, sortOption, hideOutOfStock]);
 
     return { sorted, page, setPage, hasMore };
 }

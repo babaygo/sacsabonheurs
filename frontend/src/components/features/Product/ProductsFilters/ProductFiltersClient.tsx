@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SortOption } from "@/lib/constants/SortOptions";
 import ProductFilters from "./ProductFilters";
+import MaterialTabs from "./MaterialTabs";
 import PreviewProduct from "../PreviewProduct";
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
@@ -12,16 +13,24 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
+    const [hideOutOfStock, setHideOutOfStock] = useState(false);
 
     const { sorted, page, setPage, hasMore } = useProductList({
         initialProducts,
         categorySlug: selectedCategory,
         selectedCollection,
         sortOption,
+        hideOutOfStock,
     });
 
     return (
         <div className="pt-4">
+            <MaterialTabs
+                value={selectedCollection}
+                onChange={setSelectedCollection}
+                className="mb-4"
+            />
+
             <ProductFilters
                 selectedCategory={selectedCategory}
                 selectedCollection={selectedCollection}
@@ -30,7 +39,10 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
                 onCollectionChange={setSelectedCollection}
                 onSortChange={setSortOption}
                 showCategoryFilter={true}
-                showCollectionFilter={true}
+                showCollectionFilter={false}
+                showStockToggle={true}
+                hideOutOfStock={hideOutOfStock}
+                onHideOutOfStockChange={setHideOutOfStock}
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">

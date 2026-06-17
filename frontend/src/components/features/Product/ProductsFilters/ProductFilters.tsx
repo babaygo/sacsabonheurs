@@ -3,6 +3,7 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Separator } from "@/components/ui/separator";
 import { SlidersHorizontal, X } from "lucide-react";
 import { useCategories } from "@/hooks/useCategories";
@@ -21,6 +22,9 @@ interface ProductFiltersProps {
     onSortChange: (value: SortOption | null) => void;
     showCategoryFilter?: boolean;
     showCollectionFilter?: boolean;
+    showStockToggle?: boolean;
+    hideOutOfStock?: boolean;
+    onHideOutOfStockChange?: (value: boolean) => void;
 }
 
 const sortLabels: Record<SortOption, string> = {
@@ -41,6 +45,9 @@ export default function ProductFilters({
     onSortChange,
     showCategoryFilter = true,
     showCollectionFilter = true,
+    showStockToggle = false,
+    hideOutOfStock = false,
+    onHideOutOfStockChange,
 }: ProductFiltersProps) {
     const { categories, loading, error } = useCategories();
     const [collections, setCollections] = useState<Collection[]>([]);
@@ -120,12 +127,24 @@ export default function ProductFilters({
         </div>
     );
 
+    const StockToggle = ({ className = "" }: { className?: string }) => (
+        <label className={`flex items-center gap-2 cursor-pointer select-none text-sm ${className}`}>
+            <Checkbox
+                checked={hideOutOfStock}
+                onCheckedChange={(v) => onHideOutOfStockChange?.(v === true)}
+                aria-label="Masquer les articles en rupture de stock"
+            />
+            <span>Masquer les articles en rupture de stock</span>
+        </label>
+    );
+
     return (
         <div className="mb-2">
-            <div className="hidden md:flex gap-4">
+            <div className="hidden md:flex md:items-center gap-4">
                 {showCategoryFilter && <CategoryFilter className="w-[200px]" />}
                 {showCollectionFilter && <CollectionFilter className="w-[200px]" />}
                 <SortFilter className="w-[200px]" showReset />
+                {showStockToggle && <StockToggle className="ml-auto" />}
             </div>
 
             <div className="md:hidden">
@@ -159,6 +178,12 @@ export default function ProductFilters({
                                 <label className="text-sm font-medium">Trier par</label>
                                 <SortFilter className="w-full" showReset />
                             </div>
+                            {showStockToggle && (
+                                <div className="space-y-2">
+                                    <label className="text-sm font-medium">Disponibilité</label>
+                                    <StockToggle />
+                                </div>
+                            )}
                         </div>
                     </SheetContent>
                 </Sheet>
