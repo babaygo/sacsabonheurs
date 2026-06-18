@@ -141,9 +141,9 @@ export default function ProductFilters({
     return (
         <div className="mb-2">
             <div className="hidden md:flex md:items-center gap-4">
-                {showCategoryFilter && <CategoryFilter className="w-[200px]" />}
-                {showCollectionFilter && <CollectionFilter className="w-[200px]" />}
-                <SortFilter className="w-[200px]" showReset />
+                {showCategoryFilter && <CategoryFilter className="w-50" />}
+                {showCollectionFilter && <CollectionFilter className="w-50" />}
+                <SortFilter className="w-50" showReset />
                 {showStockToggle && <StockToggle className="ml-auto" />}
             </div>
 

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     title: "Sacs à Bonheurs – Élégance artisanale",
     description:
       "Sacs faits main en France, alliant savoir-faire, passion et qualité. Découvrez une boutique artisanale dédiée à l'élégance durable.",
-    images: [{ url: "/assets/og_image.png", width: 1200, height: 630, alt: BRAND_NAME }],
+    images: [{ url: "/assets/og_image.jpg", width: 1200, height: 628, alt: BRAND_NAME }],
     siteName: BRAND_NAME,
     locale: "fr_FR",
   },

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { SortOption } from "@/lib/constants/SortOptions";
 import ProductFilters from "./ProductFilters";
-import MaterialTabs from "./MaterialTabs";
+import CollectionTabs from "./CollectionTabs";
 import PreviewProduct from "../PreviewProduct";
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
@@ -25,7 +25,7 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
 
     return (
         <div className="pt-4">
-            <MaterialTabs
+            <CollectionTabs
                 value={selectedCollection}
                 onChange={setSelectedCollection}
                 className="mb-4"

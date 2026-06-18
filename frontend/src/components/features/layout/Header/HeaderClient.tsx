@@ -55,7 +55,7 @@ export default function HeaderClient() {
                             <Sheet open={openSheetMobile} onOpenChange={setOpenSheetMobile}>
                                 <SheetTitle className="hidden">Menu Mobile</SheetTitle>
                                 <SheetTrigger asChild>
-                                    <Button variant="ghost" className="p-2 -ml-2">
+                                    <Button variant="ghost" className="p-2 -ml-2" aria-label="Ouvrir le menu">
                                         <Menu className="size-6 text-primary" />
                                     </Button>
                                 </SheetTrigger>
@@ -136,7 +136,7 @@ export default function HeaderClient() {
                             <Sheet open={openSheet} onOpenChange={setOpenSheet}>
                                 <SheetTitle className="hidden">Menu Principal</SheetTitle>
                                 <SheetTrigger asChild>
-                                    <Button variant="ghost" className="p-0 hover:bg-white -ml-2">
+                                    <Button variant="ghost" className="p-0 hover:bg-white -ml-2" aria-label="Ouvrir le menu">
                                         <Menu className="size-6 text-primary" />
                                     </Button>
                                 </SheetTrigger>
@@ -227,7 +227,7 @@ export default function HeaderClient() {
                             {!loadingUser && user ? (
                                 <Popover>
                                     <PopoverTrigger asChild>
-                                        <Button variant="ghost" className="hover:bg-white p-2">
+                                        <Button variant="ghost" className="hover:bg-white p-2" aria-label="Mon compte">
                                             <UserRound className="size-6 text-primary" />
                                         </Button>
                                     </PopoverTrigger>
@@ -258,8 +258,8 @@ export default function HeaderClient() {
                                     </PopoverContent>
                                 </Popover>
                             ) : (
-                                <Link href="/signup">
-                                    <Button variant="ghost" className="hover:bg-white p-2">
+                                <Link href="/signup" aria-label="Connexion / Mon compte">
+                                    <Button variant="ghost" className="hover:bg-white p-2" aria-label="Connexion / Mon compte">
                                         <UserRound className="size-6 text-primary" />
                                     </Button>
                                 </Link>
@@ -270,6 +270,7 @@ export default function HeaderClient() {
                             variant="ghost"
                             onClick={() => setOpen(true)}
                             className="group flex items-center p-2 relative hover:bg-white -mr-2"
+                            aria-label={count > 0 ? `Ouvrir le panier, ${count} article${count > 1 ? "s" : ""}` : "Ouvrir le panier"}
                         >
                             <ShoppingBasket className="size-6 text-primary" />
                             {count > 0 && (

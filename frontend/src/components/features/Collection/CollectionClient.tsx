@@ -150,7 +150,7 @@ export default function CollectionClient({
 
             {/* FAQ */}
             {faq && faq.length > 0 && (
-                <section className="mb-16 max-w-3xl [&_button]:font-montserrat [&_button]:text-base">
+                <section className="mb-16 max-w-4xl [&_button]:font-montserrat [&_button]:text-base">
                     <div className="space-y-2 section-header-mb">
                         <span className="section-label">Questions fréquentes</span>
                         <h2>Tout savoir sur la collection {collection.title}</h2>

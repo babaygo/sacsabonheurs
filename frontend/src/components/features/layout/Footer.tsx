@@ -46,12 +46,14 @@ export default function Footer() {
 
                         <div className="flex items-center space-x-4 pt-5">
                                 <a href="https://www.instagram.com/sacs_a_bonheurs/" target="_blank" rel="noopener noreferrer"
+                                    aria-label="Instagram (nouvel onglet)"
                                     className="flex items-center gap-2 text-sm hover:text-pink-500 transition">
-                                    <Instagram className="w-5 h-5" />
+                                    <Instagram className="w-5 h-5" aria-hidden="true" />
                                 </a>
                                 <a href="https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/" target="_blank" rel="noopener noreferrer"
+                                    aria-label="Facebook (nouvel onglet)"
                                     className="flex items-center gap-2 text-sm hover:text-blue-500 transition">
-                                    <Facebook className="w-5 h-5" />
+                                    <Facebook className="w-5 h-5" aria-hidden="true" />
                                 </a>
                         </div>
                     </Accordion>

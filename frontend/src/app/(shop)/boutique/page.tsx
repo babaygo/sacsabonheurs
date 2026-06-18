@@ -27,7 +27,7 @@ export default async function BoutiquePage() {
                     { label: "Boutique" },
                 ]}
             />
-            <header className="mb-8 max-w-3xl">
+            <header className="mb-8 max-w-4xl">
                 <h1 className="mb-4">Sacs artisanaux faits main en France</h1>
                 <div className="space-y-3 text-body leading-relaxed text-foreground/80 text-justify">
                     <p>

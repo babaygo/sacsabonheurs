@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { SortOption } from "@/lib/constants/SortOptions";
 import ProductFilters from "../Product/ProductsFilters/ProductFilters";
+import CollectionTabs from "../Product/ProductsFilters/CollectionTabs";
 import PreviewProduct from "../Product/PreviewProduct";
 import { Product } from "@/types/Product";
 import { Button } from "@/components/ui/button";
@@ -22,12 +23,14 @@ export default function CategoryPageClient({
     const { heading, intro } = getCategoryContent(categorySlug, category.name);
     const [selectedCollection, setSelectedCollection] = useState<string | null>(null);
     const [sortOption, setSortOption] = useState<SortOption | null>(null);
+    const [hideOutOfStock, setHideOutOfStock] = useState(false);
 
-    const { sorted, page, setPage, hasMore } = useProductList({
+    const { sorted, products, page, setPage, hasMore } = useProductList({
         initialProducts,
         categorySlug,
         selectedCollection,
         sortOption,
+        hideOutOfStock,
     });
 
     return (
@@ -39,7 +42,7 @@ export default function CategoryPageClient({
                     { label: category.name },
                 ]}
             />
-            <header className="mb-8 max-w-3xl">
+            <header className="mb-8 max-w-4xl">
                 <h1 className="mb-4">{heading}</h1>
                 <div className="space-y-3 text-body leading-relaxed text-foreground/80">
                     {intro.map((paragraph, i) => (
@@ -47,6 +50,13 @@ export default function CategoryPageClient({
                     ))}
                 </div>
             </header>
+            <CollectionTabs
+                value={selectedCollection}
+                onChange={setSelectedCollection}
+                products={products}
+                className="mb-4"
+            />
+
             <ProductFilters
                 selectedCategory={null}
                 selectedCollection={selectedCollection}
@@ -55,7 +65,10 @@ export default function CategoryPageClient({
                 onCollectionChange={setSelectedCollection}
                 onSortChange={setSortOption}
                 showCategoryFilter={false}
-                showCollectionFilter={true}
+                showCollectionFilter={false}
+                showStockToggle={true}
+                hideOutOfStock={hideOutOfStock}
+                onHideOutOfStockChange={setHideOutOfStock}
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">

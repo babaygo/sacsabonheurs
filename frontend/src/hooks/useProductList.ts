@@ -77,5 +77,5 @@ export function useProductList({
         });
     }, [products, categorySlug, selectedCollection, sortOption, hideOutOfStock]);
 
-    return { sorted, page, setPage, hasMore };
+    return { sorted, products, page, setPage, hasMore };
 }
