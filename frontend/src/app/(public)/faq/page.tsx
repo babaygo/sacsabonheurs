@@ -19,9 +19,38 @@ export const metadata: Metadata = {
     },
 };
 
+const faqItems: Array<{ q: string; a: string }> = [
+    { q: "Quand est-ce que les nouveaux articles sortent ?", a: "Nous publions régulièrement de nouveaux articles, restez attentif aux annonces sur Instagram." },
+    { q: "Les articles en rupture de stock vont-ils revenir ?", a: "Tous les articles sont fabriqués une seule fois, il n'y a pas de réaprovisionnement prévu." },
+    { q: "Que faire si mon article est défectueux ?", a: "Contactez notre service client avec des photos du défaut." },
+    { q: "Comment entretenir mes articles ?", a: "Consultez les instructions d'entretien fournies dans la description de chaque produit." },
+    { q: "Puis-je avoir plus d'informations sur un article ?", a: "Oui, chaque fiche produit contient des détails complets, dans la description." },
+    { q: "Livrez-vous à l'international ?", a: "Les livraisons sont actuellement, disponible uniquement en France métropolitaine." },
+    { q: "La livraison est-elle gratuite ?", a: "La livraison est gratuite à partir de 85€ d'achats." },
+    { q: "Quels sont les délais de livraison ?", a: "Le service de livraison Mondial Relay, prévois une livraison entre 3 à 5 jours ouvrés." },
+    { q: "Puis-je retourner un article ?", a: "Oui. Conformément à l'article L221-18 du Code de la consommation, vous disposez d'un délai de 14 jours à compter de la réception de votre commande pour exercer votre droit de rétractation, sans avoir à justifier votre décision. Contactez-nous via le formulaire de contact ou à sacsabonheurs@gmail.com pour initier le retour." },
+    { q: "Quelles sont les conditions de retour ?", a: "Le produit doit être retourné en parfait état, sans avoir été utilisé, dans les 14 jours suivant l'envoi de votre formulaire de rétractation. Tout article retourné en mauvais état ou ayant été utilisé ne pourra pas être remboursé." },
+    { q: "Les frais de retour sont-ils à ma charge ?", a: "Oui, les frais de retour sont à votre charge." },
+    { q: "Quand vais-je être remboursé ?", a: "Le remboursement est effectué dans les 14 jours suivant la réception de votre notification de rétractation, par le même moyen de paiement que celui utilisé lors de l'achat. Le remboursement inclut la totalité des sommes versées, frais de livraison compris." },
+    { q: "Quels moyens de paiement acceptez-vous ?", a: "Nous acceptons les paiements avec Visa, MasterCard, Apple Pay, Google Pay et Link. Les paiements sont gérés avec Stripe, nous ne collections aucunes données bancaires." },
+];
+
 export default function FAQPage() {
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        mainEntity: faqItems.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+        })),
+    };
     return (
         <div className="min-h-screen pt-4">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+            />
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },

@@ -51,14 +51,18 @@ export default async function RootLayout({
   return (
     <html lang="fr" className={`${montserrat.variable} ${fraunces.variable}`}>
       <head>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <script type="application/ld+json" dangerouslySetInnerHTML={{
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "Organization",
             "url": `${process.env.NEXT_PUBLIC_URL_FRONT}`,
             "logo": `${process.env.NEXT_PUBLIC_URL_FRONT}/assets/sacs-a-bonheurs-logo.png`,
-            "name": "Sacs à Bonheurs"
+            "name": "Sacs à Bonheurs",
+            "sameAs": [
+              "https://www.instagram.com/sacs_a_bonheurs/",
+              "https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/"
+            ]
           })
         }} />
 

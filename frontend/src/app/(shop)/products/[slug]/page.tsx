@@ -17,15 +17,43 @@ function sanitizeDescription(html?: string) {
     return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
+function buildSchemaDescription(rawHtml?: string, name?: string) {
+    const desc = sanitizeDescription(rawHtml);
+    if (!desc || !name) return desc;
+    const norm = (s: string) =>
+        s.normalize("NFD").replace(/[̀-ͯ]/g, "").toUpperCase().replace(/\s+/g, " ").trim();
+    if (norm(desc).startsWith(norm(name))) {
+        const nameWords = name.trim().split(/\s+/).length;
+        const stripped = desc.trim().split(/\s+/).slice(nameWords).join(" ").replace(/^[\s,.;:–—-]+/, "").trim();
+        return stripped || desc;
+    }
+    return desc;
+}
+
 function buildBreadcrumbSchema(product: Product) {
+    const items: Array<Record<string, unknown>> = [
+        { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
+        { "@type": "ListItem", position: 2, name: "Boutique", item: `${SITE_URL}/boutique` },
+    ];
+
+    if (product?.category?.name && product?.category?.slug) {
+        items.push({
+            "@type": "ListItem",
+            position: items.length + 1,
+            name: product.category.name,
+            item: `${SITE_URL}/category/${product.category.slug}`,
+        });
+    }
+    items.push({
+        "@type": "ListItem",
+        position: items.length + 1,
+        name: product?.name || "",
+        item: `${SITE_URL}/products/${product?.slug}`,
+    });
     return {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
-        itemListElement: [
-            { "@type": "ListItem", position: 1, name: "Accueil", item: SITE_URL },
-            { "@type": "ListItem", position: 2, name: "Boutique", item: `${SITE_URL}/boutique` },
-            { "@type": "ListItem", position: 3, name: product?.name || "", item: `${SITE_URL}/products/${product?.slug}` },
-        ],
+        itemListElement: items,
     };
 }
 
@@ -39,13 +67,17 @@ function buildProductSchema(product: Product) {
         "@context": "https://schema.org/",
         "@type": "Product",
         name: product?.name || "",
-        description: sanitizeDescription(product?.description),
+        description: buildSchemaDescription(product?.description, product?.name),
         image: images,
         sku: product?.id ? String(product.id) : undefined,
         category: product?.category?.name || undefined,
         color: product?.color || undefined,
         material: product?.material || undefined,
         brand: { "@type": "Brand", name: BRAND_NAME },
+        mpn: product?.id ? String(product.id) : undefined,
+        additionalProperty: [
+            { "@type": "PropertyValue", name: "identifier_exists", value: "false" },
+        ],
         offers: {
             "@type": "Offer",
             url: `${SITE_URL}/products/${product?.slug}`,
@@ -62,6 +94,16 @@ function buildProductSchema(product: Product) {
                 merchantReturnDays: 14,
                 returnMethod: "https://schema.org/ReturnByMail",
                 returnFees: "https://schema.org/ReturnShippingFees",
+            },
+            shippingDetails: {
+                "@type": "OfferShippingDetails",
+                shippingRate: { "@type": "MonetaryAmount", value: "4.99", currency: "EUR" },
+                deliveryTime: {
+                    "@type": "ShippingDeliveryTime",
+                    handlingTime: { "@type": "QuantitativeValue", minValue: 1, maxValue: 3, unitCode: "DAY" },
+                    transitTime: { "@type": "QuantitativeValue", minValue: 2, maxValue: 5, unitCode: "DAY" },
+                },
+                shippingDestination: { "@type": "DefinedRegion", addressCountry: "FR" },
             },
         },
     };

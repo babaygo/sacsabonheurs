@@ -2,6 +2,7 @@ import Link from "next/link";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import ProductFiltersClient from "@/components/features/Product/ProductsFilters/ProductFiltersClient";
 import { getProducts } from "@/lib/api/product";
+import { SITE_URL } from "@/lib/seo/seo";
 
 export const metadata = {
     title: "Sacs artisanaux faits main en France — liège, jacquard, suédine | Sacs à Bonheurs",
@@ -19,8 +20,23 @@ export const metadata = {
 export default async function BoutiquePage() {
     const initialProducts = await getProducts(24, true);
 
+    const itemListSchema = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        itemListElement: initialProducts.map((product, index) => ({
+            "@type": "ListItem",
+            position: index + 1,
+            url: `${SITE_URL}/products/${product.slug}`,
+            name: product.name,
+        })),
+    };
+
     return (
         <div className="min-h-screen pt-4">
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }}
+            />
             <BreadCrumb
                 items={[
                     { label: "Accueil", href: "/" },

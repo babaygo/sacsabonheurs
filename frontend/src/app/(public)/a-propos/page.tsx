@@ -24,7 +24,6 @@ export default function AProposPage() {
         "description": "Créatrice de sacs artisanaux et accessoires en cuir et tissus de qualité. Fabrication française à Saint-Nazaire depuis 2021.",
         "address": {
             "@type": "PostalAddress",
-            "streetAddress": "",
             "addressLocality": "Saint-Nazaire",
             "postalCode": "44600",
             "addressRegion": "Loire-Atlantique",
@@ -36,7 +35,6 @@ export default function AProposPage() {
             "longitude": "-2.2137"
         },
         "url": process.env.NEXT_PUBLIC_URL_FRONT!,
-        "telephone": "",
         "email": "sacsabonheurs@gmail.com",
         "priceRange": "€€",
         "openingHoursSpecification": {

@@ -45,7 +45,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 {product.images[1] && (
                     <Image
                         src={product.images[1]}
-                        alt={`${product.name} alt`}
+                        alt={`${product.name} — autre vue`}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         fill
                         className="object-cover w-full h-auto block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
