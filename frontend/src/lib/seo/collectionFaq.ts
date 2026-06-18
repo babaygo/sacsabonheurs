@@ -44,6 +44,60 @@ const COLLECTION_FAQ: Record<string, FaqItem[]> = {
                 "Oui. Chaque sac est fabriqué en quantité très limitée, le plus souvent en exemplaire unique. Les légères variations de grain et de teinte du liège sont la signature de la matière naturelle et de la main qui la façonne : aucun modèle n'est jamais reproduit exactement à l'identique.",
         },
     ],
+    velours: [
+        {
+            question: "Le velours est-il une matière fragile pour un sac ?",
+            answer:
+                "Non, à condition d'en prendre soin. Le velours que j'utilise est dense et résistant ; associé à des finitions en simili cuir, il supporte très bien un usage quotidien. Il suffit d'éviter l'humidité prolongée et les frottements répétés.",
+        },
+        {
+            question: "Comment entretenir un sac en velours ?",
+            answer:
+                "Un brossage doux à sec, dans le sens du poil, suffit à raviver l'aspect du velours et à retirer les poussières. Évitez l'eau et le nettoyage agressif ; en cas de tache, tamponnez délicatement sans frotter.",
+        },
+        {
+            question: "Vos sacs en velours sont-ils faits main ?",
+            answer:
+                "Oui. Chaque sac en velours est coupé, assemblé et cousu à la main dans mon atelier de Saint-Nazaire, en Loire-Atlantique, le plus souvent en exemplaire unique.",
+        },
+        {
+            question: "Le velours convient-il à toutes les saisons ?",
+            answer:
+                "Le velours est particulièrement chaleureux à l'automne et en hiver, mais ses coloris profonds s'accordent à toutes les saisons. C'est une matière intemporelle qui apporte une touche d'élégance toute l'année.",
+        },
+        {
+            question: "Pourquoi associer le velours au simili cuir ?",
+            answer:
+                "Le simili cuir structure le sac, protège les zones d'usure et facilite l'entretien, tandis que le velours apporte la douceur et le caractère. Cette association allie esthétique et durabilité.",
+        },
+    ],
+    "simili-cuir": [
+        {
+            question: "Le simili cuir est-il vegan ?",
+            answer:
+                "Oui. Le simili cuir ne contient aucune matière d'origine animale : il reproduit l'aspect et la tenue du cuir tout en étant une alternative végane, idéale pour celles qui veulent un beau sac sans cuir.",
+        },
+        {
+            question: "Un sac en simili cuir est-il résistant ?",
+            answer:
+                "Oui. Le simili cuir est robuste, garde sa forme et résiste bien aux petits accrocs du quotidien. Cousu à la main avec des finitions soignées, il est conçu pour durer.",
+        },
+        {
+            question: "Comment entretenir un sac en simili cuir ?",
+            answer:
+                "L'entretien est très simple : un chiffon doux légèrement humide suffit à nettoyer la surface. Évitez les produits agressifs et séchez avec un chiffon sec.",
+        },
+        {
+            question: "Le simili cuir craint-il la pluie ?",
+            answer:
+                "Le simili cuir résiste bien aux éclaboussures et à l'humidité légère, mieux que beaucoup de tissus. Il reste conseillé d'essuyer les gouttes et d'éviter une exposition prolongée à la pluie.",
+        },
+        {
+            question: "Vos sacs en simili cuir sont-ils des pièces uniques ?",
+            answer:
+                "Oui. Chaque sac est fabriqué à la main en quantité très limitée, le plus souvent en exemplaire unique, dans mon atelier de Saint-Nazaire.",
+        },
+    ],
 };
 
 export function getCollectionFaq(slug: string): FaqItem[] | null {
