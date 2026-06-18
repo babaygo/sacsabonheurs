@@ -6,6 +6,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   images: {
+    // Optimisation déléguée à Cloudflare (bucket R2) — on désactive l'optimiseur Vercel,
+    // qui est plafonné et renvoie des 401 (OPTIMIZED_EXTERNAL_IMAGE_REQUEST_UNAUTHORIZED) sur certaines images.
+    unoptimized: true,
     formats: ['image/avif', 'image/webp'],
     minimumCacheTTL: 31536000,
     remotePatterns: [
