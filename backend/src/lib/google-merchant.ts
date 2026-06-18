@@ -46,6 +46,21 @@ function stripHtml(html: string): string {
 }
 
 /**
+ * Retire un éventuel préfixe ALL-CAPS reprenant le nom du produit
+ */
+function stripLeadingName(desc: string, name?: string): string {
+    if (!desc || !name) return desc;
+    const norm = (s: string) =>
+        s.normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase().replace(/\s+/g, ' ').trim();
+    if (norm(desc).startsWith(norm(name))) {
+        const nameWords = name.trim().split(/\s+/).length;
+        const stripped = desc.trim().split(/\s+/).slice(nameWords).join(' ').replace(/^[\s,.;:–—-]+/, '').trim();
+        return stripped || desc;
+    }
+    return desc;
+}
+
+/**
  * Génère une entrée XML pour un produit
  */
 function generateProductItem(
@@ -57,7 +72,7 @@ function generateProductItem(
         image.startsWith('http') ? image : `${baseUrl}${image}`;
     const id = String(product.id);
     const title = product.name;
-    const description = stripHtml(product.description);
+    const description = stripLeadingName(stripHtml(product.description), product.name);
     const link = `${baseUrl}/products/${product.slug}`;
     let imageLink = `${baseUrl}/images/placeholder.jpg`;
     if (product.images && product.images.length > 0) {
