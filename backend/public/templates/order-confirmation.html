@@ -2,91 +2,272 @@
 <html lang="fr">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
     <title>Confirmation de commande</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet" />
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            color: #333;
-            background-color: #f9f9f9;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            background-color: #FAF8F6;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #3C3C3C;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            color: transparent;
+            height: 0;
+            width: 0;
+            max-height: 0;
+            max-width: 0;
+            overflow: hidden;
+            mso-hide: all;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 32px 16px;
+            box-sizing: border-box;
         }
 
         .container {
             max-width: 600px;
-            margin: auto;
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #E9E3DF;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 28px rgba(107, 46, 28, 0.07);
         }
 
-        table {
+        .topbar {
+            height: 4px;
+            line-height: 4px;
+            font-size: 4px;
+            background-color: #6B2E1C;
+        }
+
+        .header {
+            text-align: center;
+            padding: 32px 32px 24px;
+            border-bottom: 1px solid #E9E3DF;
+        }
+
+        .brand {
+            font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #6B2E1C;
+        }
+
+        .tagline {
+            margin-top: 8px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #A1897B;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        h1 {
+            margin: 0 0 8px;
+            font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #6B2E1C;
+        }
+
+        p {
+            margin: 0 0 16px;
+            font-size: 15px;
+            line-height: 1.65;
+            color: #4A4A4A;
+        }
+
+        .section-label {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #6B2E1C;
+            margin: 28px 0 8px;
+        }
+
+        .info p {
+            margin: 0 0 4px;
+            font-size: 14px;
+            line-height: 1.55;
+            color: #4A4A4A;
+        }
+
+        table.items {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+
+        table.items th {
+            background-color: #F6E1D5;
+            color: #6B2E1C;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 10px 12px;
+        }
+
+        table.items td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #E9E3DF;
+            font-size: 14px;
+            color: #4A4A4A;
+            vertical-align: middle;
+        }
+
+        table.items td img {
+            border-radius: 8px;
+            border: 1px solid #E9E3DF;
+            display: block;
+        }
+
+        table.summary {
             width: 100%;
             border-collapse: collapse;
             margin-top: 10px;
         }
 
-        th,
-        td {
-            padding: 8px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
+        table.summary td {
+            padding: 7px 12px;
+            font-size: 14px;
+            color: #4A4A4A;
+        }
+
+        table.summary td.amount {
+            text-align: right;
+        }
+
+        table.summary tr.total-row td {
+            border-top: 1px solid #E9E3DF;
+            padding-top: 12px;
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #6B2E1C;
         }
 
         .footer {
+            padding: 26px 32px 30px;
             text-align: center;
-            margin-top: 40px;
-            font-size: 0.9em;
-            color: #666;
+            border-top: 1px solid #E9E3DF;
+            background-color: #FAF8F6;
+        }
+
+        .footer p {
+            margin: 0 0 4px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: #9A8B80;
+        }
+
+        .footer .footer-brand {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 14px;
+            color: #6B2E1C;
+            margin-bottom: 6px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h2>Merci pour votre commande, {{userName}} !</h2>
-        <p>Résumé de votre commande passée le {{orderDate}} :</p>
+    <div class="preheader">Merci pour votre commande — voici votre récapitulatif.</div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="topbar">&nbsp;</div>
+            <div class="header">
+                <div class="brand">Sacs à Bonheurs</div>
+                <div class="tagline">Boutique artisanale faite main</div>
+            </div>
+            <div class="content">
+                <h1>Merci pour votre commande, {{userName}}&nbsp;!</h1>
+                <p>Résumé de votre commande passée le {{orderDate}} :</p>
 
-        <h4>Coordonnées</h4>
-        <p>Email : {{email}}</p>
-        <p>Numéro de téléphone : {{phone}}</p>
+                <p class="section-label">Coordonnées</p>
+                <div class="info">
+                    <p>Email : {{email}}</p>
+                    <p>Téléphone : {{phone}}</p>
+                </div>
 
-        <h4>Point de livraison sélectionné</h4>
-        <p>{{relayName}}</p>
-        <p>{{relayAddress}}</p>
+                <p class="section-label">Point de livraison sélectionné</p>
+                <div class="info">
+                    <p>{{relayName}}</p>
+                    <p>{{relayAddress}}</p>
+                </div>
 
-        <h4>Adresse de facturation</h4>
-        <p>{{billingAddress}}, {{detailsBillingAddress}}</p>
-        <p>{{codePostal}}, {{city}}</p>
-        <p>{{country}}</p>
+                <p class="section-label">Adresse de facturation</p>
+                <div class="info">
+                    <p>{{billingAddress}}, {{detailsBillingAddress}}</p>
+                    <p>{{codePostal}}, {{city}}</p>
+                    <p>{{country}}</p>
+                </div>
 
-        <h4>Paiement</h4>
-        <p>{{prixTotal}} le {{datePaiement}}</p>
+                <p class="section-label">Paiement</p>
+                <div class="info">
+                    <p>{{prixTotal}} le {{datePaiement}}</p>
+                </div>
 
-        <h4>Articles commandés</h4>
-        <table>
-            <thead>
-                <tr>
-                    <th>Produit</th>
-                    <th>Nom</th>
-                    <th>Prix</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{itemRows}}
-            </tbody>
-        </table>
+                <p class="section-label">Articles commandés</p>
+                <table class="items">
+                    <thead>
+                        <tr>
+                            <th>Produit</th>
+                            <th>Nom</th>
+                            <th>Prix</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{itemRows}}
+                    </tbody>
+                </table>
 
-        <h4>Récapitulatif</h4>
-        <p>Sous-total : {{subtotal}}</p>
-        <p>Taxes : {{taxes}}</p>
-        <p>Frais de livraison : {{shippingCost}}</p>
-        <p>Total : {{total}}</p>
-
-        <div class="footer">
-            <p>Merci pour votre confiance,</p>
-            <p>{{storeName}}</p>
+                <p class="section-label">Récapitulatif</p>
+                <table class="summary">
+                    <tr>
+                        <td>Sous-total</td>
+                        <td class="amount">{{subtotal}}</td>
+                    </tr>
+                    <tr>
+                        <td>Taxes</td>
+                        <td class="amount">{{taxes}}</td>
+                    </tr>
+                    <tr>
+                        <td>Frais de livraison</td>
+                        <td class="amount">{{shippingCost}}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td>Total</td>
+                        <td class="amount">{{total}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="footer">
+                <p class="footer-brand">Sacs à Bonheurs</p>
+                <p>Merci pour votre confiance — {{storeName}}</p>
+                <p>&copy; Sacs à Bonheurs — Tous droits réservés</p>
+            </div>
         </div>
     </div>
 </body>
