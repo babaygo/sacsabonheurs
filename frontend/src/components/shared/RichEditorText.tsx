@@ -460,7 +460,7 @@ export function RichTextEditor({ value, onChange, variant = "site" }: RichTextEd
                         ))}
                     </SelectContent>
                 </Select>
-                <DropdownMenu>
+                <DropdownMenu modal={false}>
                     <DropdownMenuTrigger asChild>
                         <Button type="button" variant="outline" size="sm" className="h-8 gap-1 bg-card px-2 hover:bg-card">
                             <ListChevronsUpDown className="h-4 w-4" />
