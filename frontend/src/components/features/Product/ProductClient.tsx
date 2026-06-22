@@ -175,11 +175,11 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                     <AddToCart product={product} className="w-full" />
 
                     {product?.unavailable && (
-                        <div className="space-y-3 rounded-md border border-amber-200 bg-amber-50 p-4">
-                            <p className="text-sm text-amber-900">
+                        <div className="space-y-3 rounded-md border border-gray-200 bg-white p-4">
+                            <p className="text-sm text-gray-700">
                                 <span className="font-semibold">Temporairement indisponible.</span>{" "}
-                                Cette pièce unique est actuellement présentée en physique
-                                (marché, boutique éphémère…). Si elle n'est pas vendue sur place,
+                                Cette pièce unique est actuellement présentée en physique. 
+                                Si elle n'est pas vendue sur place,
                                 elle redeviendra disponible à l'achat en ligne.
                             </p>
                             <RestockNotifyForm slug={product.slug} />
