@@ -43,6 +43,9 @@ coverage/
 # Datas folders
 backend/public/uploads/
 
-#SEO reports
+# SEO reports
 seo-reports/
 seo-plan/
+
+# Claude
+CLAUDE.md

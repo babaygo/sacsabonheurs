@@ -70,6 +70,7 @@ export default function AdminTarifsLivraisonsClient() {
                         <TableHeader>
                             <TableRow>
                                 <TableHead>Nom</TableHead>
+                                <TableHead>Prix</TableHead>
                                 <TableHead className="text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -77,6 +78,14 @@ export default function AdminTarifsLivraisonsClient() {
                             {tarifsLivraisons.map((tarifLivraison: ShippingRate) => (
                                 <TableRow key={tarifLivraison.id}>
                                     <TableCell>{tarifLivraison.display_name}</TableCell>
+                                    <TableCell>
+                                        {tarifLivraison.fixed_amount
+                                            ? new Intl.NumberFormat("fr-FR", {
+                                                  style: "currency",
+                                                  currency: tarifLivraison.fixed_amount.currency,
+                                              }).format(tarifLivraison.fixed_amount.amount / 100)
+                                            : "Calculé"}
+                                    </TableCell>
                                     <TableCell className="text-right space-x-2">
                                         <Button
                                             variant="outline"
