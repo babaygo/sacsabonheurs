@@ -120,3 +120,38 @@ export async function deleteProduct(id: number): Promise<void> {
         throw new Error(error.error || "Erreur suppression produit");
     }
 }
+
+export interface RestockAlert {
+    id: number;
+    email: string;
+    notified: boolean;
+    createdAt: string;
+}
+
+export async function subscribeRestockAlert(slug: string, email: string): Promise<void> {
+    const res = await fetch(`${getBaseUrl()}/api/products/${slug}/restock-alert`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+    });
+
+    if (!res.ok) {
+        const error = await res.json().catch(() => ({}));
+        throw new Error(error.error || "Erreur lors de l'inscription à l'alerte");
+    }
+}
+
+export async function getRestockAlerts(
+    productId: number
+): Promise<{ alerts: RestockAlert[]; total: number; pending: number }> {
+    const res = await fetch(`${getBaseUrl()}/api/admin/products/${productId}/restock-alerts`, {
+        credentials: "include",
+    });
+
+    if (!res.ok) {
+        return { alerts: [], total: 0, pending: 0 };
+    }
+
+    return await res.json();
+}

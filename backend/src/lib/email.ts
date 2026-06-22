@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { Prisma, Product } from "@prisma/client";
 import fs from "fs";
 import path from "path";
 import { Resend } from "resend";
@@ -144,5 +144,44 @@ export async function sendContactConfirmationEmail(email: string, name: string, 
     html: html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
     bcc: `${process.env.MAIL_OWNER}`
+  });
+}
+
+function renderProductTemplate(file: string, product: Product) {
+  const template = fs.readFileSync(path.join(process.cwd(), "public/templates", file), "utf8");
+
+  const replacements: Record<string, string> = {
+    productName: product.name ?? "",
+    productUrl: `${process.env.URL_FRONT}/products/${product.slug}`,
+    productImage: product.images?.[0] ?? "",
+  };
+
+  return Object.entries(replacements).reduce(
+    (acc, [key, value]) => acc.replaceAll(`{{${key}}}`, value),
+    template
+  );
+}
+
+export async function sendRestockSubscriptionEmail(email: string, product: Product) {
+  const html = renderProductTemplate("restock-subscription-confirmation.html", product);
+
+  await sendEmail({
+    to: email,
+    subject: `Alerte enregistrée — ${product.name}`,
+    html,
+    from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
+    replyTo: "sacsabonheurs@gmail.com"
+  });
+}
+
+export async function sendBackInStockEmail(email: string, product: Product) {
+  const html = renderProductTemplate("back-in-stock-email.html", product);
+
+  await sendEmail({
+    to: email,
+    subject: `${product.name} est de nouveau disponible !`,
+    html,
+    from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
+    replyTo: "sacsabonheurs@gmail.com"
   });
 }

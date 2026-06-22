@@ -12,7 +12,7 @@ export async function checkout(req: Request, res: Response) {
 
     for (const item of items) {
         const product = await prisma.product.findUnique({ where: { slug: item.slug } });
-        if (!product || product.stock < item.quantity || product.hidden || item.quantity < 1) {
+        if (!product || product.stock < item.quantity || product.hidden || product.unavailable || item.quantity < 1) {
             return res.status(422).json({ error: `Le produit ${item.name} n'est plus disponible.` });
         }
     }

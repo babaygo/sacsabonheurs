@@ -80,7 +80,7 @@ function generateProductItem(
         imageLink = toImageUrl(firstImage);
     }
     const price = `${product.price.toFixed(2)} EUR`;
-    const availability = product.stock > 0 ? 'in_stock' : 'out_of_stock';
+    const availability = product.stock > 0 && !product.unavailable ? 'in_stock' : 'out_of_stock';
     const condition = 'new';
     const brand = brandName;
     const color = product.color;

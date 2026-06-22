@@ -29,7 +29,7 @@ function buildCategorySchema(category: Category) {
                 url: `${SITE_URL}/products/${product.slug}`,
                 priceCurrency: "EUR",
                 price: product.isOnSale && product.salePrice ? String(product.salePrice) : String(product.price),
-                availability: product.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                availability: product.stock > 0 && !product.unavailable ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
                 seller: { "@type": "Organization", name: BRAND_NAME },
             },
         })),

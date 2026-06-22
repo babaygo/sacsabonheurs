@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Separator } from "@/components/ui/separator";
 import AddToCart from "../Cart/AddToCart";
+import RestockNotifyForm from "./RestockNotifyForm";
 import { useProductBySlug } from "@/hooks/useProductBySlug";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -172,6 +173,18 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                     })()}
 
                     <AddToCart product={product} className="w-full" />
+
+                    {product?.unavailable && (
+                        <div className="space-y-3 rounded-md border border-amber-200 bg-amber-50 p-4">
+                            <p className="text-sm text-amber-900">
+                                <span className="font-semibold">Temporairement indisponible.</span>{" "}
+                                Cette pièce unique est actuellement présentée en physique
+                                (marché, boutique éphémère…). Si elle n'est pas vendue sur place,
+                                elle redeviendra disponible à l'achat en ligne.
+                            </p>
+                            <RestockNotifyForm slug={product.slug} />
+                        </div>
+                    )}
 
                     <Accordion type="multiple" defaultValue={["item-1"]}>
                         <Separator />

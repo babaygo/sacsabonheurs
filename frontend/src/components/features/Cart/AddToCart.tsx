@@ -12,10 +12,22 @@ type AddToCartProps = {
 export default function AddToCart({ product, className, variant }: AddToCartProps) {
     const { addToCart, setOpen } = useCart();
 
+    const isUnavailable = product?.unavailable === true;
+    const isOutOfStock = product?.stock <= 0;
+    const isBuyable = !isUnavailable && !isOutOfStock;
+
+    const label = isUnavailable
+        ? "Indisponible"
+        : isOutOfStock
+            ? "Rupture de stock"
+            : "Ajouter au panier";
+
     const handleClick = (e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        
+
+        if (!isBuyable) return;
+
         const priceInfo = calculateSalePrice(
             product.price,
             product.isOnSale || false,
@@ -38,11 +50,11 @@ export default function AddToCart({ product, className, variant }: AddToCartProp
     return (
         <Button
             onClick={handleClick}
-            disabled={product?.stock <= 0}
-            variant={variant ?? (product?.stock > 0 ? "default" : "secondary")}
+            disabled={!isBuyable}
+            variant={variant ?? (isBuyable ? "default" : "secondary")}
             className={`hover:opacity-100" ${className}`}
         >
-             {product?.stock > 0 ? "Ajouter au panier" : "Rupture de stock"}
+             {label}
         </Button>
     )
 }

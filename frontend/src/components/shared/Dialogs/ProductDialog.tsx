@@ -16,7 +16,7 @@ import { Category } from "@/types/Category";
 import { validateSalePrice, calculateComplementaryValue } from "@/lib/utils/priceCalculator";
 import { AlertCircle } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
-import { createProduct, updateProduct } from "@/lib/api/product";
+import { createProduct, updateProduct, getRestockAlerts, RestockAlert } from "@/lib/api/product";
 import { Collection } from "@/types/Collection";
 
 interface ProductDialogProps {
@@ -34,6 +34,7 @@ const emptyProduct = {
     description: "",
     metaDescription: "",
     hidden: false,
+    unavailable: false,
     price: 0,
     stock: 0,
     weight: 0,
@@ -63,6 +64,7 @@ export function ProductDialog({
     const [removeImages, setRemoveImages] = useState<string[]>([]);
     const [saleError, setSaleError] = useState<string>("");
     const [isLoading, setIsLoading] = useState(false);
+    const [restockAlerts, setRestockAlerts] = useState<RestockAlert[]>([]);
 
     const isEditMode = !!product;
 
@@ -80,10 +82,12 @@ export function ProductDialog({
                 setForm(product);
                 setKeptImages(product.images as string[]);
                 setRemoveImages([]);
+                getRestockAlerts(product.id).then((r) => setRestockAlerts(r.alerts));
             } else {
                 setForm(emptyProduct);
                 setKeptImages([]);
                 setRemoveImages([]);
+                setRestockAlerts([]);
             }
             setFiles([]);
             setSaleError("");
@@ -275,6 +279,43 @@ export function ProductDialog({
                                 </div>
                             </div>
                         </Field>
+
+                        <Field>
+                            <div className="flex items-start gap-3">
+                                <Checkbox
+                                    id="unavailable"
+                                    checked={form.unavailable || false}
+                                    disabled={isLoading}
+                                    onCheckedChange={(checked) => handleChange("unavailable", checked)}
+                                />
+                                <div className="grid gap-1">
+                                    <Label htmlFor="unavailable">Indisponible temporairement (exposé en physique)</Label>
+                                    <p className="text-xs text-muted-foreground">
+                                        L'achat est bloqué et un message invite les visiteurs à laisser
+                                        leur email. En décochant (avec du stock), ils seront prévenus du retour.
+                                    </p>
+                                </div>
+                            </div>
+                        </Field>
+
+                        {isEditMode && restockAlerts.length > 0 && (
+                            <Field>
+                                <FieldLabel>
+                                    Alertes de retour — {restockAlerts.filter((a) => !a.notified).length} en attente
+                                    {" "}({restockAlerts.length} au total)
+                                </FieldLabel>
+                                <ul className="max-h-40 overflow-y-auto rounded-md border divide-y text-sm">
+                                    {restockAlerts.map((alert) => (
+                                        <li key={alert.id} className="flex items-center justify-between px-3 py-2">
+                                            <span className="truncate">{alert.email}</span>
+                                            <span className={`ml-2 flex-shrink-0 text-xs ${alert.notified ? "text-green-600" : "text-amber-600"}`}>
+                                                {alert.notified ? "prévenu" : "en attente"}
+                                            </span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </Field>
+                        )}
 
                         <div className="grid grid-cols-2 gap-4">
                             <Field>

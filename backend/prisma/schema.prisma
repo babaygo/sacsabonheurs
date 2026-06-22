@@ -42,10 +42,23 @@ model Product {
   createdAt      DateTime    @default(now())
   updatedAt      DateTime    @updatedAt
   hidden         Boolean     @default(false)
+  unavailable    Boolean     @default(false)
   color          String?
   material       String?
   collectionId   Int?
   collection     Collection? @relation(fields: [collectionId], references: [id])
+  restockAlerts  RestockAlert[]
+}
+
+model RestockAlert {
+  id        Int      @id @default(autoincrement())
+  email     String
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  notified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@unique([productId, email])
 }
 
 model User {

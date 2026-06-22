@@ -77,6 +77,7 @@ export default function AdminProducts() {
     const filteredProducts = products.filter((product) => {
         if (filter === "rupture-stock") return product.stock < 1;
         if (filter === "hidden") return product.hidden === true;
+        if (filter === "unavailable") return product.unavailable === true;
         return true;
     });
 
@@ -107,6 +108,7 @@ export default function AdminProducts() {
                     <SelectContent>
                         <SelectItem value="all">Tous les produits</SelectItem>
                         <SelectItem value="rupture-stock">Rupture de stock</SelectItem>
+                        <SelectItem value="unavailable">Indisponible (exposé)</SelectItem>
                         <SelectItem value="hidden">Masqués sur la boutique</SelectItem>
                     </SelectContent>
                 </Select>
@@ -125,6 +127,24 @@ export default function AdminProducts() {
                                 className="w-full h-48 object-cover rounded"
                             />
                             <h2 className="text-lg font-semibold">{product.name}</h2>
+
+                            <div className="flex flex-wrap gap-1">
+                                {product.unavailable && (
+                                    <span className="text-xs font-medium bg-amber-100 text-amber-800 px-2 py-0.5 rounded">
+                                        Indisponible (exposé)
+                                    </span>
+                                )}
+                                {product.hidden && (
+                                    <span className="text-xs font-medium bg-gray-200 text-gray-700 px-2 py-0.5 rounded">
+                                        Masqué
+                                    </span>
+                                )}
+                                {product.stock < 1 && (
+                                    <span className="text-xs font-medium bg-red-100 text-red-700 px-2 py-0.5 rounded">
+                                        Rupture
+                                    </span>
+                                )}
+                            </div>
 
                             <div className="flex flex-wrap gap-2 mt-2">
                                 <Button

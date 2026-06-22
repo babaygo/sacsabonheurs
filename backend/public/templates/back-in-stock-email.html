@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light only" />
+    <title>L'article est de nouveau disponible</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Montserrat:wght@400;500;600&display=swap"
+        rel="stylesheet" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #FAF8F6;
+            font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #3C3C3C;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .preheader {
+            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            color: transparent;
+            height: 0;
+            width: 0;
+            max-height: 0;
+            max-width: 0;
+            overflow: hidden;
+            mso-hide: all;
+        }
+
+        .wrapper {
+            width: 100%;
+            padding: 32px 16px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border: 1px solid #E9E3DF;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 28px rgba(107, 46, 28, 0.07);
+        }
+
+        .topbar {
+            height: 4px;
+            line-height: 4px;
+            font-size: 4px;
+            background-color: #6B2E1C;
+        }
+
+        .header {
+            text-align: center;
+            padding: 32px 32px 24px;
+            border-bottom: 1px solid #E9E3DF;
+        }
+
+        .brand {
+            font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+            font-size: 26px;
+            font-weight: 600;
+            color: #6B2E1C;
+        }
+
+        .tagline {
+            margin-top: 8px;
+            font-size: 11px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #A1897B;
+        }
+
+        .content {
+            padding: 32px;
+        }
+
+        h1 {
+            margin: 0 0 16px;
+            font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 1.3;
+            color: #6B2E1C;
+        }
+
+        p {
+            margin: 0 0 16px;
+            font-size: 15px;
+            line-height: 1.65;
+            color: #4A4A4A;
+        }
+
+        .product {
+            text-align: center;
+            margin: 24px 0;
+            padding: 20px;
+            background-color: #FAF8F6;
+            border: 1px solid #E9E3DF;
+            border-radius: 12px;
+        }
+
+        .product img {
+            max-width: 240px;
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid #E9E3DF;
+        }
+
+        .product-name {
+            font-family: 'Fraunces', Georgia, serif;
+            font-weight: 600;
+            font-size: 17px;
+            color: #6B2E1C;
+            margin-top: 14px;
+        }
+
+        .note {
+            background-color: #F6E1D5;
+            border-radius: 10px;
+            padding: 14px 18px;
+            margin: 20px 0;
+        }
+
+        .note p {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #6B2E1C;
+        }
+
+        .cta {
+            text-align: center;
+            margin: 28px 0 8px;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #6B2E1C;
+            color: #FFFFFF !important;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 600;
+            padding: 14px 34px;
+            border-radius: 9999px;
+        }
+
+        .footer {
+            padding: 26px 32px 30px;
+            text-align: center;
+            border-top: 1px solid #E9E3DF;
+            background-color: #FAF8F6;
+        }
+
+        .footer p {
+            margin: 0 0 4px;
+            font-size: 12.5px;
+            line-height: 1.6;
+            color: #9A8B80;
+        }
+
+        .footer .footer-brand {
+            font-family: 'Fraunces', Georgia, serif;
+            font-size: 14px;
+            color: #6B2E1C;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="preheader">La pièce que vous attendiez est de nouveau disponible en ligne.</div>
+    <div class="wrapper">
+        <div class="container">
+            <div class="topbar">&nbsp;</div>
+            <div class="header">
+                <div class="brand">Sacs à Bonheurs</div>
+                <div class="tagline">Boutique artisanale faite main</div>
+            </div>
+            <div class="content">
+                <h1>Bonne nouvelle : votre pièce est de retour&nbsp;!</h1>
+                <p>Bonjour,</p>
+                <p>
+                    La pièce que vous attendiez est de nouveau disponible à l'achat sur la boutique en ligne&nbsp;:
+                </p>
+                <div class="product">
+                    <a href="{{productUrl}}">
+                        <img src="{{productImage}}" alt="{{productName}}" />
+                    </a>
+                    <div class="product-name">{{productName}}</div>
+                </div>
+                <div class="note">
+                    <p>
+                        Il s'agit d'une pièce unique fabriquée à la main : si elle vous plaît, ne tardez pas,
+                        il n'y en a qu'un seul exemplaire.
+                    </p>
+                </div>
+                <div class="cta">
+                    <a href="{{productUrl}}" class="button">Voir la pièce</a>
+                </div>
+            </div>
+            <div class="footer">
+                <p class="footer-brand">Sacs à Bonheurs</p>
+                <p>Boutique artisanale &amp; pièces uniques faites main</p>
+                <p>&copy; Sacs à Bonheurs — Tous droits réservés</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

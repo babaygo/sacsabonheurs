@@ -14,6 +14,7 @@ import shippingRouter from './routes/shipping.routes.js';
 import contactRouter from './routes/contact.routes.js';
 import legalRouter from './routes/legal.routes.js';
 import googleRouter from './routes/google.routes.js';
+import restockRouter from './routes/restock.routes.js';
 import { webhookHandler } from './controllers/webhook.controller.js';
 
 const app = express();
@@ -36,6 +37,7 @@ app.use('/api', shippingRouter);
 app.use('/api', contactRouter);
 app.use('/api', legalRouter);
 app.use('/api', googleRouter);
+app.use('/api', restockRouter);
 
 app.use((err: any, req: Request, res: Response, next: NextFunction) => {
     if (err && err.name === 'MulterError') {

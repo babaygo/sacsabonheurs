@@ -1,6 +1,31 @@
 import { Request, Response } from 'express';
+import { Product } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 import { uploadToR2, cfImageUrl, deleteImagesFromR2 } from '../lib/bucket.js';
+import { sendBackInStockEmail } from '../lib/email.js';
+
+/**
+ * Prévient par email les visiteurs inscrits à l'alerte de retour d'un produit,
+ * puis marque ces alertes comme notifiées. Les erreurs d'envoi n'interrompent
+ * jamais le flux appelant (enregistrement admin).
+ */
+async function notifyRestockSubscribers(product: Product) {
+    try {
+        const alerts = await prisma.restockAlert.findMany({
+            where: { productId: product.id, notified: false },
+        });
+        if (alerts.length === 0) return;
+
+        await Promise.allSettled(alerts.map((a) => sendBackInStockEmail(a.email, product)));
+
+        await prisma.restockAlert.updateMany({
+            where: { id: { in: alerts.map((a) => a.id) } },
+            data: { notified: true },
+        });
+    } catch (error) {
+        console.error('Erreur notification retour de stock :', error);
+    }
+}
 
 export async function getProducts(req: Request, res: Response) {
     try {
@@ -75,7 +100,7 @@ export async function createProduct(req: Request, res: Response) {
     try {
         const {
             name, slug, description, metaDescription, price, categoryId,
-            stock, weight, height, lenght, width, hidden, color, material,
+            stock, weight, height, lenght, width, hidden, unavailable, color, material,
             collectionId,
         } = req.body;
 
@@ -105,6 +130,7 @@ export async function createProduct(req: Request, res: Response) {
                 categoryId: parseInt(categoryId),
                 images: cfUrls,
                 hidden: hidden === 'true',
+                unavailable: unavailable === 'true',
                 color,
                 material,
                 collectionId: collectionId && collectionId !== 'null' && collectionId !== '' ? parseInt(collectionId) : null,
@@ -128,11 +154,14 @@ export async function updateProduct(req: Request, res: Response) {
     const { id } = req.params;
     const {
         name, slug, description, metaDescription, price, stock,
-        weight, height, lenght, width, categoryId, hidden, color, material,
+        weight, height, lenght, width, categoryId, hidden, unavailable, color, material,
         isOnSale, salePrice, salePercentage, collectionId,
     } = req.body;
 
     try {
+        const previous = await prisma.product.findUnique({ where: { id: parseInt(id) } });
+        if (!previous) return res.status(404).json({ error: 'Produit introuvable' });
+
         const existingSlug = await prisma.product.findUnique({ where: { slug } });
         if (existingSlug && existingSlug.id !== parseInt(id)) {
             return res.status(400).json({ error: 'Ce slug existe déjà' });
@@ -175,6 +204,7 @@ export async function updateProduct(req: Request, res: Response) {
                 categoryId: parseInt(categoryId),
                 images: finalImages,
                 hidden: hidden === 'true' ? true : false,
+                unavailable: unavailable === 'true' ? true : false,
                 color,
                 material,
                 isOnSale: isOnSale === 'true',
@@ -183,6 +213,14 @@ export async function updateProduct(req: Request, res: Response) {
                 collectionId: collectionId && collectionId !== 'null' && collectionId !== '' ? parseInt(collectionId) : null,
             },
         });
+
+        // Le produit redevient achetable après avoir été « indisponible »
+        // (ex. pièce revenue d'une exposition physique) : on prévient les inscrits.
+        const becameAvailable =
+            previous.unavailable && !product.unavailable && product.stock > 0;
+        if (becameAvailable) {
+            await notifyRestockSubscribers(product);
+        }
 
         res.json({ success: true, product });
     } catch (error: any) {

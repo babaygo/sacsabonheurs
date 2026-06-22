@@ -84,7 +84,7 @@ function buildProductSchema(product: Product) {
             priceCurrency: "EUR",
             price: price !== undefined ? String(price) : undefined,
             priceValidUntil,
-            availability: product?.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+            availability: product?.stock > 0 && !product?.unavailable ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
             itemCondition: "https://schema.org/NewCondition",
             seller: { "@type": "Organization", name: BRAND_NAME },
             hasMerchantReturnPolicy: {

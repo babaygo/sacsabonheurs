@@ -23,6 +23,7 @@ export interface Product {
     createdAt: Date;
     updatedAt: Date;
     hidden: boolean;
+    unavailable: boolean;
     color: string;
     material: string;
     collectionId?: number | null;
