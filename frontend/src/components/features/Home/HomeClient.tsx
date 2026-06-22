@@ -253,7 +253,7 @@ export default function HomeClient({
                         Mes Univers
                     </h2>
                     <p className="text-muted-foreground text-body max-w-md text-center">
-                        Trois matières d'exception pour des créations uniques.
+                        Des matières d'exception pour des créations uniques.
                     </p>
                 </div>
 

@@ -35,7 +35,7 @@ export default async function CollectionsPage() {
                 <span className="section-label">Nos univers</span>
                 <h1>Les Collections</h1>
                 <p className="text-muted-foreground text-body max-w-lg">
-                    Trois matières d'exception, sélectionnées pour leur caractère unique et
+                    Des matières d'exception, sélectionnées pour leur caractère unique et
                     leur qualité. Chaque collection donne naissance à des pièces artisanales
                     fabriquées à la main dans mon atelier à Saint-Nazaire.
                 </p>
