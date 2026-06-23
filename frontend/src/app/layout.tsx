@@ -61,12 +61,15 @@ export default async function RootLayout({
             "name": "Sacs à Bonheurs",
             "sameAs": [
               "https://www.instagram.com/sacs_a_bonheurs/",
-              "https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/"
+              "https://www.facebook.com/p/Sacs-%C3%A0-bonheurs-61555061294316/",
+              "https://fr.pinterest.com/sacsabonheurs/"
             ]
           })
         }} />
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <meta name="p:domain_verify" content="0d5980fefc0d08a7d2e20f4725055da8" />
 
       </head>
       <body className="min-h-screen bg-background text-foreground antialiased overflow-x-hidden">
