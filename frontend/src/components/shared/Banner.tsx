@@ -33,6 +33,12 @@ const VARIANT_STYLES: Record<BannerVariant, { bg: string; text: string; icon?: R
 
 const REPEATS = 4;
 
+// Durée du défilement par bannière. La largeur du contenu grandit avec le
+// nombre de messages : pour garder une vitesse constante (au lieu d'accélérer
+// à chaque bannière ajoutée), la durée doit être proportionnelle au nombre
+// d'items. 25s/item => 2 bannières = 50s, la vitesse jugée confortable.
+const SECONDS_PER_ITEM = 25;
+
 export default function Banner({
     items,
     variant = "primary",
@@ -74,7 +80,10 @@ export default function Banner({
             )}
 
             <div className="flex-1 overflow-hidden marquee-container">
-                <div className="animate-marquee inline-flex whitespace-nowrap w-max">
+                <div
+                    className="animate-marquee inline-flex whitespace-nowrap w-max"
+                    style={{ animationDuration: `${items.length * SECONDS_PER_ITEM}s` }}
+                >
                     {Array.from({ length: REPEATS }).map((_, i) => (
                         <span key={`a-${i}`} className="inline-flex items-center">
                             {track}
