@@ -32,7 +32,7 @@ const VARIANT_STYLES: Record<BannerVariant, { bg: string; text: string; icon?: R
 };
 
 const REPEATS = 4;
-const SECONDS_PER_ITEM = 18;
+const SECONDS_PER_ITEM = 33;
 
 export default function Banner({
     items,
