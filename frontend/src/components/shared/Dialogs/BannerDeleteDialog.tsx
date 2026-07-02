@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import toast from "react-hot-toast";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
+import { revalidateBanners } from "@/lib/api/banner";
 import { Trash } from "lucide-react";
 import Banner from "@/types/Banner";
 
@@ -23,7 +24,9 @@ async function deleteBanner(id: number) {
             const { error } = await res.json();
             throw new Error(error || "Erreur inconnue");
         }
-        return res.json();
+        const result = await res.json();
+        await revalidateBanners();
+        return result;
     } catch (error: any) {
         toast.error(error.message);
     }

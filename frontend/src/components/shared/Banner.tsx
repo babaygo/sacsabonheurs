@@ -32,12 +32,7 @@ const VARIANT_STYLES: Record<BannerVariant, { bg: string; text: string; icon?: R
 };
 
 const REPEATS = 4;
-
-// Durée du défilement par bannière. La largeur du contenu grandit avec le
-// nombre de messages : pour garder une vitesse constante (au lieu d'accélérer
-// à chaque bannière ajoutée), la durée doit être proportionnelle au nombre
-// d'items. 25s/item => 2 bannières = 50s, la vitesse jugée confortable.
-const SECONDS_PER_ITEM = 25;
+const SECONDS_PER_ITEM = 18;
 
 export default function Banner({
     items,

@@ -1,6 +1,29 @@
 import { Banner } from "@/types/Banner";
 import { getBaseUrl } from "../utils/getBaseUrl";
 
+const BANNERS_TAG = "banners";
+
+// Invalide le cache du fetch public des bannières (taggé `banners`) pour que
+// toute modif admin s'affiche immédiatement sur le site, sans attendre la
+// revalidation planifiée. Appelé après chaque mutation (create/update/delete).
+export async function revalidateBanners() {
+    try {
+        const response = await fetch("/api/revalidate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({ tags: [BANNERS_TAG] }),
+        });
+
+        if (!response.ok) {
+            const details = await response.text();
+            console.warn("Banner cache revalidation failed:", response.status, details);
+        }
+    } catch (error) {
+        console.warn("Banner cache revalidation failed:", error);
+    }
+}
+
 export async function getAdminBanners(): Promise<Banner[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/admin/banners`, {
@@ -19,7 +42,7 @@ export async function getAdminBanners(): Promise<Banner[]> {
 export async function getBanners(): Promise<Banner[]> {
     try {
         const res = await fetch(`${getBaseUrl()}/api/banners`, {
-            next: { revalidate: 300 },
+            next: { revalidate: 300, tags: [BANNERS_TAG] },
         });
 
         if (!res.ok) return [];
@@ -50,7 +73,9 @@ export async function createBanner(data: {
         throw new Error(error.error || "Erreur création banneau");
     }
 
-    return await res.json();
+    const created = await res.json();
+    await revalidateBanners();
+    return created;
 }
 
 export async function updateBanner(id: number, data: {
@@ -72,7 +97,9 @@ export async function updateBanner(id: number, data: {
         throw new Error(error.error || "Erreur modification banneau");
     }
 
-    return await res.json();
+    const updated = await res.json();
+    await revalidateBanners();
+    return updated;
 }
 
 export async function deleteBanner(id: number): Promise<void> {
@@ -85,4 +112,6 @@ export async function deleteBanner(id: number): Promise<void> {
         const error = await res.json();
         throw new Error(error.error || "Erreur suppression banneau");
     }
+
+    await revalidateBanners();
 }
