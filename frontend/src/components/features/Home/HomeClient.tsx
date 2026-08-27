@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { preload } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
 import {
@@ -33,6 +34,15 @@ import { Collection } from "@/types/Collection";
 import { CategoryLink } from "@/types/Category";
 import { Separator } from "@/components/ui/separator";
 
+
+// Hero responsive servi en <img srcset> natif : images.unoptimized est volontaire
+// (pipeline Cloudflare/R2) et next/image n'émet alors qu'une seule taille — le
+// srcset manuel évite de servir les 403 Ko de l'original aux mobiles.
+// Même srcset/sizes sur les deux <img> (mobile et desktop) pour que le
+// navigateur choisisse le même fichier et ne télécharge qu'une fois.
+const HERO_SRCSET =
+    "/assets/hero_image-828.webp 828w, /assets/hero_image-1280.webp 1280w, /assets/hero_image.webp 1797w";
+const HERO_SIZES = "(min-width: 1024px) 50vw, 100vw";
 
 function useReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.15) {
     const [visible, setVisible] = useState(false);
@@ -80,6 +90,13 @@ export default function HomeClient({
     useEffect(() => {
         setHeroH(`${window.innerHeight}px`);
     }, []);
+
+    preload("/assets/hero_image-828.webp", {
+        as: "image",
+        imageSrcSet: HERO_SRCSET,
+        imageSizes: HERO_SIZES,
+        fetchPriority: "high",
+    });
 
     const collectionsReveal = useReveal();
     const categoriesReveal = useReveal();
@@ -152,15 +169,15 @@ export default function HomeClient({
                 style={{ minHeight: `calc(${heroH} - var(--header-height))` }}
             >
                 <div className="lg:hidden absolute inset-0 -mx-[var(--container-padding,1rem)] -mt-6 overflow-hidden">
-                    <Image
-                        src="/assets/hero_image.webp"
-                        alt="Hero image"
-                        fill
-                        sizes="100vw"
-                        className="object-cover object-center"
-                        priority
-                        fetchPriority="high"
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                        src="/assets/hero_image-828.webp"
+                        srcSet={HERO_SRCSET}
+                        sizes={HERO_SIZES}
+                        alt=""
                         aria-hidden="true"
+                        fetchPriority="high"
+                        className="absolute inset-0 h-full w-full object-cover object-center"
                     />
                 </div>
 
@@ -222,14 +239,14 @@ export default function HomeClient({
 
                 <div className="relative hidden lg:block lg:w-1/2 order-2">
                     <div className="relative w-full lg:h-[calc(100vh-var(--header-height)-10rem)] rounded-[3rem] overflow-hidden shadow-2xl animate-fade-in-right">
-                        <Image
-                            src="/assets/hero_image.webp"
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                            src="/assets/hero_image-1280.webp"
+                            srcSet={HERO_SRCSET}
+                            sizes={HERO_SIZES}
                             alt="Sacs à Bonheurs - Sacs artisanaux faits en France"
-                            fill
-                            sizes="50vw"
-                            className="object-cover hover:scale-105 transition-transform duration-1000 ease-out"
-                            priority
                             fetchPriority="high"
+                            className="absolute inset-0 h-full w-full object-cover hover:scale-105 transition-transform duration-1000 ease-out"
                         />
 
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
