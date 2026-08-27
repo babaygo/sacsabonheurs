@@ -72,7 +72,7 @@ export async function sendOrderConfirmationEmail(order: OrderWithDetails) {
     subject: `Confirmation de votre commande #${order.id}`,
     html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    replyTo: "sacsabonheurs@gmail.com"
+    replyTo: process.env.MAIL_OWNER
   });
 }
 
@@ -100,7 +100,7 @@ export async function sendResetPasswordEmail(email: string, resetUrl: string) {
     subject: `Réinitialisation de votre mot de passe`,
     html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    replyTo: "sacsabonheurs@gmail.com"
+    replyTo: process.env.MAIL_OWNER
   });
 }
 
@@ -115,7 +115,7 @@ export async function sendPasswordChangedEmail(email: string) {
     subject: `Modification de votre mot de passe`,
     html: template,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    replyTo: "sacsabonheurs@gmail.com"
+    replyTo: process.env.MAIL_OWNER
   });
 }
 
@@ -143,7 +143,7 @@ export async function sendContactConfirmationEmail(email: string, name: string, 
     subject: `Demande de contact reçue`,
     html: html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    bcc: `${process.env.MAIL_OWNER}`
+    bcc: process.env.MAIL_OWNER
   });
 }
 
@@ -170,7 +170,8 @@ export async function sendRestockSubscriptionEmail(email: string, product: Produ
     subject: `Alerte enregistrée — ${product.name}`,
     html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    replyTo: "sacsabonheurs@gmail.com"
+    replyTo: process.env.MAIL_OWNER,
+    bcc: process.env.MAIL_OWNER
   });
 }
 
@@ -182,6 +183,6 @@ export async function sendBackInStockEmail(email: string, product: Product) {
     subject: `${product.name} est de nouveau disponible !`,
     html,
     from: `"Sacs à Bonheurs" <${process.env.MAIL_BOUTIQUE}>`,
-    replyTo: "sacsabonheurs@gmail.com"
+    replyTo: process.env.MAIL_OWNER,
   });
 }
