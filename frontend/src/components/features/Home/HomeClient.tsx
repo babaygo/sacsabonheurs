@@ -30,6 +30,7 @@ import {
 import { getArticles } from "@/lib/api/article";
 import { Article } from "@/types/Article";
 import { Collection } from "@/types/Collection";
+import { CategoryLink } from "@/types/Category";
 import { Separator } from "@/components/ui/separator";
 
 
@@ -62,9 +63,11 @@ function useReveal<T extends HTMLElement = HTMLDivElement>(threshold = 0.15) {
 export default function HomeClient({
     initialProducts,
     featuredCollections,
+    categories = [],
 }: {
     initialProducts: Product[];
     featuredCollections: Collection[];
+    categories?: CategoryLink[];
 }) {
     const { products: liveProducts, fetchProducts } = useProductsContext();
     const [products, setProducts] = useState<Product[]>(initialProducts);
@@ -79,6 +82,7 @@ export default function HomeClient({
     }, []);
 
     const collectionsReveal = useReveal();
+    const categoriesReveal = useReveal();
     const productsReveal = useReveal();
     const aboutReveal = useReveal();
     const blogReveal = useReveal();
@@ -384,6 +388,58 @@ export default function HomeClient({
                     </Carousel>
                 </div>
             </section>
+
+            {categories.length > 0 && (
+                <section
+                    ref={categoriesReveal.ref}
+                    className={`section-padding transition-all duration-700 ${categoriesReveal.visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
+                >
+                    <div className="flex flex-col items-center space-y-2 mb-10 md:mb-14">
+                        <span className="section-label">
+                            Catégories
+                        </span>
+                        <h2 className="text-center">
+                            Nos types de sacs
+                        </h2>
+                        <p className="text-muted-foreground text-body max-w-md text-center">
+                            Pochettes, cabas, sacs à main… trouvez la forme faite pour vous.
+                        </p>
+                    </div>
+
+                    <nav aria-label="Types de sacs">
+                        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+                            {categories.map((category) => (
+                                <li key={category.slug}>
+                                    <Link
+                                        href={`/category/${category.slug}`}
+                                        className="group relative block aspect-square rounded-2xl overflow-hidden bg-secondary"
+                                    >
+                                        {category.image && (
+                                            <Image
+                                                src={category.image}
+                                                alt={category.name}
+                                                fill
+                                                sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                                                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                loading="lazy"
+                                            />
+                                        )}
+                                        <div className="absolute inset-0 overlay-gradient" />
+                                        <div className="absolute inset-x-0 bottom-0 p-4 md:p-5">
+                                            <h3 className="text-white text-base md:text-lg font-fraunces font-semibold">
+                                                {category.name}
+                                            </h3>
+                                            <span className="inline-flex items-center gap-1 mt-1 text-white/90 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                                                Découvrir <ChevronRight className="w-4 h-4" />
+                                            </span>
+                                        </div>
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </section>
+            )}
 
             <section
                 ref={aboutReveal.ref}

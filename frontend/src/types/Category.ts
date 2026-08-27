@@ -6,3 +6,9 @@ export interface Category {
     slug: string;
     products: Product[];
 }
+
+export interface CategoryLink {
+    name: string;
+    slug: string;
+    image?: string | null;
+}

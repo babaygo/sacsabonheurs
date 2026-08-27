@@ -2,6 +2,7 @@ import Link from "next/link";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import ProductFiltersClient from "@/components/features/Product/ProductsFilters/ProductFiltersClient";
 import { getProducts } from "@/lib/api/product";
+import { getCategoryLinks } from "@/lib/api/category";
 import { SITE_URL } from "@/lib/seo/seo";
 
 export const metadata = {
@@ -18,7 +19,10 @@ export const metadata = {
 };
 
 export default async function BoutiquePage() {
-    const initialProducts = await getProducts(24, true);
+    const [initialProducts, categories] = await Promise.all([
+        getProducts(24, true),
+        getCategoryLinks(),
+    ]);
 
     const itemListSchema = {
         "@context": "https://schema.org",
@@ -70,6 +74,25 @@ export default async function BoutiquePage() {
                     </p>
                 </div>
             </header>
+            {categories.length > 0 && (
+                <nav aria-label="Parcourir par type de sac" className="mb-6">
+                    <h2 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground mb-3">
+                        Parcourir par type de sac
+                    </h2>
+                    <ul className="flex flex-wrap gap-2">
+                        {categories.map((category) => (
+                            <li key={category.slug}>
+                                <Link
+                                    href={`/category/${category.slug}`}
+                                    className="inline-block rounded-full border border-border bg-background px-4 py-1.5 text-sm hover:border-primary hover:text-primary transition-colors"
+                                >
+                                    {category.name}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
+                </nav>
+            )}
             <ProductFiltersClient initialProducts={initialProducts} />
         </div>
     );

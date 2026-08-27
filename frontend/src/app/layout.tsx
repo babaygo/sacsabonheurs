@@ -11,6 +11,7 @@ import { ProductsProvider } from "@/contexts/ProductsContext";
 import DynamicBanner from "@/components/features/layout/DynamicBanner";
 import { AppProvider } from "@/components/shared/AppProvider";
 import Header from "@/components/features/layout/Header";
+import { getCategoryLinks } from "@/lib/api/category";
 import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
 
 const montserrat = Montserrat({
@@ -48,6 +49,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const categories = await getCategoryLinks();
+
   return (
     <html lang="fr" className={`${montserrat.variable} ${fraunces.variable}`}>
       <head>
@@ -88,7 +91,7 @@ export default async function RootLayout({
             </ProductsProvider>
           </SessionProvider>
         </AppProvider>
-        <Footer />
+        <Footer categories={categories} />
       </body>
     </html>
   );

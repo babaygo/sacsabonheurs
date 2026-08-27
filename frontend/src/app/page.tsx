@@ -1,5 +1,6 @@
 import { getProducts } from "@/lib/api/product";
 import { getFeaturedCollections } from "@/lib/api/collection";
+import { getCategoryLinks } from "@/lib/api/category";
 import HomeClient from "@/components/features/Home/HomeClient";
 
 export const metadata = {
@@ -16,10 +17,17 @@ export const metadata = {
 };
 
 export default async function HomePage() {
-  const [products, featuredCollections] = await Promise.all([
+  const [products, featuredCollections, categories] = await Promise.all([
     getProducts(4, true),
     getFeaturedCollections(),
+    getCategoryLinks(),
   ]);
 
-  return <HomeClient initialProducts={products} featuredCollections={featuredCollections} />;
+  return (
+    <HomeClient
+      initialProducts={products}
+      featuredCollections={featuredCollections}
+      categories={categories}
+    />
+  );
 }

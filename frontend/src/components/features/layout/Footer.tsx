@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Facebook, Instagram } from "lucide-react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import Image from "next/image";
+import { CategoryLink } from "@/types/Category";
 
 function PinterestIcon({ className = "" }: { className?: string }) {
     return (
@@ -13,7 +14,7 @@ function PinterestIcon({ className = "" }: { className?: string }) {
     );
 }
 
-export default function Footer() {
+export default function Footer({ categories = [] }: { categories?: CategoryLink[] }) {
     return (
         <footer className="w-full mt-8 bg-secondary px-4 sm:px-6 lg:px-8 py-8 text-base border-t">
             <div className="max-w-7xl mx-auto space-y-2">
@@ -30,6 +31,23 @@ export default function Footer() {
                                 </ul>
                             </AccordionContent>
                         </AccordionItem>
+
+                        {categories.length > 0 && (
+                            <AccordionItem value="nos-sacs" className="border-b-muted">
+                                <AccordionTrigger className="font-semibold">Nos sacs</AccordionTrigger>
+                                <AccordionContent>
+                                    <ul className="space-y-2 text-sm">
+                                        {categories.map((category) => (
+                                            <li key={category.slug}>
+                                                <Link href={`/category/${category.slug}`} className="hover:underline">
+                                                    {category.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </AccordionContent>
+                            </AccordionItem>
+                        )}
 
                         <AccordionItem value="legal" className="border-b-muted">
                             <AccordionTrigger className="font-semibold">Légal</AccordionTrigger>
@@ -82,6 +100,21 @@ export default function Footer() {
                             <li><Link href="/a-propos" className="hover:underline">À propos</Link></li>
                         </ul>
                     </div>
+
+                    {categories.length > 0 && (
+                        <div className="space-y-2">
+                            <p className="font-semibold">Nos sacs</p>
+                            <ul className="space-y-1 text-sm">
+                                {categories.map((category) => (
+                                    <li key={category.slug}>
+                                        <Link href={`/category/${category.slug}`} className="hover:underline">
+                                            {category.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
 
                     <div className="space-y-2">
                         <p className="font-semibold">Légal</p>

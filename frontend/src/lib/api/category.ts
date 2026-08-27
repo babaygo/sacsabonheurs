@@ -1,5 +1,14 @@
-import { Category } from "@/types/Category";
+import { Category, CategoryLink } from "@/types/Category";
 import { getBaseUrl } from "../utils/getBaseUrl";
+
+export async function getCategoryLinks(): Promise<CategoryLink[]> {
+    const categories = await getCategories();
+    return categories.map((c) => ({
+        name: c.name.trim(),
+        slug: c.slug,
+        image: c.products?.find((p) => Array.isArray(p.images) && p.images[0])?.images[0] ?? null,
+    }));
+}
 
 export async function getCategoryBySlug(slug: string): Promise<Category | null> {
     try {
