@@ -1,6 +1,17 @@
 import { Request, Response } from 'express';
 import { prisma } from '../lib/prisma.js';
-import { uploadToR2, deleteImagesFromR2 } from '../lib/bucket.js';
+import { uploadToR2, deleteImagesFromR2, cfImageUrl } from '../lib/bucket.js';
+
+// Les articles stockent l'URL R2 brute (contrairement aux produits, wrappés à
+// l'upload) : on passe l'image par le pipeline Cloudflare à la lecture pour ne
+// jamais servir l'original pleine résolution (jusqu'à 2,3 Mo) au front.
+// Uniquement pour le domaine média officiel — les autres origines (seeds de
+// dev type picsum.photos) n'ont pas le pipeline cdn-cgi.
+function withCfImage<T extends { image: string | null }>(article: T): T {
+    const mediaOrigin = process.env.DOMAIN_MEDIAS;
+    if (!article.image || !mediaOrigin || !article.image.startsWith(mediaOrigin)) return article;
+    return { ...article, image: cfImageUrl(article.image, 'width=1200,quality=auto,format=auto') };
+}
 
 export async function getArticles(req: Request, res: Response) {
     try {
@@ -23,7 +34,7 @@ export async function getArticles(req: Request, res: Response) {
             prisma.article.count({ where: whereClause }),
         ]);
         res.json({
-            data: articles,
+            data: articles.map(withCfImage),
             pagination: {
                 total,
                 page,
@@ -41,7 +52,7 @@ export async function getArticleBySlug(req: Request, res: Response) {
     try {
         const article = await prisma.article.findUnique({ where: { slug: req.params.slug } });
         if (!article) return res.status(404).json({ error: 'Article non trouvé' });
-        res.json(article);
+        res.json(withCfImage(article));
     } catch (error: any) {
         console.error('Erreur récupération article:', error);
         res.status(500).json({ error: 'Erreur serveur' });

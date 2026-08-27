@@ -159,6 +159,7 @@ export default function HomeClient({
                         sizes="100vw"
                         className="object-cover object-center"
                         priority
+                        fetchPriority="high"
                         aria-hidden="true"
                     />
                 </div>
@@ -228,6 +229,7 @@ export default function HomeClient({
                             sizes="50vw"
                             className="object-cover hover:scale-105 transition-transform duration-1000 ease-out"
                             priority
+                            fetchPriority="high"
                         />
 
                         <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />

@@ -69,7 +69,6 @@ export default function PreviewProduct({ product }: { product: Product }) {
                                             alt={`${product.name} ${index + 1}`}
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                             fill
-                                            priority={index === 0}
                                             className="object-cover"
                                         />
                                     </div>
