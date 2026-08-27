@@ -75,7 +75,7 @@ export async function getAdminProductById(req: Request, res: Response) {
 export async function getProductBySlug(req: Request, res: Response) {
     const { slug } = req.params;
     try {
-        const product = await prisma.product.findUnique({ where: { slug } });
+        const product = await prisma.product.findUnique({ where: { slug }, include: { category: true } });
         if (!product) return res.status(404).json({ error: 'Produit non trouvé' });
         res.json(product);
     } catch (err) {

@@ -23,7 +23,10 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
     const product = !initialProduct?.hidden ? liveProduct ?? initialProduct : initialProduct;
     const { products: similarProductsRaw, loadingProducts, errorProducts } = useProductsByCategory(product.categoryId);
 
-    const similarProducts = similarProductsRaw.filter((p) => p.id !== product.id);
+    const isAvailable = (p: Product) => p.stock > 0 && !p.unavailable;
+    const similarProducts = similarProductsRaw
+        .filter((p) => p.id !== product.id)
+        .sort((a, b) => Number(isAvailable(b)) - Number(isAvailable(a)));
 
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
@@ -93,6 +96,9 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                 items={[
                     { label: "Accueil", href: "/" },
                     { label: "Boutique", href: "/boutique" },
+                    ...(product?.category?.name && product?.category?.slug
+                        ? [{ label: product.category.name, href: `/category/${product.category.slug}` }]
+                        : []),
                     { label: product?.name! },
                 ]}
             />
@@ -183,6 +189,18 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                                 elle redeviendra disponible à l'achat en ligne.
                             </p>
                             <RestockNotifyForm slug={product.slug} />
+                            {product?.category?.slug && (
+                                <p className="text-sm text-gray-700">
+                                    En attendant, découvrez les{" "}
+                                    <Link
+                                        href={`/category/${product.category.slug}`}
+                                        className="font-semibold text-primary underline underline-offset-2 hover:text-accent"
+                                    >
+                                        {product.category.name.trim().toLowerCase()} disponibles
+                                    </Link>
+                                    .
+                                </p>
+                            )}
                         </div>
                     )}
 
