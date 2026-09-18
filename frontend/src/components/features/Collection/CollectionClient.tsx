@@ -1,6 +1,6 @@
 "use client";
 
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import BreadCrumb from "@/components/shared/BreadCrumb";
@@ -44,12 +44,13 @@ export default function CollectionClient({
 
             <section className="relative overflow-hidden rounded-2xl md:rounded-3xl mb-12 md:mb-16 aspect-[4/3] sm:aspect-[16/9] md:aspect-[16/7]">
                 {collection.heroImage && (
-                    <Image
+                    <CfImage
                         src={collection.heroImage}
                         alt={collection.title}
                         fill
                         priority
                         sizes="100vw"
+                        widths={[640, 828, 1080, 1280, 1600]}
                         className="object-cover"
                     />
                 )}

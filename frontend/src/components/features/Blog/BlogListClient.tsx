@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { useSearchParams } from "next/navigation";
 import { Article } from "@/types/Article";
 import { getArticles } from "@/lib/api/article";
@@ -109,13 +109,12 @@ export default function BlogListClient({ initialPage, featuredSlug }: BlogListCl
                     <Link key={article.id} href={`/blog/${article.slug}`} className="group flex flex-col h-full rounded-lg shadow-sm border border-border p-4 transition-transform hover:-translate-y-1">
                         <div className="relative aspect-[3/2] w-full overflow-hidden rounded-[var(--radius)] mb-5 bg-muted border border-border">
                             {article.image && (
-                                <Image
+                                <CfImage
                                     src={article.image}
                                     alt={article.title}
                                     fill
                                     className="object-cover transition-transform duration-500 group-hover:scale-105"
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    loading="lazy"
                                 />
                             )}
                         </div>

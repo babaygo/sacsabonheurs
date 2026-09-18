@@ -1,4 +1,5 @@
 import { S3Client, PutObjectCommand, DeleteObjectsCommand } from "@aws-sdk/client-s3";
+import { createHash } from "crypto";
 
 export const s3 = new S3Client({
     region: "auto",
@@ -9,14 +10,28 @@ export const s3 = new S3Client({
     },
 });
 
+const IMMUTABLE_CACHE = "public, max-age=31536000, immutable";
+
+// Le cache navigateur d'un an n'est correct que si l'URL change avec le contenu :
+// sans ce hash, un ré-upload sous le même nom resterait invisible pendant des mois.
+export function versionedKey(originalname: string, buffer: Buffer, folder?: string): string {
+    const hash = createHash("sha256").update(buffer).digest("hex").slice(0, 8);
+    const dot = originalname.lastIndexOf(".");
+    const base = dot > 0 ? originalname.slice(0, dot) : originalname;
+    const ext = dot > 0 ? originalname.slice(dot) : "";
+    const name = `${base}-${hash}${ext}`;
+    return folder ? `${folder}/${name}` : name;
+}
+
 export async function uploadToR2(file: Express.Multer.File, folder?: string): Promise<string> {
-    const key = folder ? `${folder}/${file.originalname}` : file.originalname;
+    const key = versionedKey(file.originalname, file.buffer, folder);
     try {
         await s3.send(new PutObjectCommand({
             Bucket: process.env.R2_BUCKET!,
             Key: key,
             Body: file.buffer,
             ContentType: file.mimetype,
+            CacheControl: IMMUTABLE_CACHE,
         }));
     } catch (error: any) {
         console.error("Upload échoué :", error);

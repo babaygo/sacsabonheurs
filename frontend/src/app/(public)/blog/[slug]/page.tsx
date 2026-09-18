@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { Metadata } from "next";
 import { ArrowRight, CalendarDays, ChevronDown, Clock3, Facebook, Linkedin, Share2 } from "lucide-react";
 import BreadCrumb from "@/components/shared/BreadCrumb";
@@ -144,7 +144,7 @@ export default async function ArticlePage({
 
                         {article.image && (
                             <div className="relative order-1 min-h-[260px] overflow-hidden bg-secondary lg:order-2 lg:min-h-full">
-                                <Image
+                                <CfImage
                                     src={article.image}
                                     alt={article.title}
                                     fill

@@ -1,5 +1,5 @@
 import BreadCrumb from "@/components/shared/BreadCrumb";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -121,13 +121,14 @@ export default function AProposPage() {
                     </div>
                     <div className="order-2 lg:order-2 flex justify-center lg:justify-end lg:flex-shrink-0">
                         <div className="relative w-full max-w-xs sm:max-w-sm lg:w-72 xl:w-80">
-                            <Image
+                            <CfImage
                                 src={`${process.env.NEXT_PUBLIC_URL_MEDIA}/about/sophie.jpg`}
                                 alt="Sophie, créatrice de Sacs à Bonheurs"
                                 width={320}
                                 height={480}
                                 priority
                                 sizes="(max-width: 640px) 80vw, (max-width: 1024px) 384px, 320px"
+                                widths={[320, 480, 640, 768]}
                                 className="object-contain rounded-lg w-full h-auto"
                             />
                         </div>
@@ -197,12 +198,12 @@ export default function AProposPage() {
                                 key={index}
                                 className="relative aspect-square rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow"
                             >
-                                <Image
+                                <CfImage
                                     src={image.src}
                                     alt={image.alt}
                                     fill
-                                    loading="lazy"
                                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 33vw"
+                                    widths={[320, 480, 640, 800]}
                                     className="object-cover hover:scale-105 transition-transform duration-300"
                                 />
                             </div>

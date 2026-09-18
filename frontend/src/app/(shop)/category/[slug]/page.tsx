@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import { Category } from "@/types/Category";
 import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
+import { cfImageUrl, OG_IMAGE_WIDTH } from "@/lib/utils/cfImage";
 
 type Props = {
     params: Promise<{ slug: string }>;
@@ -45,7 +46,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
 
     const description = `Découvrez notre collection de ${category.name.toLowerCase()} cousus à la main à Saint-Nazaire. Élégants, durables, uniques. Livraison rapide en France.`;
-    const ogImage = category.products?.find((p) => Array.isArray(p.images) && p.images[0])?.images[0];
+    const rawOgImage = category.products?.find((p) => Array.isArray(p.images) && p.images[0])?.images[0];
+    const ogImage = rawOgImage ? cfImageUrl(rawOgImage, OG_IMAGE_WIDTH) : undefined;
 
     return {
         title: `${category.name} artisanaux faits main - Sacs à Bonheurs`,

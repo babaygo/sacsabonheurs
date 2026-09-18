@@ -7,7 +7,7 @@ import { useCartDrawerStore } from "@/lib/stores/cartDrawerStore";
 import { useCartStore } from "@/lib/stores/cartStore";
 import { getBaseUrl } from "@/lib/utils/getBaseUrl";
 import toast from "react-hot-toast";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { useProductsContext } from "@/contexts/ProductsContext";
 import { useSessionContext } from "@/components/shared/SessionProvider";
 import { useRouter } from "next/navigation";
@@ -84,13 +84,14 @@ export default function CartDrawer() {
                     ) : (
                         items.map((item, i) => (
                             <div key={item.id} className="flex items-center gap-4">
-                                <Image
+                                <CfImage
                                     src={item.image}
                                     alt={item.name}
                                     width={64}
                                     height={64}
+                                    sizes="64px"
+                                    widths={[64, 128, 192]}
                                     className="w-16 h-16 object-cover rounded"
-                                    loading="lazy"
                                 />
                                 <div className="flex-1">
                                     <p className="font-medium">{item.name}</p>

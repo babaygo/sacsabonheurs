@@ -1,6 +1,6 @@
 import { Product } from "@/types/Product";
 import Link from "next/link";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import AddToCart from "../Cart/AddToCart";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel"
 import { useState, useEffect } from "react";
@@ -34,21 +34,21 @@ export default function PreviewProduct({ product }: { product: Product }) {
             className="flex flex-col items-start py-4 group"
         >
             <div className="hidden md:block relative w-full aspect-square max-w-[450px] overflow-hidden">
-                <Image
+                <CfImage
                     src={product.images[0]}
                     alt={product.name}
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                     fill
-                    className="object-cover w-full h-auto block transition-opacity duration-300 group-hover:opacity-0"
+                    className="object-cover block transition-opacity duration-300 group-hover:opacity-0"
                 />
 
                 {product.images[1] && (
-                    <Image
+                    <CfImage
                         src={product.images[1]}
                         alt={`${product.name} — autre vue`}
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                         fill
-                        className="object-cover w-full h-auto block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
+                        className="object-cover block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                     />
                 )}
 
@@ -64,7 +64,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
                             {product.images.map((image, index) => (
                                 <CarouselItem key={index}>
                                     <div className="relative w-full aspect-square">
-                                        <Image
+                                        <CfImage
                                             src={image}
                                             alt={`${product.name} ${index + 1}`}
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

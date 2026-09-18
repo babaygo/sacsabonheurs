@@ -4,6 +4,7 @@ import { Product } from "@/types/Product";
 import { SITE_URL, BRAND_NAME } from "@/lib/seo/seo";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cfImageUrl, OG_IMAGE_WIDTH } from "@/lib/utils/cfImage";
 
 export const revalidate = 3600;
 
@@ -59,7 +60,9 @@ function buildBreadcrumbSchema(product: Product) {
 
 function buildProductSchema(product: Product) {
     const price = product?.isOnSale && product?.salePrice ? product.salePrice : product.price;
-    const images = Array.isArray(product?.images) ? product.images : [];
+    // Largeur explicite : les URLs stockées portent `width=auto`, que Cloudflare
+    // n'honore pas — les crawlers sociaux récupéreraient l'original pleine résolution.
+    const images = (Array.isArray(product?.images) ? product.images : []).map((url: string) => cfImageUrl(url, OG_IMAGE_WIDTH));
 
     const priceValidUntil = `${new Date().getFullYear() + 1}-12-31`;
 
@@ -141,7 +144,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const images = (Array.isArray(product.images) ? product.images : [])
         .filter(Boolean)
-        .map((url) => ({ url, alt: product.name }));
+        .map((url) => ({ url: cfImageUrl(url, OG_IMAGE_WIDTH), alt: product.name }));
 
     return {
         title,

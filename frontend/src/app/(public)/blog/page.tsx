@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { Metadata } from "next";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { Article } from "@/types/Article";
@@ -51,7 +51,7 @@ export default async function BlogPage({
                         <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 lg:items-center">
                             <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[var(--radius)] border border-border">
                                 {featuredArticle.image && (
-                                    <Image
+                                    <CfImage
                                         src={featuredArticle.image}
                                         alt={featuredArticle.title}
                                         fill

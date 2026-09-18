@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { preload } from "react-dom";
 import { Button } from "@/components/ui/button";
 import { Product } from "@/types/Product";
@@ -287,14 +288,13 @@ export default function HomeClient({
                             href={collection.href}
                             className="group relative aspect-[3/4] rounded-2xl overflow-hidden cursor-pointer"
                         >
-                            <Image
+                            <CfImage
                                 src={collection.heroImage ?? ""}
                                 alt={collection.title}
                                 width={832}
                                 height={1248}
                                 sizes="(max-width: 1024px) 50vw, 33vw"
                                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                loading="lazy"
                             />
                             <div className="absolute inset-0 overlay-gradient transition-opacity duration-500" />
 
@@ -322,13 +322,12 @@ export default function HomeClient({
                                         href={collection.href}
                                         className="relative aspect-[3/4] block rounded-2xl overflow-hidden"
                                     >
-                                        <Image
+                                        <CfImage
                                             src={collection.heroImage ?? ""}
                                             alt={collection.title}
                                             sizes="85vw"
                                             fill
-                                            className="w-full h-full object-cover"
-                                            loading="lazy"
+                                            className="object-cover"
                                         />
                                         <div className="absolute inset-0 overlay-gradient" />
                                         <div className="absolute inset-x-0 bottom-0 p-5">
@@ -434,13 +433,12 @@ export default function HomeClient({
                                         className="group relative block aspect-square rounded-2xl overflow-hidden bg-secondary"
                                     >
                                         {category.image && (
-                                            <Image
+                                            <CfImage
                                                 src={category.image}
                                                 alt={category.name}
                                                 fill
                                                 sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                                                 className="object-cover transition-transform duration-700 group-hover:scale-110"
-                                                loading="lazy"
                                             />
                                         )}
                                         <div className="absolute inset-0 overlay-gradient" />
@@ -603,13 +601,12 @@ export default function HomeClient({
                         >
                             <div className="relative w-full aspect-[16/9] overflow-hidden">
                                 {blogPosts[0].image ? (
-                                    <Image
+                                    <CfImage
                                         src={blogPosts[0].image}
                                         alt={blogPosts[0].title}
                                         fill
                                         sizes="(max-width: 1024px) 100vw, 66vw"
                                         className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                        loading="lazy"
                                     />
                                 ) : (
                                     <div className="w-full h-full bg-secondary" />
@@ -648,13 +645,13 @@ export default function HomeClient({
                                     >
                                         <div className="relative w-20 h-20 md:w-24 md:h-24 rounded-lg overflow-hidden bg-secondary shrink-0">
                                             {post.image ? (
-                                                <Image
+                                                <CfImage
                                                     src={post.image}
                                                     alt={post.title}
                                                     fill
                                                     sizes="96px"
+                                                    widths={[96, 192, 288]}
                                                     className="object-cover transition-transform duration-500 group-hover:scale-110"
-                                                    loading="lazy"
                                                 />
                                             ) : (
                                                 <div className="w-full h-full" />

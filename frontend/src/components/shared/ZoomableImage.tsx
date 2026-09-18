@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import ZoomableCarousel from "./ZoomableCarousel";
-import Image from "next/image";
+import CfImage from "./CfImage";
 
 type Props = {
   images: string[];
@@ -15,12 +15,12 @@ export default function ZoomableImage({ images, index, alt }: Props) {
 
   return (
     <>
-      <Image
+      <CfImage
         src={images[index]}
         alt={alt || `Image ${index + 1}`}
         className="cursor-zoom-in w-2/3 hover:opacity-90 transition duration-300 shadow-md mx-auto mb-4"
         onClick={() => setOpen(true)}
-        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 40vw, 33vw"
         width={800}
         height={800}
         priority={index === 0}

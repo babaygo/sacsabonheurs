@@ -1,7 +1,7 @@
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { getCollections } from "@/lib/api/collection";
 import { Metadata } from "next";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
 
@@ -58,13 +58,12 @@ export default async function CollectionsPage() {
                             {/* Image */}
                             <div className="relative aspect-[3/4] overflow-hidden bg-secondary">
                                 {collection.heroImage && (
-                                    <Image
+                                    <CfImage
                                         src={collection.heroImage}
                                         alt={collection.title}
                                         fill
                                         sizes="(max-width: 768px) 100vw, 33vw"
                                         className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                        loading="lazy"
                                     />
                                 )}
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />

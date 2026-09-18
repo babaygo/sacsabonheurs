@@ -6,7 +6,7 @@ import { Product } from "@/types/Product";
 import ZoomableImage from "@/components/shared/ZoomableImage";
 import BreadCrumb from "@/components/shared/BreadCrumb";
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import CfImage from "@/components/shared/CfImage";
 import { Separator } from "@/components/ui/separator";
 import AddToCart from "../Cart/AddToCart";
 import RestockNotifyForm from "./RestockNotifyForm";
@@ -121,11 +121,11 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                             {product?.images.map((src, i) => (
                                 <CarouselItem key={i}>
                                     <div className="relative w-full aspect-square overflow-hidden">
-                                        <Image
+                                        <CfImage
                                             src={src}
                                             alt={`${product.name} ${i + 1}`}
                                             fill
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            sizes="100vw"
                                             className="object-cover"
                                             priority={i === 0}
                                         />
@@ -229,12 +229,12 @@ export default function ProductClient({ initialProduct, slug }: { initialProduct
                                 >
                                     <Link key={p.id} href={`/products/${p.slug}`}>
                                         <div className="relative w-full aspect-square max-w-[450px] overflow-hidden group">
-                                            <Image
+                                            <CfImage
                                                 src={p.images[0]}
                                                 alt={p.name}
-                                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                                                 fill
-                                                className="object-cover w-full h-auto block transition-opacity duration-300"
+                                                className="object-cover block transition-opacity duration-300"
                                             />
                                             <div className="w-full flex justify-center py-2 px-4 absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-600">
                                                 <AddToCart product={p} className="rounded-full" />
