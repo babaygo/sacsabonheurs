@@ -7,7 +7,17 @@ import { useState, useEffect } from "react";
 import type { CarouselApi } from "@/components/ui/carousel";
 import { calculateSalePrice, formatPrice } from "@/lib/utils/priceCalculator";
 
-export default function PreviewProduct({ product }: { product: Product }) {
+const DEFAULT_SIZES = "(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 25vw";
+
+export default function PreviewProduct({
+    product,
+    priority = false,
+    sizes = DEFAULT_SIZES,
+}: {
+    product: Product;
+    priority?: boolean;
+    sizes?: string;
+}) {
     const [api, setApi] = useState<CarouselApi>();
     const [current, setCurrent] = useState(0);
 
@@ -37,7 +47,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
                 <CfImage
                     src={product.images[0]}
                     alt={product.name}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    sizes={sizes}
+                    priority={priority}
                     fill
                     className="object-cover block transition-opacity duration-300 group-hover:opacity-0"
                 />
@@ -46,7 +57,7 @@ export default function PreviewProduct({ product }: { product: Product }) {
                     <CfImage
                         src={product.images[1]}
                         alt={`${product.name} — autre vue`}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                        sizes={sizes}
                         fill
                         className="object-cover block transition-opacity duration-300 opacity-0 group-hover:opacity-100"
                     />
@@ -67,7 +78,8 @@ export default function PreviewProduct({ product }: { product: Product }) {
                                         <CfImage
                                             src={image}
                                             alt={`${product.name} ${index + 1}`}
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                            sizes={sizes}
+                                            priority={priority && index === 0}
                                             fill
                                             className="object-cover"
                                         />

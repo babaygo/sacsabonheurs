@@ -46,8 +46,13 @@ export default function ProductFiltersClient({ initialProducts }: { initialProdu
             />
 
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-6">
-                {sorted.map((product) => (
-                    <PreviewProduct key={`product-${product.id}`} product={product} />
+                {sorted.map((product, index) => (
+                    <PreviewProduct
+                        key={`product-${product.id}`}
+                        product={product}
+                        priority={index < 2}
+                        sizes="(max-width: 767px) 50vw, 25vw"
+                    />
                 ))}
             </div>
 
