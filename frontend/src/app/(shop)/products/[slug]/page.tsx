@@ -60,8 +60,6 @@ function buildBreadcrumbSchema(product: Product) {
 
 function buildProductSchema(product: Product) {
     const price = product?.isOnSale && product?.salePrice ? product.salePrice : product.price;
-    // Largeur explicite : les URLs stockées portent `width=auto`, que Cloudflare
-    // n'honore pas — les crawlers sociaux récupéreraient l'original pleine résolution.
     const images = (Array.isArray(product?.images) ? product.images : []).map((url: string) => cfImageUrl(url, OG_IMAGE_WIDTH));
 
     const priceValidUntil = `${new Date().getFullYear() + 1}-12-31`;

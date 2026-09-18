@@ -20,7 +20,6 @@ export default function CfImage({
     className,
     ...rest
 }: Props) {
-    // src="" ferait re-télécharger la page courante au navigateur.
     if (!src) return null;
 
     const fallbackWidth = widths[Math.floor(widths.length / 2)];

@@ -12,8 +12,6 @@ export const s3 = new S3Client({
 
 const IMMUTABLE_CACHE = "public, max-age=31536000, immutable";
 
-// Le cache navigateur d'un an n'est correct que si l'URL change avec le contenu :
-// sans ce hash, un ré-upload sous le même nom resterait invisible pendant des mois.
 export function versionedKey(originalname: string, buffer: Buffer, folder?: string): string {
     const hash = createHash("sha256").update(buffer).digest("hex").slice(0, 8);
     const dot = originalname.lastIndexOf(".");
