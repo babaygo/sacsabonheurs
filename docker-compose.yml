@@ -27,6 +27,7 @@ services:
       - .env
     environment:
       DATABASE_URL: ${POSTGRES_DATABASE_URL}
+      CHOKIDAR_USEPOLLING: "true"
     depends_on:
       - postgres
 

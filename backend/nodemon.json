@@ -1,8 +1,0 @@
-{
-  "watch": ["src"],
-  "ext": "ts,tsx",
-  "exec": "tsx src/index.ts",
-  "delay": 500,
-  "legacyWatch": true,
-  "verbose": true
-}
