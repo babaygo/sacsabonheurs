@@ -1,7 +1,7 @@
 services:
   - type: web
     name: backend-preprod
-    env: node
+    runtime: node
     rootDir: backend
     region: frankfurt
     buildCommand: |
@@ -18,3 +18,5 @@ services:
         value: https://sacsabonheurs.fr
       - key: NODE_ENV
         value: production
+      - key: NODE_VERSION
+        value: "24"

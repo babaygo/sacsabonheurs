@@ -15,5 +15,5 @@ npx prisma generate
 echo "Applying migrations..."
 npx prisma migrate deploy
 
-echo "Starting dev server with nodemon (hot reload)..."
+echo "Starting dev server with tsx watch (hot reload)..."
 exec npm run dev:watch
